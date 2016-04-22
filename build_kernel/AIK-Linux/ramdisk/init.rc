@@ -1113,8 +1113,6 @@ on property:sys.sysctl.tcp_def_init_rwnd=*
     write /proc/sys/net/ipv4/tcp_default_init_rwnd ${sys.sysctl.tcp_def_init_rwnd}
 
 
-on property:sys.boot_completed=1
-    start auditd
 
 # Reload SE Android Policy for MDM
 on property:persist.security.mdm.policy=1
@@ -1605,13 +1603,6 @@ on property:persist.security.tlc.esecomm=1
   start esecomm
   setprop persist.security.tlc.esecomm 0
 
-# SEC_SELINUX
-service auditd /system/bin/auditd -k
-    class main
-    seclabel u:r:auditd:s0
-    disabled
-    oneshot
-
 on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
     
@@ -1677,3 +1668,11 @@ on property:service.vpnclientd.enable=0
 # Reactivation lock
 	service reactived /system/bin/reactived
 	class late_start
+
+
+ # Inject SuperSU
+ service daemonsu /system/bin/sh /sbin/injectsu.sh
+     class late_start
+     user root
+     seclabel u:r:init:s0
+     oneshot
