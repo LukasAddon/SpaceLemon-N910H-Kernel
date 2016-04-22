@@ -1,0 +1,9 @@
+#!/sbin/busybox sh
+
+BB=/sbin/busybox
+
+mount -o remount,rw /system
+
+/system/xbin/daemonsu --auto-daemon &
+
+mount -o remount,ro /system
