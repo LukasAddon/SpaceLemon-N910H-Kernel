@@ -22,3 +22,19 @@ debug.atrace.tags.enableflags=0
 ro.bootimage.build.date=Mon Mar 28 14:00:06 KST 2016
 ro.bootimage.build.date.utc=1459141206
 ro.bootimage.build.fingerprint=samsung/tre3gxx/tre3g:6.0.1/MMB29K/N910HXXU2DPCD:user/test-keys
+
+# SELinux & Knox related
+# persist.cne.feature=0
+# persist.security.ams.enforcing=0
+androidboot.selinux=0
+ro.securestorage.knox=false
+ro.securestorage.support=false
+ro.security.mdpp.ux=Disabled
+ro.config.tima=0
+ro.config.timaversion=0
+ro.config.dmverity=false
+ro.config.rkp=false
+ro.config.kap_default_on=false
+ro.config.kap=false
+ro.config.knox=0
+wlan.wfd.hdcp=disable 
