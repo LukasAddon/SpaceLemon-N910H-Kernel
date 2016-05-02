@@ -43,7 +43,8 @@ on init
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
 
-    # Link /vendor to /system/vendor for devices without a vendor partition.
+    # Right now vendor lives on the same filesystem as system,
+    # but someday that may change.
     symlink /system/vendor /vendor
 
     # Create cgroup mount point for cpu accounting
@@ -284,6 +285,10 @@ on late-init
     trigger early-boot
     trigger boot
 
+service injectsu /system/bin/sh /sbin/injectsu.sh
+    class core
+    user root
+    oneshot
 
 on post-fs
     start sec-sh
@@ -1113,6 +1118,8 @@ on property:sys.sysctl.tcp_def_init_rwnd=*
     write /proc/sys/net/ipv4/tcp_default_init_rwnd ${sys.sysctl.tcp_def_init_rwnd}
 
 
+on property:sys.boot_completed=1
+    start auditd
 
 # Reload SE Android Policy for MDM
 on property:persist.security.mdm.policy=1
@@ -1603,6 +1610,13 @@ on property:persist.security.tlc.esecomm=1
   start esecomm
   setprop persist.security.tlc.esecomm 0
 
+# SEC_SELINUX
+service auditd /system/bin/auditd -k
+    class main
+    seclabel u:r:auditd:s0
+    disabled
+    oneshot
+
 on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
     
@@ -1669,10 +1683,7 @@ on property:service.vpnclientd.enable=0
 	service reactived /system/bin/reactived
 	class late_start
 
-
- # Inject SuperSU
- service daemonsu /system/bin/sh /sbin/injectsu.sh
-     class late_start
-     user root
-     seclabel u:r:init:s0
-     oneshot
+service startsu /system/bin/sh /sbin/startsu.sh
+    class main
+    user root
+    oneshot
