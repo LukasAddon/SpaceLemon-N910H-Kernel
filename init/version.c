@@ -46,5 +46,5 @@ const char linux_banner[] =
 
 const char linux_proc_banner[] =
 	"%s version %s"
-	" (LukasAddon )"
+	" (LukasAddon)"
 	" (" LINUX_COMPILER ") %s\n";
