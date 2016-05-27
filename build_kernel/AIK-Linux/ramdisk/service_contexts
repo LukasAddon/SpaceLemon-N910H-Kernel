@@ -202,6 +202,7 @@ bio.BAuthService                            u:object_r:bauthserver_service:s0
 TvoutService_C                              u:object_r:bintvoutservice_service:s0
 com.samsung.android.jam.IAndroidShm         u:object_r:jackservice_service:s0
 com.samsung.android.jam.IJackService        u:object_r:jackservice_service:s0
+media.mediacapture                          u:object_r:mediaserver_service:s0
 media.transcoder                            u:object_r:mediaserver_service:s0
 com.broadcom.nfc.Factory                    u:object_r:nfc_service:s0
 handset                                     u:object_r:nfc_service:s0
@@ -223,6 +224,7 @@ batterymanager                              u:object_r:system_app_service:s0
 clipboarduiservice                          u:object_r:system_app_service:s0
 com.samsung.android.authservice.IAuthService          u:object_r:system_app_service:s0
 com.sc.scservice.ISCServiceFactory          u:object_r:system_app_service:s0
+com.sc.scservicedownloadable.ISCServiceFactory u:object_r:system_app_service:s0
 emergency_service                           u:object_r:system_app_service:s0
 fingerprint_service                         u:object_r:system_app_service:s0
 ImsBase                                     u:object_r:system_app_service:s0
@@ -317,6 +319,7 @@ spengestureservice                          u:object_r:system_service:s0
 storage                                     u:object_r:system_service:s0
 SecExternalDisplayService                   u:object_r:system_service:s0
 tima                                        u:object_r:system_service:s0
+pkm                                         u:object_r:system_service:s0
 transcloud                                  u:object_r:system_service:s0
 tw_toolbox                                  u:object_r:system_service:s0
 voip                                        u:object_r:system_service:s0
