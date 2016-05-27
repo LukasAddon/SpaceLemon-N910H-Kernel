@@ -184,6 +184,7 @@ csc.sales_code	u:object_r:csc_prop:s0
 persist.csc.nosimlanguage	u:object_r:csc_prop:s0
 persist.csc.nosimcountry	u:object_r:csc_prop:s0
 com.google.clientidbase.    u:object_r:csc_prop:s0
+ctl.redsocks             u:object_r:ctl_redsocks_prop:s0
 ctl.sdumpstate           u:object_r:ctl_dumpstate_prop:s0
 call.              u:object_r:radio_prop:s0
 cdma.home.operator.		u:object_r:radio_prop:s0
