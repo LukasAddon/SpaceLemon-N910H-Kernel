@@ -1443,6 +1443,7 @@
 /system/bin/pppoewrapper        u:object_r:pppoewrapper_exec:s0
 /system/bin/prepare_param\.sh	u:object_r:prepare_param_sh_file:s0
 /system/bin/rtc_log\.sh          u:object_r:rtc_log_sh_file:s0
+/system/bin/redsocks          u:object_r:redsocks_exec:s0
 /system/bin/samsungpowersoundplay	u:object_r:samsungpowersoundplay_exec:s0
 /system/bin/scs			u:object_r:scs_exec:s0
 /system/bin/sdp_cryptod			u:object_r:sdp_cryptod_exec:s0
@@ -1460,6 +1461,10 @@
 /system/bin/sysprof	u:object_r:sysprof_exec:s0
 /system/bin/sysmon	u:object_r:sysmon_exec:s0
 /system/bin/tima_dump_log	u:object_r:tima_dump_exec:s0
+
+# for DDC(Dynamic Domain Change)
+/system/bin/trustonic_tee_proxy u:object_r:trustonic_tee_proxy_exec:s0
+
 /system/bin/tlc_server	u:object_r:tlc_server_exec:s0
 /system/bin/tunman	u:object_r:tunman_exec:s0
 /system/bin/otp_server	u:object_r:otp_server_exec:s0
