@@ -1,7 +1,7 @@
 /*
  *
  * Automatically generated file; DO NOT EDIT.
- * Linux/arm 3.10.9 Kernel Configuration
+ * Linux/arm 3.10.13 Kernel Configuration
  *
  */
 #define CONFIG_RING_BUFFER 1
@@ -897,7 +897,7 @@
 #define CONFIG_GENERIC_ACL 1
 #define CONFIG_DEBUG_KERNEL 1
 #define CONFIG_COMPAT_BRK 1
-#define CONFIG_LOCALVERSION "-SpaceLemon-1.2.4-Battery-Extended-"
+#define CONFIG_LOCALVERSION "-SpaceLemon-1.3.4-Battery-Extended-"
 #define CONFIG_CRYPTO 1
 #define CONFIG_SCHED_DEBUG 1
 #define CONFIG_NET_VENDOR_BROCADE 1
