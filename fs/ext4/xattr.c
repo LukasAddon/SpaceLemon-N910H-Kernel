@@ -1350,8 +1350,8 @@ retry:
 				    s_min_extra_isize) {
 					tried_min_extra_isize++;
 					new_extra_isize = s_min_extra_isize;
-					kfree(is);
-					kfree(bs);
+					kfree(is); is = NULL;
+					kfree(bs); bs = NULL;
 					brelse(bh);
 					goto retry;
 				}
