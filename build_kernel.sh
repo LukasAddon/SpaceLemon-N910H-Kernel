@@ -10,7 +10,7 @@ make clean
 echo "make config"
 make trelte_00_defconfig
 echo "build kernel"
-make -j8
+make -j2
 
 cp -f arch/arm/boot/zImage build_kernel/AIK-Linux/split_img/boot.img-zImage 
 
