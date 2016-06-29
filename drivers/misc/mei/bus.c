@@ -295,13 +295,10 @@ int __mei_cl_recv(struct mei_cl *cl, u8 *buf, size_t length)
 
 	if (cl->reading_state != MEI_READ_COMPLETE &&
 	    !waitqueue_active(&cl->rx_wait)) {
-
 		mutex_unlock(&dev->device_lock);
 
 		if (wait_event_interruptible(cl->rx_wait,
-				cl->reading_state == MEI_READ_COMPLETE  ||
-				mei_cl_is_transitioning(cl))) {
-
+				(MEI_READ_COMPLETE == cl->reading_state))) {
 			if (signal_pending(current))
 				return -EINTR;
 			return -ERESTARTSYS;

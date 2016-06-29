@@ -166,15 +166,14 @@ static int dummy_dec_opt_array(struct xdr_stream *xdr,
 	return 0;
 }
 
-static int get_host_u32(struct xdr_stream *xdr, u32 *res)
+static int get_s32(void **p, void *max, s32 *res)
 {
-	__be32 *p;
-
-	p = xdr_inline_decode(xdr, 4);
-	if (!p)
+	void *base = *p;
+	void *next = (void *)((char *)base + sizeof(s32));
+	if (unlikely(next > max || next < base))
 		return -EINVAL;
-	/* Contents of linux creds are all host-endian: */
-	memcpy(res, p, sizeof(u32));
+	memcpy(res, base, sizeof(s32));
+	*p = next;
 	return 0;
 }
 
@@ -183,9 +182,9 @@ static int gssx_dec_linux_creds(struct xdr_stream *xdr,
 {
 	u32 length;
 	__be32 *p;
-	u32 tmp;
-	u32 N;
-	int i, err;
+	void *q, *end;
+	s32 tmp;
+	int N, i, err;
 
 	p = xdr_inline_decode(xdr, 4);
 	if (unlikely(p == NULL))
@@ -193,28 +192,33 @@ static int gssx_dec_linux_creds(struct xdr_stream *xdr,
 
 	length = be32_to_cpup(p);
 
-	if (length > (3 + NGROUPS_MAX) * sizeof(u32))
+	/* FIXME: we do not want to use the scratch buffer for this one
+	 * may need to use functions that allows us to access an io vector
+	 * directly */
+	p = xdr_inline_decode(xdr, length);
+	if (unlikely(p == NULL))
 		return -ENOSPC;
 
+	q = p;
+	end = q + length;
+
 	/* uid */
-	err = get_host_u32(xdr, &tmp);
+	err = get_s32(&q, end, &tmp);
 	if (err)
 		return err;
 	creds->cr_uid = make_kuid(&init_user_ns, tmp);
 
 	/* gid */
-	err = get_host_u32(xdr, &tmp);
+	err = get_s32(&q, end, &tmp);
 	if (err)
 		return err;
 	creds->cr_gid = make_kgid(&init_user_ns, tmp);
 
 	/* number of additional gid's */
-	err = get_host_u32(xdr, &tmp);
+	err = get_s32(&q, end, &tmp);
 	if (err)
 		return err;
 	N = tmp;
-	if ((3 + N) * sizeof(u32) != length)
-		return -EINVAL;
 	creds->cr_group_info = groups_alloc(N);
 	if (creds->cr_group_info == NULL)
 		return -ENOMEM;
@@ -222,7 +226,7 @@ static int gssx_dec_linux_creds(struct xdr_stream *xdr,
 	/* gid's */
 	for (i = 0; i < N; i++) {
 		kgid_t kgid;
-		err = get_host_u32(xdr, &tmp);
+		err = get_s32(&q, end, &tmp);
 		if (err)
 			goto out_free_groups;
 		err = -EINVAL;
@@ -780,9 +784,6 @@ void gssx_enc_accept_sec_context(struct rpc_rqst *req,
 	/* arg->options */
 	err = dummy_enc_opt_array(xdr, &arg->options);
 
-	xdr_inline_pages(&req->rq_rcv_buf,
-		PAGE_SIZE/2 /* pretty arbitrary */,
-		arg->pages, 0 /* page base */, arg->npages * PAGE_SIZE);
 done:
 	if (err)
 		dprintk("RPC:       gssx_enc_accept_sec_context: %d\n", err);
