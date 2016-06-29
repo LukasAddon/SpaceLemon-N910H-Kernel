@@ -668,12 +668,6 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
 			bi->bi_io_vec[0].bv_len = STRIPE_SIZE;
 			bi->bi_io_vec[0].bv_offset = 0;
 			bi->bi_size = STRIPE_SIZE;
-			/*
-			 * If this is discard request, set bi_vcnt 0. We don't
-			 * want to confuse SCSI because SCSI will replace payload
-			 */
-			if (rw & REQ_DISCARD)
-				bi->bi_vcnt = 0;
 			if (rrdev)
 				set_bit(R5_DOUBLE_LOCKED, &sh->dev[i].flags);
 
@@ -712,12 +706,6 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
 			rbi->bi_io_vec[0].bv_len = STRIPE_SIZE;
 			rbi->bi_io_vec[0].bv_offset = 0;
 			rbi->bi_size = STRIPE_SIZE;
-			/*
-			 * If this is discard request, set bi_vcnt 0. We don't
-			 * want to confuse SCSI because SCSI will replace payload
-			 */
-			if (rw & REQ_DISCARD)
-				rbi->bi_vcnt = 0;
 			if (conf->mddev->gendisk)
 				trace_block_bio_remap(bdev_get_queue(rbi->bi_bdev),
 						      rbi, disk_devt(conf->mddev->gendisk),
@@ -2812,14 +2800,6 @@ static void handle_stripe_clean_event(struct r5conf *conf,
 		}
 		/* now that discard is done we can proceed with any sync */
 		clear_bit(STRIPE_DISCARD, &sh->state);
-		/*
-		 * SCSI discard will change some bio fields and the stripe has
-		 * no updated data, so remove it from hash list and the stripe
-		 * will be reinitialized
-		 */
-		spin_lock_irq(&conf->device_lock);
-		remove_hash(sh);
-		spin_unlock_irq(&conf->device_lock);
 		if (test_bit(STRIPE_SYNC_REQUESTED, &sh->state))
 			set_bit(STRIPE_HANDLE, &sh->state);
 
