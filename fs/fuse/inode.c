@@ -201,8 +201,7 @@ void fuse_change_attributes(struct inode *inode, struct fuse_attr *attr,
 	struct timespec old_mtime;
 
 	spin_lock(&fc->lock);
-	if ((attr_version != 0 && fi->attr_version > attr_version) ||
-	    test_bit(FUSE_I_SIZE_UNSTABLE, &fi->state)) {
+	if (attr_version != 0 && fi->attr_version > attr_version) {
 		spin_unlock(&fc->lock);
 		return;
 	}

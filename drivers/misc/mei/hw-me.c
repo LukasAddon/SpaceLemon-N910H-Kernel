@@ -176,14 +176,16 @@ static void mei_me_hw_reset(struct mei_device *dev, bool intr_enable)
 	struct mei_me_hw *hw = to_me_hw(dev);
 	u32 hcsr = mei_hcsr_read(hw);
 
-	hcsr |= H_RST | H_IG | H_IS;
+	dev_dbg(&dev->pdev->dev, "before reset HCSR = 0x%08x.\n", hcsr);
+
+	hcsr |= (H_RST | H_IG);
 
 	if (intr_enable)
 		hcsr |= H_IE;
 	else
-		hcsr &= ~H_IE;
+		hcsr |= ~H_IE;
 
-	mei_me_reg_write(hw, H_CSR, hcsr);
+	mei_hcsr_set(hw, hcsr);
 
 	if (dev->dev_state == MEI_DEV_POWER_DOWN)
 		mei_me_hw_reset_release(dev);
