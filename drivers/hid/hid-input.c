@@ -340,7 +340,7 @@ static int hidinput_get_battery_property(struct power_supply *psy,
 {
 	struct hid_device *dev = container_of(psy, struct hid_device, battery);
 	int ret = 0;
-	__u8 *buf;
+	__u8 buf[2] = {};
 
 	switch (prop) {
 	case POWER_SUPPLY_PROP_PRESENT:
@@ -349,20 +349,13 @@ static int hidinput_get_battery_property(struct power_supply *psy,
 		break;
 
 	case POWER_SUPPLY_PROP_CAPACITY:
-
-		buf = kmalloc(2 * sizeof(__u8), GFP_KERNEL);
-		if (!buf) {
-			ret = -ENOMEM;
-			break;
-		}
 		ret = dev->hid_get_raw_report(dev, dev->battery_report_id,
-					      buf, 2,
+					      buf, sizeof(buf),
 					      dev->battery_report_type);
 
 		if (ret != 2) {
 			if (ret >= 0)
 				ret = -EINVAL;
-			kfree(buf);
 			break;
 		}
 
@@ -371,7 +364,6 @@ static int hidinput_get_battery_property(struct power_supply *psy,
 		    buf[1] <= dev->battery_max)
 			val->intval = (100 * (buf[1] - dev->battery_min)) /
 				(dev->battery_max - dev->battery_min);
-		kfree(buf);
 		break;
 
 	case POWER_SUPPLY_PROP_MODEL_NAME:
