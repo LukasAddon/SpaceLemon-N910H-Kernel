@@ -175,10 +175,9 @@ static void start_transaction(struct acpi_ec *ec)
 static void advance_transaction(struct acpi_ec *ec, u8 status)
 {
 	unsigned long flags;
-	struct transaction *t;
+	struct transaction *t = ec->curr;
 
 	spin_lock_irqsave(&ec->lock, flags);
-	t = ec->curr;
 	if (!t)
 		goto unlock;
 	if (t->wlen > t->wi) {

@@ -846,7 +846,7 @@ acpi_video_init_brightness(struct acpi_video_device *device)
 		for (i = 2; i < br->count; i++)
 			if (level_old == br->levels[i])
 				break;
-		if (i == br->count || !level)
+		if (i == br->count)
 			level = max_level;
 	}
 
