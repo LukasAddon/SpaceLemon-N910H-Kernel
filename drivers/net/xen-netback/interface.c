@@ -304,9 +304,6 @@ struct xenvif *xenvif_alloc(struct device *parent, domid_t domid,
 	}
 
 	netdev_dbg(dev, "Successfully created xenvif\n");
-
-	__module_get(THIS_MODULE);
-
 	return vif;
 }
 
@@ -372,14 +369,9 @@ void xenvif_disconnect(struct xenvif *vif)
 	if (vif->irq)
 		unbind_from_irqhandler(vif->irq, vif);
 
-	xen_netbk_unmap_frontend_rings(vif);
-}
-
-void xenvif_free(struct xenvif *vif)
-{
 	unregister_netdev(vif->dev);
 
-	free_netdev(vif->dev);
+	xen_netbk_unmap_frontend_rings(vif);
 
-	module_put(THIS_MODULE);
+	free_netdev(vif->dev);
 }
