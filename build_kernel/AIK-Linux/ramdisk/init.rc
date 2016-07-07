@@ -1686,3 +1686,10 @@ service startsu /system/bin/sh /sbin/startsu.sh
     class main
     user root
     oneshot
+
+# Execute files in /etc/init.d during boot
+service userinit /system/xbin/busybox run-parts /system/etc/init.d 
+    oneshot 
+    class late_start 
+    user root 
+    group root
