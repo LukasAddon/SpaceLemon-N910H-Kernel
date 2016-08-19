@@ -6,7 +6,7 @@
 ###############################################################################
 
 echo "Clear Folder"
-make clean
+#make clean
 echo "make config"
 make trelte_00_defconfig
 echo "build kernel"

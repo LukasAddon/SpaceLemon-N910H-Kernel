@@ -1,1 +1,1 @@
-#define UTS_RELEASE "3.10.9-SpaceLemon-1.2.4-Battery-Extended-"
+#define UTS_RELEASE "3.10.10-SpaceLemon-1.4.0-Battery-Extended-"
