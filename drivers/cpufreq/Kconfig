@@ -111,6 +111,23 @@ config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
+
+config CPU_FREQ_DEFAULT_GOV_INTEREXTREM
+	bool "interextrem"
+	select CPU_FREQ_GOV_INTEREXTREM
+	help
+	  Use the CPUFreq governor 'interextrem' as default. This
+	  is a tweaked 'interactive' CPUFreq governor, This allows
+	  you to get a full dynamic cpu frequency capable system by simply
+	  loading your cpufreq low-level hardware driver, using the
+	  'interactive' governor for latency-sensitive workloads.
+
+config CPU_FREQ_DEFAULT_GOV_LIONHEART
+            bool "lionheart"
+            select CPU_FREQ_GOV_LIONHEART
+            help
+              Use the CPUFreq governor 'lionheart' as default.
+
 config CPU_FREQ_DEFAULT_GOV_BIOSHOCK
 	bool "BioShock"
 	select CPU_FREQ_GOV_BIOSHOCK
@@ -210,6 +227,30 @@ config CPU_FREQ_GOV_CONSERVATIVE
 	  its optimisation for better suitability in a battery powered
 	  environment.  The frequency is gracefully increased and decreased
 	  rather than jumping to 100% when speed is required.
+
+config CPU_FREQ_GOV_LIONHEART
+           tristate "'lionheart' cpufreq governor"
+           depends on CPU_FREQ
+           help
+             lionheart' - a "smart" optimized governor!
+             If in doubt, say N.
+
+config CPU_FREQ_GOV_INTEREXTREM
+	tristate "'interextrem' cpufreq policy governor"
+	help
+	  'interextrem' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+
+	  This governor attempts to reduce the latency of clock
+	  increases so that the system is more responsive to
+	  interactive workloads.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_interextrem.
+
+	  For details, take a look at linux/Documentation/cpu-freq.
+
+	  If in doubt, say N.
 
 config CPU_FREQ_GOV_BIOSHOCK
 	tristate "'bioshock' cpufreq bioshock"
