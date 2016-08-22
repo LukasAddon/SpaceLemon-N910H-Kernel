@@ -16,6 +16,10 @@ import /init.container.rc
 import /init.rilcommon.rc
 
 on early-init
+    # Ensure some kernel boot defaults are set
+    write /sys/devices/14ac0000.mali/max_clock 600
+    write /sys/devices/14ac0000.mali/min_clock 160
+
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
@@ -136,8 +140,7 @@ on init
     write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
     write /proc/sys/kernel/sched_compat_yield 1
     write /proc/sys/kernel/sched_child_runs_first 0
-
-    write /proc/sys/kernel/randomize_va_space 2
+    write /proc/sys/kernel/randomize_va_space 0
     write /proc/sys/kernel/kptr_restrict 2
     write /proc/sys/vm/mmap_min_addr 32768
     write /proc/sys/net/ipv4/ping_group_range "0 2147483647"
@@ -294,7 +297,7 @@ on post-fs
     start logd
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
-    # Mount shared so changes propagate into child namespaces
+    # mount shared so changes propagate into child namespaces
     mount rootfs rootfs / shared rec
     # Mount default storage into root namespace
     mount none /mnt/runtime/default /storage slave bind rec
@@ -1693,3 +1696,9 @@ service userinit /system/xbin/busybox run-parts /system/etc/init.d
     class late_start 
     user root 
     group root
+
+# Call Post-init script
+service post-init /sbin/post-init.sh
+    class core
+    user root
+    oneshot
