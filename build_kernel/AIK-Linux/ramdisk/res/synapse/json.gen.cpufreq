@@ -1,0 +1,129 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:CPU FREQ,
+    elements:[
+        { STitleBar:{
+                title:"CPU Frequency Scaling"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+                title:"Exynos A57(BIG) Core Control Interface"
+        }},
+	{ SSpacer:{
+		height:2
+	}},
+        { SOptionList:{
+                title:"MAX A57(BIG) CPU Cores",
+                description:" Maximum number of online BIG A57 CPU Cores when screen is on. A53 Cores always online!",
+                default:`cat /sys/power/cpucore_max_num_limit`,
+                action:"generic /sys/power/cpucore_max_num_limit",
+		values:{
+                        "5":"1 A57 Core Online",
+                        "6":"2 A57 Cores Online",
+                        "7":"3 A57 Cores Online",
+                        "8":"4(All) A57 Cores Online - Default"
+                }
+        }},
+	{ SSpacer:{
+		height:2
+	}},
+        { STitleBar:{
+                title:"A57 big Cores Freq Control"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+                title:"A57 big Cores live frequency",
+		refresh:500,
+		action:"live LiveCPUFrequency_big"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A57 big Cores MAX frequency",
+		description:" Set the maximum frequency the CPU big Cores scale up to. Default is 1900 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu4/cpufreq/ren_max_freq`,
+		action:"generic /sys/devices/system/cpu/cpu4/cpufreq/ren_max_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A57 big Cores MIN frequency",
+		description:" Set the maximum frequency the CPU big Cores scale down to. Default is 700 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq`,
+		action:"generic /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+        { STitleBar:{
+                title:"A53 LITTLE Cores Freq Control"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+                title:"A53 LITTLE Cores live frequency",
+		refresh:500,
+		action:"live LiveCPUFrequency_LITTLE"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A53 LITTLE Cores MAX frequency",
+		description:" Set the maximum frequency the CPU LITTLE Cores scale up to. Default is 1300 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu0/cpufreq/ren_max_freq`,
+		action:"generic /sys/devices/system/cpu/cpu0/cpufreq/ren_max_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A53 LITTLE Cores MIN frequency",
+		description:" Set the minimum frequency the CPU LITTLE Cores scale down to. Default is 400 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq`,
+		action:"generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+    ]
+}
+CTAG

@@ -4031,6 +4031,7 @@
 0x00000000	scsi_get_device_flags_keyed	vmlinux	EXPORT_SYMBOL
 0x00000000	device_show_int	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	kbase_va_alloc	vmlinux	EXPORT_SYMBOL
+0x00000000	erandom_get_random_bytes	vmlinux	EXPORT_SYMBOL
 0x00000000	uart_handle_cts_change	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	uart_handle_dcd_change	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	cfg80211_chandef_compatible	vmlinux	EXPORT_SYMBOL
