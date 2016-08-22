@@ -1,0 +1,210 @@
+# By UpInTheAir for SkyHigh kernels
+# performance, battery & turbo values by g.lewarne @ XDA
+
+BB=/sbin/busybox;
+
+if [ "$($BB mount | grep rootfs | cut -c 26-27 | grep -c ro)" -eq "1" ]; then
+	$BB mount -o remount,rw /;
+fi;
+
+case $1 in
+interextrem_turbo)
+  P=/res/synapse/SkyHigh/tuning_interextrem_turbo
+  if [ ! -z $2 ]; then
+  if [ $2 == Disabled ]; then
+    echo 0 > $P
+	echo "0" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/enforced_mode;
+	echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/enforced_mode;
+	echo "400000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/single_kfc_min_freq;
+	echo "400000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/single_kfc_min_freq;
+  elif [ $2 == Enabled ]; then
+    echo 1 > $P
+	echo "400000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/single_kfc_min_freq;
+	echo "700000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/single_kfc_min_freq;
+	echo "1" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/enforced_mode;
+	echo "1" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/enforced_mode;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Disabled
+  elif [ $copy == 1 ]; then
+    echo Enabled
+  fi
+  ;;
+interextrem_b)
+  P=/res/synapse/SkyHigh/tuning_interextrem_b
+  if [ ! -z $2 ]; then
+  if [ $2 == Default ]; then
+    echo 0 > $P
+	echo "20000 1200000:39000 1500000:29000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/above_hispeed_delay;
+	echo "40000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/boostpulse_duration;
+	echo "90" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/go_hispeed_load;
+	echo "1000000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/io_is_busy;
+	echo "30000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/min_sample_time;
+	echo "80 1200000:90 1500000:95" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/target_loads;
+	echo "7000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_rate;
+	echo "80000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_slack;
+	echo "19000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "40000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "85" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "900000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "30000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "80 1100000:90 1300000:95" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "7000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "80000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+	echo "8" > /sys/power/cpucore_max_num_limit;
+	echo "600" > /sys/devices/14ac0000.mali/max_clock;
+  elif [ $2 == Performance ]; then
+    echo 1 > $P
+	echo "19000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/above_hispeed_delay;
+	echo "45000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/boostpulse_duration;
+	echo "80" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/go_hispeed_load;
+	echo "1200000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/io_is_busy;
+	echo "60 1500000:70" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/target_loads;
+	echo "35000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/min_sample_time;
+	echo "15000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_rate;
+	echo "15000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_slack;
+	echo "12000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "45000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "80" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "1000000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "70" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "35000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "20000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "20000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+	echo "8" > /sys/power/cpucore_max_num_limit;
+	echo "700" > /sys/devices/14ac0000.mali/max_clock;
+  elif [ $2 == Battery ]; then
+    echo 2 > $P
+	echo "70000 1300000:55000 1700000:55000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/above_hispeed_delay;
+	echo "25000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/boostpulse_duration;
+	echo "95" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/go_hispeed_load;
+	echo "900000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/hispeed_freq;
+	echo "0" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/io_is_busy;
+	echo "90 1500000:99" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/target_loads;
+	echo "15000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/min_sample_time;
+	echo "15000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_rate;
+	echo "15000" > /sys/devices/system/cpu/cpu4/cpufreq/interextrem/timer_slack;
+	echo "37000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "25000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "90" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "900000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "95" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+	echo "6" > /sys/power/cpucore_max_num_limit;
+	echo "420" > /sys/devices/14ac0000.mali/max_clock;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Default
+  elif [ $copy == 1 ]; then
+    echo Performance
+  elif [ $copy == 2 ]; then
+    echo Battery
+  fi
+  ;;
+interextrem_L)
+  P=/res/synapse/SkyHigh/tuning_interextrem_L
+  if [ ! -z $2 ]; then
+  if [ $2 == Default ]; then
+    echo 0 > $P
+	echo "19000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "40000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "85" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "900000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "30000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "80 1100000:90 1300000:95" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "7000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "80000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+  elif [ $2 == Performance ]; then
+    echo 1 > $P
+	echo "12000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "45000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "80" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "1000000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "1" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "70" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "35000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "20000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "20000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+  elif [ $2 == Battery ]; then
+    echo 2 > $P
+	echo "37000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/above_hispeed_delay;
+	echo "25000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/boostpulse_duration;
+	echo "90" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/go_hispeed_load;
+	echo "900000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/hispeed_freq;
+	echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/io_is_busy;
+	echo "95" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/target_loads;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/min_sample_time;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_rate;
+	echo "15000" > /sys/devices/system/cpu/cpu0/cpufreq/interextrem/timer_slack;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Default
+  elif [ $copy == 1 ]; then
+    echo Performance
+  elif [ $copy == 2 ]; then
+    echo Battery
+  fi
+  ;;
+touchboost)
+  P=/res/synapse/SkyHigh/tuning_touchboost
+  if [ ! -z $2 ]; then
+  if [ $2 == 0 ]; then
+    echo 0 > $P
+	echo "0" > /sys/class/input_booster/touch/level;
+	echo "0" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 1 ]; then
+    echo 1 > $P
+	echo "1" > /sys/class/input_booster/touch/level;
+	echo "1" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 2 ]; then
+    echo 2 > $P
+	echo "2" > /sys/class/input_booster/touch/level;
+	echo "2" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 3 ]; then
+    echo 3 > $P
+	echo "3" > /sys/class/input_booster/touch/level;
+	echo "3" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 4 ]; then
+    echo 4 > $P
+	echo "4" > /sys/class/input_booster/touch/level;
+	echo "4" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 5 ]; then
+    echo 5 > $P
+	echo "5" > /sys/class/input_booster/touch/level;
+	echo "5" > /sys/class/input_booster/pen/level;
+  elif [ $2 == 9 ]; then
+    echo 6 > $P
+	echo "9" > /sys/class/input_booster/touch/level;
+	echo "9" > /sys/class/input_booster/pen/level;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo 0
+  elif [ $copy == 1 ]; then
+    echo 1
+  elif [ $copy == 2 ]; then
+    echo 2
+  elif [ $copy == 3 ]; then
+    echo 3
+  elif [ $copy == 4 ]; then
+    echo 4
+  elif [ $copy == 5 ]; then
+    echo 5
+  elif [ $copy == 6 ]; then
+    echo 9
+  fi
+  ;;
+esac
+
+$BB mount -t rootfs -o remount,ro rootfs;

@@ -1,0 +1,100 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:NET SYSCTL,
+    elements:[
+	{ STitleBar:{
+		title:"CORE"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/net/core",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STitleBar:{
+		title:"IPV4"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/net/ipv4",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+		exclude: [
+			"conf",
+			"icmp_echo_ignore_all",
+			"neigh",
+			"netfilter",
+			"route",
+			"tcp_allowed_congestion_control",
+			"tcp_available_congestion_control",
+			"tcp_congestion_control",
+			"tcp_delack_seg",
+			"tcp_fastopen_key",
+			"tcp_fin_timeout",
+			"tcp_keepalive_intvl",
+			"tcp_keepalive_probes",
+			"tcp_keepalive_time",
+			"tcp_max_syn_backlog",
+			"tcp_max_tw_buckets",
+			"tcp_no_metrics_save",
+			"tcp_rmem",
+			"tcp_syn_retries",
+			"tcp_synack_retries",
+			"tcp_use_userconfig",
+			"tcp_wmem"
+		]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STitleBar:{
+		title:"IPV6"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/net/ipv6",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+		exclude: [
+			"conf",
+			"icmp",
+			"neigh",
+			"netfilter",
+			"route"
+		]
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/net/ipv6conf/all",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+	}},
+    ]
+}
+CTAG
