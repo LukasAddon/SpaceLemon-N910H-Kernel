@@ -1,0 +1,14 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+
+{
+    sections: [
+                `. /res/synapse/json.gen.cpustats`,
+                `. /res/synapse/json.gen.cpufreq`,
+		`. /res/synapse/json.gen.cpuvolt`,
+		`. /res/synapse/json.gen.cpugov`,
+    ]
+}
+CTAG
+

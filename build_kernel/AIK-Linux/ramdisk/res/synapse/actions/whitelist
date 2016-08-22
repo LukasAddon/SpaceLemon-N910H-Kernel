@@ -1,0 +1,58 @@
+if [ -d /data/data/com.af.synapse ]; then
+  SYNAPSE_SD_DIR=/sdcard/Synapse;
+  SYNAPSE_LMK_DIR=$SYNAPSE_SD_DIR/lmk_whitelists;
+
+  [ ! -d "$SYNAPSE_LMK_DIR" ] && mkdir -p "$SYNAPSE_LMK_DIR";
+  [ ! -f "$SYNAPSE_LMK_DIR/.sys_processes" ] && touch "$SYNAPSE_LMK_DIR/.sys_processes";
+  [ ! -f "$SYNAPSE_LMK_DIR/.user_processes" ] && touch "$SYNAPSE_LMK_DIR/.user_processes";
+fi;
+
+reset_uci() {
+  /sbin/uci reset;
+  /sbin/uci;
+}
+
+if [ $2 == "sys" ]; then
+  sysfs=/sys/module/lowmemorykiller/parameters/donotkill_sysproc_names;
+  sd=$SYNAPSE_LMK_DIR/.sys_processes;
+elif [ $2 == "user" ]; then
+  sysfs=/sys/module/lowmemorykiller/parameters/donotkill_proc_names;
+  sd=$SYNAPSE_LMK_DIR/.user_processes;
+fi;
+
+if [ ! -z "`cat $sysfs`" -a -z "`cat $sd`" ]; then
+  now=`cat $sysfs`;
+  for proc in ${now//,/ }; do
+    echo $proc >> $sd;
+    reset_uci;
+  done;
+fi;
+
+case $1 in
+  list)
+    list=`cat $sd`;
+    if [ ! -z "$list" ]; then
+      num=0;
+      for proc in $list; do
+        num=$(($num+1));
+        if [ "$num" == 1 ]; then
+          array="$proc";
+        else
+          array="$array $proc";
+        fi;
+      done;
+      echo "${array// /,}" > $sysfs;
+      echo "$list";
+    else
+      echo "None";
+    fi;
+  ;;
+  set)
+    list=`cat $sd`;
+    if [ ! -z "$list" ]; then
+      echo "$list" | head -n 1;
+    else
+      echo "None";
+    fi;
+  ;;
+esac;
