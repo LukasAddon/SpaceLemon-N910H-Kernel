@@ -58,6 +58,21 @@ ssize_t gpu_min_clock_show(struct device *dev, struct device_attribute *attr, ch
 	return sprintf(buf, "%s", output_str);
 }
 
+ssize_t gpu_min_clock_write(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+	if (open_file_and_write_buffer(GPU_FREQ_TABLE, buf, strlen(buf)) == 0)
+	{
+		pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+		return 0;
+	}
+	
+	pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+
+	/* Return success status. */
+	return count;
+}
+
 ssize_t gpu_max_clock_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	char   	input_buffer[INPUT_BUFFER_SIZE_256];
@@ -90,6 +105,21 @@ ssize_t gpu_max_clock_show(struct device *dev, struct device_attribute *attr, ch
 	/* ******************* */
 
 	return sprintf(buf, "%s\n", output_str);
+}
+
+ssize_t gpu_max_clock_write(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+	if (open_file_and_write_buffer(GPU_FREQ_TABLE, buf, strlen(buf)) == 0)
+	{
+		pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+		return 0;
+	}
+	
+	pr_info("SRUK ----------- %s -- %d", __FUNCTION__, __LINE__);
+
+	/* Return success status. */
+	return count;
 }
 
 ssize_t gpu_busy_show(struct device *dev, struct device_attribute *attr, char *buf)
