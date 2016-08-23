@@ -8,6 +8,12 @@ cat << CTAG
                 `. /res/synapse/json.gen.cpufreq`,
 		`. /res/synapse/json.gen.cpuvolt`,
 		`. /res/synapse/json.gen.cpugov`,
+		`. /res/synapse/json.gen.devfreq`,
+                `. /res/synapse/json.gen.gpu`,
+		`. /res/synapse/json.gen.tmu`,
+		`. /res/synapse/json.gen.boost`,
+		`. /res/synapse/json.gen.advanced`,
+		`. /res/synapse/json.gen.wakelocks`,
     ]
 }
 CTAG
