@@ -6,7 +6,7 @@
 ###############################################################################
 
 echo "Clear Folder"
-#make clean
+make clean
 echo "make config"
 make trelte_00_defconfig
 echo "build kernel"
@@ -24,5 +24,3 @@ cd build_kernel/out/
 
 zip -r SpaceLemon.zip ./
 
-echo "Clear Folder after build kernel"
-make clean
