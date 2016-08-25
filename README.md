@@ -8,7 +8,7 @@
 
 		From android git server , codesourcery and etc ..
 
-		 - arm-eabi-4.8
+		 - arm-eabi-5.2
 
 		
 
