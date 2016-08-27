@@ -2,7 +2,7 @@ BB=/sbin/busybox;
 
 case $1 in
 gpu)
-  echo Current Clock: $(($(cat /sys/devices/platform/gpusysfs/gpu_clock))) MHz
+  echo Current Clock: $(($(cat /sys/devices/14ac0000.mali/clock))) MHz
   ;;
 gpu_load)
   echo Load: $(($(cat /sys/class/misc/mali0/device/utilization))) %
