@@ -162,6 +162,14 @@ on boot
 # CS socket
     mkdir /dev/socket/cs_socket 0770 system system
 
+#GPU
+#unify sysfs node for GPU
+    chmod 0444 /sys/devices/platform/gpusysfs/gpu_clock
+    chmod 0644 /sys/devices/platform/gpusysfs/gpu_governor
+    chmod 0644 /sys/devices/platform/gpusysfs/fps
+    chown system shell /sys/devices/platform/gpusysfs/gpu_governor
+    chown system shell /sys/devices/platform/gpusysfs/fps
+
     # PMS DVFS
     chown radio system /sys/power/cpufreq_table
     chown radio system /sys/power/cpufreq_max_limit

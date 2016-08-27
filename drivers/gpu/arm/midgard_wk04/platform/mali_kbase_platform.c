@@ -173,27 +173,27 @@ static kbase_attribute config_attributes[] = {
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_RESET_TIMEOUT_MS,
-		50 /* 50ms before cancelling stuck jobs */
+		16000 /* 16sec before cancelling stuck jobs */
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_SOFT_STOP_TICKS,
-		16 /* 0.8sec */
+		110 /* 11sec */
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_HARD_STOP_TICKS_SS,
-		17 /* 0.85sec */
+		120 /* 12sec */
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_RESET_TICKS_SS,
-		18 /* 0.9sec */
+		130 /*13sec */
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_HARD_STOP_TICKS_NSS,
-		19 /* 0.95sec */
+		140 /* 14sec */
 	},
 	{
 		KBASE_CONFIG_ATTR_JS_RESET_TICKS_NSS,
-		20 /* 1sec */
+		150 /*15sec */
 	},
 	{
 		KBASE_CONFIG_ATTR_CPU_SPEED_FUNC,
