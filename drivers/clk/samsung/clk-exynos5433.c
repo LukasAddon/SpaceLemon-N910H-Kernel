@@ -3214,8 +3214,10 @@ struct samsung_gate_clock exynos5433_gate_clks[] __initdata = {
 
 struct samsung_pll_rate_table pll_g3d_rate_table[] = {
 	/* rate		p	m	s	k */
+	{ 800000000U,	6,	400,	1,	0},
 	{ 730000000U,	6,	365,	1,	0},
 	{ 700000000U,	6,	350,	1,	0},
+	{ 667000000U,	4,	222,	1,	0},
 	{ 600000000U,	5,	500,	2,	0},
 	{ 550000000U,	6,	550,	2,	0},
 	{ 500000000U,	6,	500,	2,	0},
@@ -3223,6 +3225,7 @@ struct samsung_pll_rate_table pll_g3d_rate_table[] = {
 	{ 350000000U,	6,	350,	2,	0},
 	{ 266000000U,	6,	532,	3,	0},
 	{ 160000000U,	6,	320,	3,	0},
+	{ 100000000U,	6,	400,	4,	0},
 };
 
 struct samsung_pll_rate_table pll_mem0_rate_table[] = {
