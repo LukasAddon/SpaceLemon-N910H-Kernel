@@ -106,7 +106,7 @@ cd ..;
 echo " ";
 echo "Building image...";
 echo " ";
-bin/$arch/mkbootimg --kernel "split_img/$kernel" --ramdisk "$ramdisk" $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset $tagsoff $dtb -o image-new.img;
+bin/$arch/mkbootimg --kernel "split_img/$kernel"  --ramdisk "$ramdisk" $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset $tagsoff $dtb -o image-new.img;
 if [ ! $? -eq "0" ]; then
   abort;
   exit 1;
