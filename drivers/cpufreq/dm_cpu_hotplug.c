@@ -918,7 +918,7 @@ static DECLARE_WORK(hotplug_in_work, event_hotplug_in_work);
 
 void event_hotplug_in(void)
 {
-	if (hotplug_wq && !in_suspend_prepared)
+    if (hotplug_wq && lcd_is_on && !in_suspend_prepared)
 		queue_work(hotplug_wq, &hotplug_in_work);
 }
 #endif

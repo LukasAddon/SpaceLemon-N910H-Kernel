@@ -30,7 +30,7 @@
 #define USE_HMP_BOOST
 #endif
 
-#define BOOSTER_EVENT_BUFFER_SIZE	10
+#define BOOSTER_EVENT_BUFFER_SIZE	15
 
 /* Feature define */
 #define BOOSTER_SYSFS
