@@ -54,7 +54,7 @@ ui_print(" ");
 ui_print(" ");
 
 ui_print("#################################");
-ui_print("#         'LemonKernel'         #");
+ui_print("#     'SpaceLemon Kernel V2'    #");
 ui_print("#  FOR SM-N910H GALAXY NOTE 4!  #");
 ui_print("#       ....INSTALLING....      #");
 ui_print("#################################");
@@ -92,9 +92,36 @@ delete_recursive ("/system/priv-app/SPDClient");
 delete_recursive ("/system/app/SwitchKnoxI");
 delete_recursive ("/system/app/SwitchKnoxII");
 delete_recursive ("/system/app/KnoxFolderContainer");
-ui_print("Completed");
 
+set_progress(0.0);
+unmount("/system");
+unmount("/data");
+ui_print(" ");
+ui_print("********************************");
+ui_print("delete synapse");
+ui_print("script by corola@4PDA");
+ui_print("********************************");
+
+ui_print("Preparing Installation...");
+ui_print("Mounting Partitions...");
+run_program("/sbin/busybox", "mount", "/system");
+run_program("/sbin/busybox", "mount", "/data");
+set_progress(0.1);
+ui_print("Wiping old app...");
+package_extract_file("corola/wipe.sh", "/tmp/wipe.sh");
+set_perm(0, 0, 0777, "/tmp/wipe.sh");
+run_program("/tmp/wipe.sh");
+
+set_progress(0.4);
+
+ui_print("Install...");
+package_extract_dir("system", "/system");
+set_progress(0.8);
+unmount("/system");
+unmount("/data");
+set_progress(0.9);
 ui_print("#################################");
 ui_print("#          ALL DONE!            #");
 ui_print("#    NOW REBOOT YOUR DEVICE     #");
 ui_print("#################################");
+set_progress(1.0);
