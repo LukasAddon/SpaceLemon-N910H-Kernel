@@ -16,6 +16,7 @@ echo "build kernel"
 make exynos5433-tre_eur_open_16.dtb
 make ARCH=arm -j4
 
+GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/trelte_00_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
@@ -42,5 +43,5 @@ cp -f build_kernel/AIK-Linux/image-new.img build_kernel/out/boot.img
 
 cd build_kernel/out/
 
-zip -r SpaceLemon.zip ./
+zip -r SpaceLemon_v${GETVER}.zip ./
 
