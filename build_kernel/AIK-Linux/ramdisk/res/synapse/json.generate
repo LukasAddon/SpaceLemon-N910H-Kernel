@@ -12,6 +12,7 @@ cat << CTAG
                 `. /res/synapse/json.gen.gpu`,
 		`. /res/synapse/json.gen.tmu`,
                 `. /res/synapse/json.gen.io`,
+                `. /res/synapse/json.gen.wakelocks`,
 		`. /res/synapse/json.gen.boost`,
 		`. /res/synapse/json.gen.advanced`,
                 `. /res/synapse/json.gen.backup-restore`,
