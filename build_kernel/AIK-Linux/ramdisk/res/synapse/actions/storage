@@ -42,7 +42,8 @@ usb_mode)
 	setprop sys.usb.config mass_storage,adb;
 	setprop persist.sys.usb.config mass_storage,adb;
 	echo "0" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
-	echo "/dev/block/vold/179:32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+        # not work but i leave this old code
+	echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
 	echo "0" > /sys/class/android_usb/android0/enable;
 	echo "04e8" > /sys/class/android_usb/android0/idVendor;
 	echo "685e" > /sys/class/android_usb/android0/idProduct;
@@ -50,12 +51,15 @@ usb_mode)
 	echo "1" > /sys/class/android_usb/android0/enable;
 	start adbd
 	setprop sys.usb.state mass_storage,adb;
+        # remount microsd card after mass storage up. and then all working
+        # usb cable must be connected before use this function
+        echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
   elif [ $2 == CD_ROM ]; then
     echo 4 > $P
 	setprop sys.usb.config mass_storage,adb;
 	setprop persist.sys.usb.config mass_storage,adb;
 	echo "1" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
-	echo "/dev/block/vold/179:32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+	echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
 	echo "0" > /sys/class/android_usb/android0/enable;
 	echo "04e8" > /sys/class/android_usb/android0/idVendor;
 	echo "685e" > /sys/class/android_usb/android0/idProduct;
