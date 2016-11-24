@@ -69,11 +69,11 @@ set_perm_recursive(0, 2000, 0777, 0777, "/system/etc/init.d");
 
 ui_print("Flash Kernel........");
 assert(package_extract_file("boot.img", "/tmp/boot.img"),
-show_progress(0.100000, 70);
+show_progress(0.100000, 20);
 write_raw_image("/tmp/boot.img", "/dev/block/mmcblk0p9"),
-show_progress(0.100000, 90);
+show_progress(0.100000, 40);
 delete("/tmp/boot.img"));
-show_progress(0.100000, 100);
+show_progress(0.100000, 50);
 
 ui_print("Deleting Knox associated files and folders...");
 ui_print("");
@@ -93,7 +93,6 @@ delete_recursive ("/system/app/SwitchKnoxI");
 delete_recursive ("/system/app/SwitchKnoxII");
 delete_recursive ("/system/app/KnoxFolderContainer");
 
-set_progress(0.0);
 unmount("/system");
 unmount("/data");
 ui_print(" ");
@@ -106,13 +105,22 @@ ui_print("Preparing Installation...");
 ui_print("Mounting Partitions...");
 run_program("/sbin/busybox", "mount", "/system");
 run_program("/sbin/busybox", "mount", "/data");
-set_progress(0.1);
+show_progress(0.100000, 60);
 ui_print("Wiping old app...");
 package_extract_file("corola/wipe.sh", "/tmp/wipe.sh");
 set_perm(0, 0, 0777, "/tmp/wipe.sh");
 run_program("/tmp/wipe.sh");
 
-set_progress(0.4);
+
+package_extract_dir("armv7", "/tmp/supersu/armv7/");
+package_extract_dir("common", "/tmp/supersu/common/");
+
+ui_print("Setup Root System...");
+package_extract_file("corola/root.sh", "/tmp/root.sh");
+set_perm(0, 0, 0777, "/tmp/root.sh");
+run_program("/tmp/root.sh","3", "27" ,  "/1.zip" );
+
+show_progress(0.100000, 80);
 
 ui_print("Install...");
 package_extract_dir("system", "/system");
@@ -121,7 +129,7 @@ unmount("/system");
 unmount("/data");
 set_progress(0.9);
 ui_print("#################################");
-ui_print("#          ALL DONE!            #");
-ui_print("#    NOW REBOOT YOUR DEVICE     #");
+ui_print("#       INSTALL COMPLETE!       #");
+ui_print("#         PLEASE REBOOT         #");
 ui_print("#################################");
-set_progress(1.0);
+show_progress(0.100000, 100);
