@@ -18,7 +18,7 @@ import /init.rilcommon.rc
 on early-init
     # Ensure some kernel boot defaults are set
     write /sys/devices/14ac0000.mali/max_clock 700
-    write /sys/devices/14ac0000.mali/min_clock 266
+    #write /sys/devices/14ac0000.mali/min_clock 266
 
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
@@ -140,7 +140,8 @@ on init
     write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
     write /proc/sys/kernel/sched_compat_yield 1
     write /proc/sys/kernel/sched_child_runs_first 0
-    write /proc/sys/kernel/randomize_va_space 0
+
+    write /proc/sys/kernel/randomize_va_space 2
     write /proc/sys/kernel/kptr_restrict 2
     write /proc/sys/vm/mmap_min_addr 32768
     write /proc/sys/net/ipv4/ping_group_range "0 2147483647"
