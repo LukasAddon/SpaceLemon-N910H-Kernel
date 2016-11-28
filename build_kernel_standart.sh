@@ -8,8 +8,9 @@
 DTS=arch/arm/boot/dts
 BK=build_kernel
 
+cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
-#make clean
+make clean
 echo "make config"
 make trelte_00_defconfig
 echo "build kernel"
@@ -43,5 +44,5 @@ cp -f build_kernel/AIK-Linux/image-new.img build_kernel/out/boot.img
 
 cd build_kernel/out/
 
-zip -r SpaceLemon_v${GETVER}.zip ./
+zip -r SpaceLemon_v${GETVER}_standart_battery.zip ./
 
