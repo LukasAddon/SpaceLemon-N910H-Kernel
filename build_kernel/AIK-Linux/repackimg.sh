@@ -11,6 +11,15 @@ cd "$aik";
 chmod -R 755 bin *.sh;
 chmod 644 bin/magic;
 
+mkdir ramdisk/data;
+mkdir ramdisk/dev;
+mkdir ramdisk/lib;
+mkdir ramdisk/lib/modules;
+mkdir ramdisk/oem;
+mkdir ramdisk/proc;
+mkdir ramdisk/sys;
+mkdir ramdisk/system;
+
 arch=`uname -m`;
 
 if [ -z "$(ls split_img/* 2> /dev/null)" -o -z "$(ls ramdisk/* 2> /dev/null)" ]; then
