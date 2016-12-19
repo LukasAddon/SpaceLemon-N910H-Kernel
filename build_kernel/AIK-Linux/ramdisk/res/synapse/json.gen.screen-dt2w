@@ -4,29 +4,28 @@ cat << CTAG
 {
     name:SCREEN,
     elements:[
-	{ SCheckBox:{
+    { SCheckBox:{
                 description:" LCD Power Reduce for backlight. Auto adjust the display brightness based on the on-screen image to save power. If you like brighter screen at the cost of battery drain, then turn it off. Default is Enabled.",
                 label:"LCD Power Reduce",
                 action:"generic /sys/class/lcd/panel/power_reduce"
 	}},
-	{ SSpacer:{
-		height:1
+    { SDescription:{
+		description:""
 	}},
-	{ SCheckBox:{
+    { SCheckBox:{
                 description:" Allows you to turn the screen off by swiping UNDER the navigation bar right > left or left > right. Default is Disabled.",
                 label:"Sweep2Sleep",
 		default:`cat /sys/sweep2sleep/sweep2sleep`,
 		action:"generic /sys/sweep2sleep/sweep2sleep"
 	}},
-	{ SSpacer:{
-		height:1
+	{ SDescription:{
+		description:""
 	}},
-	{ SOptionList:{
-		title:"DoubleTap2Wake",
+	{ SCheckBox:{
+		label:"Double Tap To Wake Phone",
 		description:"Enable/Disable DT2W. Default is Disabled.",
-		default:`echo $(/res/synapse/actions/suspend dt2w)`,
-		action:"suspend dt2w",
-		values:[DT2W_OFF, DT2W_ON_Lower_Half_Screen, DT2W_ON_Center_Screen,]
+		default: `cat /sys/android_touch/doubletap2wake`,
+		action:"generic /sys/android_touch/doubletap2wake"
 	}},
     ]
 }
