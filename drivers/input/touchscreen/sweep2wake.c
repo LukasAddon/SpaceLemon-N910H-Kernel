@@ -57,17 +57,17 @@ static struct notifier_block s2w_lcd_notif;
 #define S2W_PWRKEY_DUR          60
 
 /* Screen size */
-#define DEFAULT_S2W_Y_MAX               1920
-#define DEFAULT_S2W_Y_LIMIT             DEFAULT_S2W_Y_MAX-130
-#define DEFAULT_S2W_X_MAX		1080
+#define DEFAULT_S2W_Y_MAX               2560
+#define DEFAULT_S2W_Y_LIMIT             DEFAULT_S2W_Y_MAX-160
+#define DEFAULT_S2W_X_MAX		1440
 
 /* 0
  * |
  * |
  * |
  * |
- * 1920 - 130
- * 0<-B0-B3-B1--|--B4-B2-B5->1080
+ * 2560 - 160
+ * 0<-B0-B3-B1--|--B4-B2-B5->1440
  */
 
 /* Sweep2sleep right to left */
