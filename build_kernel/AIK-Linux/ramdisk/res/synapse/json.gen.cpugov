@@ -3,52 +3,7 @@
 cat << CTAG
 {
     name:"CPU Governors",
-    elements:[
-	
-	{ SPane:{
-		title:"Interextrem Governor Profile"
-	}},
-	{ SOptionList:{
-		title:"INTEREXTREME Profile",
-		description:" Select your profile for Interextrem governor.\n",
-		default:`echo $(/res/synapse/actions/tuning interextrem_b)`,
-		action:"tuning interextrem_b",
-		values:[Default, Performance, Battery,],
-		notify:[
-			{
-				on:APPLY,
-				do:[ REFRESH, APPLY ],
-				to:[ "/sys/devices/system/cpu/cpu4/cpufreq", "/sys/devices/system/cpu/cpu0/cpufreq" ]
-			},
-		]
-	}},
-	{ SButton:{
-		label:"Restart Synapse after apply profile and then apply changes",
-		action:"devtools restart"
-	}},
-	{ SSpacer:{
-		height:1
-	}},
-	{ SPane:{
-		title:"Interextrem Turbo Mode (DO NOT USE for Battery Profile!)"
-	}},
-	{ SOptionList:{
-		title:"Interextrem Turbo Mode",
-		description:" Forces the use of the big cores over LITTLE ones. Increase UI responsiveness at the expense of power efficiency.\n",
-		default:`echo $(/res/synapse/actions/tuning interextrem_turbo)`,
-		action:"tuning interextrem_turbo",
-		values:[Disabled, Enabled,],
-		notify:[
-			{
-				on:APPLY,
-				do:[ REFRESH, APPLY ],
-				to:"/sys/devices/system/cpu/cpu4/cpufreq"
-			}
-		]
-	}},
-	{ SSpacer:{
-		height:1
-	}},
+    elements:[   
 	{ SPane:{
 		title:"CPU Governor",
 		description:" The CPU governor determines how the CPU behaves in response to changes in workload."

@@ -1,4 +1,4 @@
-case $1 in
+case $1 in 
 powersuspend)
   P=/sys/kernel/power_suspend/power_suspend_mode
   if [ ! -z $2 ]; then
@@ -31,8 +31,8 @@ dt2w)
   elif [ $2 == DT2W_ON_Lower_Half_Screen ]; then
     echo "DT2W_ON_Lower_Half_Screen" > $P
     echo "1" > /sys/android_touch/doubletap2wake
-  elif [ $2 == DT2W_ON_Center_Screen ]; then
-    echo "DT2W_ON_Center_Screen" > $P
+  elif [ $2 == DT2W_ON_FULL_Screen ]; then
+    echo "DT2W_ON_FULL_Screen" > $P
     echo "2" > /sys/android_touch/doubletap2wake
   fi; fi
   copy=`cat $P`
@@ -40,8 +40,8 @@ dt2w)
     echo DT2W_OFF
   elif [ $copy == DT2W_ON_Lower_Half_Screen ]; then
     echo DT2W_ON_Lower_Half_Screen
-  elif [ $copy == DT2W_ON_Center_Screen ]; then
-    echo DT2W_ON_Center_Screen
+  elif [ $copy == DT2W_ON_FULL_Screen ]; then
+    echo DT2W_ON_FULL_Screen
   fi
   ;;
 esac
