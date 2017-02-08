@@ -22,6 +22,11 @@ config LCD_ALPM
 	tristate "Support ALPM mode"
 	default n
 
+config LCD_DOZE_MODE
+	depends on DECON_LCD
+	tristate "Support DOZE MODE"
+	default n
+
 config LCD_PCD
 	depends on DECON_LCD
 	tristate "Support PCD detection"
@@ -75,6 +80,10 @@ config DECON_LCD_S6E3HA2
 config DECON_LCD_S6E3HF2
 	depends on DECON_LCD && DECON_MIPI_DSI
 	tristate "S6E3HA2 driver"
+	
+config DECON_LCD_S6E3HF4
+	depends on DECON_LCD && DECON_MIPI_DSI
+	tristate "S6E3HF4 driver"
 
 config DECON_LCD_S6TNMR7
 	depends on DECON_LCD && DECON_MIPI_DSI
