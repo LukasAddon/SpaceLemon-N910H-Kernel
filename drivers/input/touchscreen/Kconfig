@@ -924,6 +924,10 @@ config TOUCHSCREEN_PREVENT_SLEEP
 	default n
 	help
 	  This disables the sleep function of modified touchscreen drivers.
+	  
+config WAKE_GESTURES
+	default y
+   	bool "Wake Gestures"
 
 source "drivers/input/touchscreen/synaptics_dsx/Kconfig"
 source "drivers/input/touchscreen/synaptics_dsx2/Kconfig"

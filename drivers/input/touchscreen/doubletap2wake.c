@@ -58,9 +58,13 @@ MODULE_VERSION(DRIVER_VERSION);
 MODULE_LICENSE("GPLv2");
 
 /* Tuneables */
+#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+#define DT2W_DEBUG		1
+#else
 #define DT2W_DEBUG		0
-#define DT2W_DEFAULT		0
+#endif
 
+#define DT2W_DEFAULT		0
 #define DT2W_PWRKEY_DUR		60
 #define DT2W_FEATHER		150
 #define DT2W_TIME		50
@@ -111,6 +115,7 @@ static void doubletap2wake_reset(void) {
 	tap_time_pre = 0;
 	x_pre = 0;
 	y_pre = 0;
+	touch_cnt = false;
 }
 
 /* PowerKey work func */
@@ -149,25 +154,30 @@ static void new_touch(int x, int y) {
 	x_pre = x;
 	y_pre = y;
 	touch_nr++;
-	wake_lock_timeout(&dt2w_wakelock, HZ/4);
+	//wake_lock_timeout(&dt2w_wakelock, HZ/4);
 }
 
 /* Doubletap2wake main function */
 static void detect_doubletap2wake(int x, int y, bool st)
 {
-	if (!flg_sensor_prox_detecting) {
+#if DT2W_DEBUG
+	pr_info(LOGTAG"flg_sensor_prox_detecting:%llu\n",(flg_sensor_prox_detecting) ? "true" : "false");
+	pr_info(LOGTAG"flg_power_suspended:%llu\n",(flg_power_suspended) ? "true" : "false");
+
+#endif
+	if (!flg_sensor_prox_detecting && flg_power_suspended) {
         	bool single_touch = st;
 #if DT2W_DEBUG
         	pr_info(LOGTAG"x,y(%4d,%4d) tap_time_pre:%llu\n",
                 	x, y, tap_time_pre);
 #endif
-		if (x < 0 || x > 1440 )
+		if (x < 0 || x > 1439 )
          		return;
 
 		/*if (dt2w_switch == 1 && y < 1300)
         		return;*/
 
-		if (dt2w_switch == 1 && (y < 0 || y > 2560))
+		if (dt2w_switch == 1 && (y < 0 || y > 2559))
         		return;
 
 		if ((single_touch) && (dt2w_switch > 0) && (exec_count) && (touch_cnt)) {
@@ -177,8 +187,15 @@ static void detect_doubletap2wake(int x, int y, bool st)
 			} else if (touch_nr == 1) {
 				if ((calc_feather(x, x_pre) < DT2W_FEATHER) &&
 			    	(calc_feather(y, y_pre) < DT2W_FEATHER) &&
-			    	((jiffies-tap_time_pre) < DT2W_TIME))
-					touch_nr++;
+			    	((jiffies-tap_time_pre) < DT2W_TIME)) {
+			    	//touch_nr++;
+					#if DT2W_DEBUG
+					pr_info(LOGTAG"ON\n");
+					#endif
+					exec_count = false;
+					doubletap2wake_pwrtrigger();
+					doubletap2wake_reset();	
+				}			
 				else {
 					doubletap2wake_reset();
 					new_touch(x, y);
@@ -187,12 +204,12 @@ static void detect_doubletap2wake(int x, int y, bool st)
 				doubletap2wake_reset();
 				new_touch(x, y);
 			}
-			if ((touch_nr > 1)) {
+			/*if ((touch_nr > 1)) {
 				pr_info(LOGTAG"ON\n");
 				exec_count = false;
 				doubletap2wake_pwrtrigger();
 				doubletap2wake_reset();
-			}
+			}*/
 		}
 	}
 }
@@ -235,7 +252,7 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 	if (code == ABS_MT_POSITION_Y) {
 		touch_y = value;
 		touch_y_called = true;
-	}
+	}	 		
 }
 
 static int input_dev_filter(struct input_dev *dev) {
