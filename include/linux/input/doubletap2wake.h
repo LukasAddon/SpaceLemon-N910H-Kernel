@@ -21,6 +21,7 @@
 #ifndef _LINUX_DOUBLETAP2WAKE_H
 #define _LINUX_DOUBLETAP2WAKE_H
 
+extern int DT2W_DEBUG;
 extern int dt2w_switch;
 extern bool dt2w_toggled;
 

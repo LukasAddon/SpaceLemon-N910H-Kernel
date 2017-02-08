@@ -34,12 +34,18 @@
 #include <linux/spinlock.h>
 #include <mach/cpufreq.h>
 
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+#include <linux/input/doubletap2wake.h>
+#endif
+
 #include <linux/sec_sysfs.h>
 #include <linux/sec_debug.h>
 
 #ifdef CONFIG_INPUT_BOOSTER
 #include <linux/input/input_booster.h>
 #endif
+
+#define LOGTAG "[doubletap2wake_gpio_sync]: "
 
 struct device *sec_key;
 EXPORT_SYMBOL(sec_key);
@@ -77,7 +83,7 @@ static bool suspended = false;
 static void sync_system(struct work_struct *work)
 {
 	if (suspended)
-		msleep(5000);
+		msleep(100);
 
 	pr_info("%s +\n", __func__);
 	wake_lock(&sync_wake_lock);
@@ -454,12 +460,14 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	unsigned int type = button->type ?: EV_KEY;
 	int state = (gpio_get_value_cansleep(button->gpio) ? 1 : 0) ^ button->active_low;
 	struct irq_desc *desc = irq_to_desc(gpio_to_irq(button->gpio));
-	if (button->code == KEY_POWER) {
-		schedule_work(&sync_system_work);
-		if (!!state) {
-			printk(KERN_INFO "PWR key is %s\n", state ? "pressed" : "released");
-		}
-	}	
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+		if (button->code == KEY_POWER  && dt2w_switch ) {
+			schedule_work(&sync_system_work);
+			if (!!state) {
+				printk(KERN_INFO "PWR key is %s\n", state ? "pressed" : "released");
+			}
+		}	
+	#endif
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 	if ((button->code == KEY_POWER)) {
 		printk(KERN_INFO "GPIO-KEY : PWR key is %s[%d]\n",
@@ -1170,14 +1178,26 @@ static struct platform_driver gpio_keys_device_driver = {
 
 static int __init gpio_keys_init(void)
 {
-	register_power_suspend(&gpio_suspend);
-	wake_lock_init(&sync_wake_lock, WAKE_LOCK_SUSPEND,
-		"sync_wake_lock");	
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+		if (dt2w_switch ) {
+			register_power_suspend(&gpio_suspend);
+			wake_lock_init(&sync_wake_lock, WAKE_LOCK_SUSPEND,
+			"sync_wake_lock");
+		}	
+	#endif	
+	
 	return platform_driver_register(&gpio_keys_device_driver);
 }
 
 static void __exit gpio_keys_exit(void)
 {
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+		//if (dt2w_switch ) {
+			unregister_power_suspend(&gpio_suspend);
+			wake_lock_destroy(&sync_wake_lock);
+		//}	
+	#endif			
+	//unregister_power_suspend
 	platform_driver_unregister(&gpio_keys_device_driver);
 }
 
