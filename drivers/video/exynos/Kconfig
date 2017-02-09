@@ -37,5 +37,6 @@ config EXYNOS_DP
 source "drivers/video/exynos/decon_display/Kconfig"
 source "drivers/video/exynos/decon_display_ext/Kconfig"
 source "drivers/video/exynos/decon_tv_display/Kconfig"
+source "drivers/video/exynos/panels/Kconfig"
 
 endif # EXYNOS_VIDEO
