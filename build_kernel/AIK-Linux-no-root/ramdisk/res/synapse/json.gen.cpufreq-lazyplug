@@ -1,0 +1,119 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:CPU FREQ,
+    elements:[
+        { STitleBar:{
+                title:"CPU Frequency Scaling"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"CPU HotPlug Profiles",
+		description:"",
+		default:0,
+		action:"generic /sys/module/lazyplug/parameters/nr_run_profile_sel",
+		values:{ 0:"Balance", 1:"Performance", 2:"Conservative", 3:"Eco", 4:"Eco_Extreme", 5:"Disable_Hotplug",
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+        { STitleBar:{
+                title:"A57 big Cores"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+                title:"A57 big Cores live frequency",
+		refresh:1000,
+		action:"live LivebigFrequency"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A57 big Cores MAX frequency",
+		description:" Set the maximum frequency the CPU big Cores scale up to. Default is 1900 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq`,
+		action:"generic /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A57 big Cores MIN frequency",
+		description:" Set the maximum frequency the CPU big Cores scale down to. Default is 700 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq`,
+		action:"generic /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+        { STitleBar:{
+                title:"A53 LITTLE Cores"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+                title:"A53 LITTLE Cores live frequency",
+		refresh:500,
+		action:"live LiveLITTLEFrequency"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A53 LITTLE Cores MAX frequency",
+		description:" Set the maximum frequency the CPU LITTLE Cores scale up to. Default is 1300 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq`,
+		action:"generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+       		title:"A53 LITTLE Cores MIN frequency",
+		description:" Set the minimum frequency the CPU LITTLE Cores scale down to. Default is 400 MHz.",
+		default:`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq`,
+		action:"generic /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq",
+		values:{
+`
+			for FREQ in $(cat /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_freq_table); do
+                                        LABEL=$(expr $FREQ / 1000)
+                                echo "$FREQ:\"${LABEL} MHz\", "
+			done
+`
+		}
+	}},
+    ]
+}
+CTAG

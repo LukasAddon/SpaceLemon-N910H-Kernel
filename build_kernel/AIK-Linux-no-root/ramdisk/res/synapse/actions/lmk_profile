@@ -1,0 +1,43 @@
+BB=/sbin/busybox;
+
+Low(){
+	MINFREE="1536,2048,2560,8192,16384,20480";
+	COST="64";
+}
+
+Medium(){
+	MINFREE="1536,2048,4096,16384,18432,20480";
+	COST="48";
+}
+
+Default(){
+	MINFREE="12288,15360,18432,21504,24576,30720";
+	COST="32";
+}
+
+Aggressive(){
+	MINFREE="2048,4096,4096,16384,32768,49152";
+	COST="16";
+}
+
+Exterminate(){
+	MINFREE="4096,8192,16384,19200,49152,65536";
+	COST="16";
+}
+
+if [ -f $1 ]; then
+	if [[ ! -z $2 ]]; then
+		if [ "$1" == "/res/synapse/SkyHigh/lmk_prof" ]; then
+			$BB echo $2 > $1;
+			if [ $2 == "No_Action" ]; then
+				$BB echo "32" > /sys/module/lowmemorykiller/parameters/cost;	
+			else
+				$2;
+				$BB echo $MINFREE > /sys/module/lowmemorykiller/parameters/minfree;
+				$BB echo $COST > /sys/module/lowmemorykiller/parameters/cost;
+			fi;
+		fi
+	fi
+
+	echo $2;
+fi
