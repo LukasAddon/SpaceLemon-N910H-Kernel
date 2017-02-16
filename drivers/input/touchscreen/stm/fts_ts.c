@@ -1478,7 +1478,7 @@ static int fts_irq_enable(struct fts_ts_info *info,
 		info->irq_enabled = true;
 	} else {
 		if (info->irq_enabled) {
-			disable_irq(info->irq);
+			disable_irq_nosync(info->irq);
 			free_irq(info->irq, info);
 			info->irq_enabled = false;
 		}
@@ -2513,13 +2513,16 @@ static void fts_reset_work(struct work_struct *work)
 static int fts_stop_device(struct fts_ts_info *info)
 {
 	tsp_debug_info(true, &info->client->dev, "%s\n", __func__);
-
 	mutex_lock(&info->device_mutex);
-
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-	if (dt2w_toggled) {
+	/*if (dt2w_toggled) {
 		info->lowpower_mode = true;
 		dt2w_toggled = false;
+	}*/
+	if (dt2w_switch) {
+		info->lowpower_mode = true;
+	} else {
+		info->lowpower_mode = false;
 	}
 #endif
 
@@ -2556,8 +2559,10 @@ static int fts_stop_device(struct fts_ts_info *info)
 			fts_delay(20);
 		}
 #endif
-		if (!dt2w_switch)
+		if (!dt2w_switch) {
+
 			fts_command(info, FTS_CMD_LOWPOWER_MODE); //FIXME
+		}
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 		if (dt2w_switch || (!dt2w_switch && device_may_wakeup(&info->client->dev)))
@@ -2577,7 +2582,7 @@ static int fts_stop_device(struct fts_ts_info *info)
 #endif
 	} else {
 		fts_interrupt_set(info, INT_DISABLE);
-		disable_irq(info->irq);
+		disable_irq_nosync(info->irq);
 
 		fts_command(info, FLUSHBUFFER);
 		fts_command(info, SLEEPIN);
@@ -2652,7 +2657,7 @@ static int fts_start_device(struct fts_ts_info *info)
 
 #ifdef FTS_ADDED_RESETCODE_IN_LPLM
 
-		disable_irq(info->irq);
+		disable_irq_nosync(info->irq);
 		info->reinit_done = false;
 
 		fts_reinit(info);

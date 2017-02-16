@@ -44,5 +44,8 @@ cp -f build_kernel/AIK-Linux/image-new.img build_kernel/out/boot.img
 
 cd build_kernel/out/
 
+mkdir system
+mkdir data
+
 zip -r SpaceLemon_v${GETVER}_zerolemon.zip ./
 
