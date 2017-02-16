@@ -1,0 +1,231 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:"CPU Governors",
+    elements:[   
+	{ SPane:{
+		title:"CPU Governor",
+		description:" The CPU governor determines how the CPU behaves in response to changes in workload."
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"Current A53 little core governor",
+                default:`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`,
+                action:"governor /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor",
+                values:[
+`
+                        for GOVERNOR in \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors\` ; do
+                                echo "\"$GOVERNOR\","
+                        done
+`
+                ],
+		notify:[
+			{
+				on:APPLY,
+				do:[ REFRESH, CANCEL ],
+				to:"/sys/devices/system/cpu/cpu0/cpufreq"
+			},
+			{
+				on:REFRESH,
+				do:REFRESH,
+				to:"/sys/devices/system/cpu/cpu0/cpufreq"
+			}
+		]
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+        { SOptionList:{
+		title:"Current A57 big core governor",
+                default:`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor`,
+                action:"governor /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor",
+                values:[
+`
+                        for GOVERNOR in \`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_available_governors\` ; do
+                                echo "\"$GOVERNOR\","
+                        done
+`
+                ],
+		notify:[
+			{
+				on:APPLY,
+				do:[ REFRESH, CANCEL ],
+				to:"/sys/devices/system/cpu/cpu4/cpufreq"
+			},
+			{
+				on:REFRESH,
+				do:REFRESH,
+				to:"/sys/devices/system/cpu/cpu4/cpufreq"
+			}
+		]
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"Governor tunables for legacy types",
+		description:"The various configuration items which are governor-dependent."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/sys/devices/system/cpu/cpufreq",
+		generic: {
+			directory: {
+				STreeDescriptor:{
+					generic: {
+						directory: {},
+						element: {
+							SGeneric: { title:"@NAME" }
+						}
+					},
+					matched: {
+						elements: [
+							{ "sampling_rate" : {
+								SSeekBar: {
+									title:"Sampling rate",
+									description:" The sampling rate controls the rate in which the governor polls for frequency changes.",
+									min:0, max:150000, step:5000, unit:" ms"
+								}
+							}}
+						]
+					},
+					exclude: [
+						"boostpulse",
+						"cpu_util",
+						"sampling_rate_min"
+					]
+				}
+			}
+		},
+		exclude: [
+          "all_time_in_state",
+			"mp-cpufreq",
+          "stats"
+		]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"Governor tunables for A53 core",
+       description:"The various configuration items which are governor-dependent."
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/sys/devices/system/cpu/cpu0/cpufreq",
+		generic: {
+			directory: {
+				STreeDescriptor:{
+					generic: {
+						directory: {},
+						element: {
+							SGeneric: { title:"@NAME" }
+						}
+					},
+					matched: {
+						elements: [
+							{ "sampling_rate" : {
+								SSeekBar: {
+									title:"Sampling rate",
+									description:" The sampling rate controls the rate in which the governor polls for frequency changes.",
+									min:0, max:150000, step:5000, unit:" ms"
+								}
+							}}
+						]
+					},
+					exclude: [
+						"boostpulse",
+						"cpu_util",
+						"enforced_mode",
+                    				"mode",
+						"sampling_rate_min"
+					]
+				}
+			}
+		},
+		exclude: [
+			"affected_cpus",
+			"cpuinfo_cur_freq",
+			"cpuinfo_max_freq",
+			"cpuinfo_min_freq",
+			"cpuinfo_transition_latency",
+			"related_cpus",
+			"scaling_available_governors",
+			"scaling_cur_freq",
+			"scaling_driver",
+			"scaling_governor",
+			"scaling_max_freq",
+			"scaling_min_freq",
+			"scaling_setspeed",
+                        "stats"
+		]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"Governor tunables for A57 core",
+       description:"The various configuration items which are governor-dependent."
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/sys/devices/system/cpu/cpu4/cpufreq",
+		generic: {
+			directory: {
+				STreeDescriptor:{
+					generic: {
+						directory: {},
+						element: {
+							SGeneric: { title:"@NAME" }
+						}
+					},
+					matched: {
+						elements: [
+							{ "sampling_rate" : {
+								SSeekBar: {
+									title:"Sampling rate",
+									description:" The sampling rate controls the rate in which the governor polls for frequency changes.",
+									min:0, max:150000, step:5000, unit:" ms"
+								}
+							}}
+						]
+					},
+					exclude: [
+						"boostpulse",
+						"cpu_util",
+						"enforced_mode",
+                    				"mode",
+						"sampling_rate_min"
+					]
+				}
+			}
+		},
+		exclude: [
+			"affected_cpus",
+			"cpuinfo_cur_freq",
+			"cpuinfo_max_freq",
+			"cpuinfo_min_freq",
+			"cpuinfo_transition_latency",
+			"related_cpus",
+			"scaling_available_governors",
+			"scaling_cur_freq",
+			"scaling_driver",
+			"scaling_governor",
+			"scaling_max_freq",
+			"scaling_min_freq",
+			"scaling_setspeed",
+                        "stats"
+		]
+	}},   
+    ]
+}
+CTAG

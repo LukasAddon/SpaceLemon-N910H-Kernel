@@ -1,0 +1,111 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:Wakelocks,
+    elements:[
+	{ SPane:{
+		title:"Wakelock control",
+		description:" Manage wakelock for drivers."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+                title:"SensorHub Wakelock",
+                description:" The SensorHub Wakelock Is One Of The Biggest Wake Sources. Disable For Better Deep Sleep And Less Awake Time, Enable For Stock Behavior. Disabling May Break Things! If You Have Weird Issues, Re Enable It Before Reporting!",
+                default:`cat /sys/module/wakeup/parameters/enable_sensorhub_wl`,
+                action:"generic /sys/module/wakeup/parameters/enable_sensorhub_wl",
+                values:{
+                        "N":"Disabled SensorHub Wakelock",
+                        "Y":"Enabled SensorHub Wakelock(Default)"
+                },
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"SSP Wakelock",
+		description:" The SSP Wakelock is one of the biggest wake sources after Sensorhub. Disable for better deep sleep and less awake time. Enable for stock behavior.\n",
+		default:`cat /sys/module/wakeup/parameters/enable_ssp_wl`,
+		action:"generic /sys/module/wakeup/parameters/enable_ssp_wl",
+		values:{
+                        "N":"Disabled SSP Wakelock",
+                        "Y":"Enabled SSP Wakelock(Default)"
+                },
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"bcm4773 Wakelock",
+		description:" The bcm4773 Wakelock (GPS chip) is one of the biggest wake sources after Sensorhub & SSP. Disable for better deep sleep and less awake time. Enable for stock behavior.\n",
+		default:`cat /sys/module/wakeup/parameters/enable_bcm4773_wl`,
+		action:"generic /sys/module/wakeup/parameters/enable_bcm4773_wl",
+		values:{
+                        "N":"Disabled bcm4773 Wakelock",
+                        "Y":"Enabled bcm4773 Wakelock(Default)"
+                },
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+                title:"Wakelock manual control",
+                description:"Enter 1 to 8 (1 = stock, higher = lower wake time) for wireless and sensorhub wakelock control"
+        }},
+        { SSeekBar:{
+                title:"Wireless wakelock timeout control",
+                description:"",
+                unit:"",
+                min:0,
+                max:10,
+                step:1,
+                default:`cat /sys/module/dhd/parameters/wl_divide`,
+                action:"generic /sys/module/dhd/parameters/wl_divide"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+                title:"BCM4773_gps wakelock timeout control",
+                description:" stock = 2\nhigher = lower wake time\n",
+                unit:"",
+                min:0,
+                max:10,
+                step:1,
+                default:`cat /sys/module/bcm_gps_spi/parameters/wl_divide_gps`,
+                action:"generic /sys/module/bcm_gps_spi/parameters/wl_divide_gps"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+                title:"SSP_input proximity_sensor wakelock timeout control",
+                description:" default = 1, stock= 3\nlower = lower wake time\n",
+                unit:"",
+                min:0,
+                max:10,
+                step:1,
+                default:`cat /sys/module/ssp_input/parameters/wl_prox`,
+                action:"generic /sys/module/ssp_input/parameters/wl_prox"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+                title:"SSP_sensorhub wl_sensorhub wakelock timeout control",
+                description:" default = 1, stock= 3\nlower = lower wake time\n",
+                unit:"",
+                min:0,
+                max:10,
+                step:1,
+                default:`cat /sys/module/ssp_sensorhub/parameters/wl_sensorhub`,
+                action:"generic /sys/module/ssp_sensorhub/parameters/wl_sensorhub"
+	}},
+	{ SSpacer:{
+		height:1
+	}}
+    ]
+}
+CTAG

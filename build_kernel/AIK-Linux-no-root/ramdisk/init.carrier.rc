@@ -1,0 +1,7 @@
+on fs
+service cpboot-daemon /sbin/cbd -d -tstem7400 -bh -mh -p 13
+    class main
+    user root
+    group radio cache inet misc audio sdcard_rw log sdcard_r shell
+    seclabel u:r:cbd:s0
+
