@@ -1178,12 +1178,12 @@ static struct platform_driver gpio_keys_device_driver = {
 
 static int __init gpio_keys_init(void)
 {
-	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-		if (dt2w_switch ) {
+	#ifdef CONFIG_POWERSUSPEND
+		//if (dt2w_switch ) {
 			register_power_suspend(&gpio_suspend);
 			wake_lock_init(&sync_wake_lock, WAKE_LOCK_SUSPEND,
 			"sync_wake_lock");
-		}	
+		//}	
 	#endif	
 	
 	return platform_driver_register(&gpio_keys_device_driver);
@@ -1191,12 +1191,12 @@ static int __init gpio_keys_init(void)
 
 static void __exit gpio_keys_exit(void)
 {
-	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-		//if (dt2w_switch ) {
+	#ifdef CONFIG_POWERSUSPEND
+		/*if (dt2w_switch ) {*/
 			unregister_power_suspend(&gpio_suspend);
 			wake_lock_destroy(&sync_wake_lock);
-		//}	
-	#endif			
+		/*}	*/
+	#endif		
 	//unregister_power_suspend
 	platform_driver_unregister(&gpio_keys_device_driver);
 }

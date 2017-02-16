@@ -39,7 +39,6 @@ static struct notifier_block s2w_lcd_notif;
 #endif
 #endif
 
-
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "Dennis Rassmann <showp1984@gmail.com>"
 #define DRIVER_DESCRIPTION "Sweep2wake for almost any device"
@@ -52,7 +51,11 @@ static struct notifier_block s2w_lcd_notif;
 #define LOGTAG "[sweep2wake]: "
 
 /* Tuneables */
+#ifndef CONFIG_TOUCHSCREEN_SWEEP2WAKE_DEBUG
+#define S2W_DEBUG		1
+#else
 #define S2W_DEBUG		0
+#endif
 #define S2W_DEFAULT		0
 #define S2W_PWRKEY_DUR          60
 
@@ -224,9 +227,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 }
 
 static void s2w_input_callback(struct work_struct *unused) {
-
 	detect_sweep2wake(touch_x, touch_y, true);
-
 	return;
 }
 
