@@ -70,7 +70,7 @@ MODULE_LICENSE("GPLv2");
 #define DT2W_TIME		50
 
 /* Sensors */
-static bool flg_sensor_prox_detecting = false;
+bool flg_sensor_prox_detecting = false;
 
 /* Resources */
 static struct wake_lock dt2w_wakelock;
@@ -91,13 +91,13 @@ static struct work_struct dt2w_input_work;
 static int __init read_dt2w_cmdline(char *dt2w)
 {
 	if (strcmp(dt2w, "1") == 0) {
-		pr_info("[cmdline_dt2w]: DoubleTap2Wake enabled. | dt2w='%s'\n", dt2w);
+		pr_info("[cmdline_dt2w]: [doubletap2wake] enabled. | dt2w='%s'\n", dt2w);
 		dt2w_switch = 1;
 	/*} else if (strcmp(dt2w, "2") == 0) {
 		pr_info("[cmdline_dt2w]: DoubleTap2Wake fullscreen enabled. | dt2w='%s'\n", dt2w);
 		dt2w_switch = 2;*/
 	} else if (strcmp(dt2w, "0") == 0) {
-		pr_info("[cmdline_dt2w]: DoubleTap2Wake disabled. | dt2w='%s'\n", dt2w);
+		pr_info("[cmdline_dt2w]: [doubletap2wake] disabled. | dt2w='%s'\n", dt2w);
 		dt2w_switch = 0;
 	} else {
 		pr_info("[cmdline_dt2w]: No valid input found. Going with default: | dt2w='%u'\n", dt2w_switch);
@@ -161,8 +161,8 @@ static void new_touch(int x, int y) {
 static void detect_doubletap2wake(int x, int y, bool st)
 {
 #if DT2W_DEBUG
-	pr_info(LOGTAG"flg_sensor_prox_detecting:%llu\n",(flg_sensor_prox_detecting) ? "true" : "false");
-	pr_info(LOGTAG"flg_power_suspended:%llu\n",(flg_power_suspended) ? "true" : "false");
+	pr_info(LOGTAG"flg_sensor_prox_detecting:%s \n",(flg_sensor_prox_detecting) ? "true" : "false");
+	pr_info(LOGTAG"flg_power_suspended:%s \n",(flg_power_suspended) ? "true" : "false");
 
 #endif
 	if (!flg_sensor_prox_detecting && flg_power_suspended) {
@@ -252,7 +252,13 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 	if (code == ABS_MT_POSITION_Y) {
 		touch_y = value;
 		touch_y_called = true;
-	}	 		
+	}
+/*	if (touch_x_called && touch_y_called) {
+		touch_x_called = false;
+		touch_y_called = false;
+		schedule_work_on(0, &dt2w_input_work);
+		return;
+	}*/			
 }
 
 static int input_dev_filter(struct input_dev *dev) {
@@ -359,7 +365,7 @@ static ssize_t dt2w_doubletap2wake_show(struct device *dev,
 static ssize_t dt2w_doubletap2wake_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
-	if (buf[0] >= '0' && buf[0] <= '2' && buf[1] == '\n')
+	if (buf[0] >= '0' && buf[0] <= '1' && buf[1] == '\n')
                 if (dt2w_switch != buf[0] - '0')
 		        dt2w_switch = buf[0] - '0';
 

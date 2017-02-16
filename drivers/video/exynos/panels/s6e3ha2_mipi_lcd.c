@@ -28,6 +28,12 @@
 #ifdef CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
 #endif
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+#include <linux/input/doubletap2wake.h>
+extern void sensor_prox_report(unsigned int detected);
+#endif
+
+
 
 
 #include <video/mipi_display.h>
@@ -2460,6 +2466,11 @@ static int s6e3ha2_displayon(struct mipi_dsim_device *dsim)
 
 	#ifdef CONFIG_POWERSUSPEND
 		set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (wakeup)
+	#endif
+
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+		sensor_prox_report(0);  // LukasAddon : set  flg_sensor_prox_detecting to false if display on
+		// because some times prox sensor didnt response it state in event.
 	#endif
 
 	return 0;
