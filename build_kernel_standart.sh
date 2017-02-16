@@ -21,7 +21,7 @@ GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/trelte_00_defcon
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
-./tools/dtbtool -o ./dt.img -v -s 2048 -p ./scripts/dtc/ $DTS/ 
+./tools/dtbtool -o ./dt.img -v -s 2048 -p ./scripts/dtc/ $DTS/
 # get rid of the temps in dts directory
 rm -rf $DTS/.*.tmp
 rm -rf $DTS/.*.cmd

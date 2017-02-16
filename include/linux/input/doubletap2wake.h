@@ -21,8 +21,8 @@
 #ifndef _LINUX_DOUBLETAP2WAKE_H
 #define _LINUX_DOUBLETAP2WAKE_H
 
-extern int DT2W_DEBUG;
 extern int dt2w_switch;
 extern bool dt2w_toggled;
+extern bool flg_sensor_prox_detecting;
 
 #endif	/* _LINUX_DOUBLETAP2WAKE_H */
