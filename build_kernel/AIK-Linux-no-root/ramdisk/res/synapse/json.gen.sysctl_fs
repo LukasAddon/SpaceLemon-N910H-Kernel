@@ -1,0 +1,44 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:FS SYSCTL,
+    elements:[
+	{ STitleBar:{
+		title:"FS SYSCTL"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/fs",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+		exclude: [
+			"aio-nr",
+			"dentry-state",
+			"epoll",
+			"file-nr",
+			"inode-nr",
+			"inode-state",
+			"inotify",
+			"protected_hardlinks",
+			"protected_symlinks"
+		]
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/fs/inotify",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+	}},
+    ]
+}
+CTAG

@@ -1,0 +1,93 @@
+case $((`cat /sys/devices/battery.30/power_supply/battery/batt_charging_source`)) in
+
+0)	echo "Unknown source"
+	;;
+
+1)	echo "Battery power"
+	;;
+
+2)	echo "UPS power"
+	;;
+
+3)	echo "Mains AC charger"
+	;;
+
+4)	echo "USB Standard Downstream Port"
+	;;
+
+5)	echo "USB Dedicated Charging Port"
+	;;
+
+6)	echo "USB Charging Downstream Port"
+	;;
+
+7)	echo "USB Accessory Charger Adapter"
+	;;
+
+8)	echo "Battery Monitor System"
+	;;
+
+9)	echo "Miscaenellous power source"
+	;;
+
+10)	echo "Wireless charging"
+	;;
+
+11)	echo "Card Dock charging"
+	;;
+
+12)	echo "UART Off charging"
+	;;
+
+13)	echo "OTG charging"
+	;;
+
+14)	echo "LAN Hub charging"
+	;;
+
+15)	echo "MHL 500 charging"
+	;;
+
+16)	echo "MHL 900 charging"
+	;;
+
+17)	echo "MHL 1500 charging"
+	;;
+
+18)	echo "MHL USB charging"
+	;;
+
+19)	echo "Smart OTG charging"
+	;;
+
+20)	echo "Smart NOTG charging"
+	;;
+
+21)	echo "Power Sharing Cable charging"
+	;;
+
+22)	echo "HV Mains charging"
+	;;
+
+23)	echo "HV Prepare Mains charging"
+	;;
+
+24)	echo "HV Error"
+	;;
+
+25)	echo "MHL 100 charging"
+	;;
+
+26)	echo "MHL 2000 charging"
+	;;
+
+27)	echo "HV Unknown charging"
+	;;
+
+28)	echo "MDock TA charging"
+	;;
+
+29)	echo "Wireless Remove"
+	;;
+
+esac
