@@ -155,20 +155,16 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 	int prev_coord = 0, next_coord = 0;
 	int reverse_prev_coord = 0, reverse_next_coord = 0;
 	bool single_touch = st;
-#if S2W_DEBUG
-        pr_info(LOGTAG"x,y(%4d,%4d) single:%s\n",
-			sweep_coord, sweep_height,
-			(single_touch) ? "true" : "false");
-#endif
-	/* s2s: right->left */
+
 	if ((single_touch) && (scr_suspended == false) && (s2w_switch > 0)) {
 		scr_on_touch = true;
+		/* s2s: right->left */
 		prev_coord = DEFAULT_S2W_X_B5;
 		next_coord = DEFAULT_S2W_X_B2;
 		if ((barrier[0] == true) ||
 				((sweep_coord < prev_coord) &&
 				(sweep_coord > next_coord) &&
-				(sweep_height > DEFAULT_S2W_Y_LIMIT))) {
+				(sweep_height > DEFAULT_S2W_Y_LIMIT))) {	
 			prev_coord = next_coord;
 			next_coord = DEFAULT_S2W_X_B1;
 			barrier[0] = true;
@@ -177,6 +173,11 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 					(sweep_coord > next_coord) &&
 					(sweep_height >
 					DEFAULT_S2W_Y_LIMIT))) {
+		#if S2W_DEBUG
+       		pr_info(LOGTAG"x,y(%4d,%4d) right->left single:%s\n",
+				sweep_coord, sweep_height,
+				(single_touch) ? "true" : "false");
+		#endif				
 				prev_coord = next_coord;
 				barrier[1] = true;
 				if ((sweep_coord < prev_coord) &&
@@ -208,6 +209,11 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 					(sweep_coord < reverse_next_coord) &&
 					(sweep_height >
 					DEFAULT_S2W_Y_LIMIT))) {
+		#if S2W_DEBUG
+       		pr_info(LOGTAG"x,y(%4d,%4d) left->right single:%s\n",
+				sweep_coord, sweep_height,
+				(single_touch) ? "true" : "false");
+		#endif					
 				reverse_prev_coord = reverse_next_coord;
 				reverse_barrier[1] = true;
 				if ((sweep_coord > reverse_prev_coord) &&
@@ -233,13 +239,13 @@ static void s2w_input_callback(struct work_struct *unused) {
 
 static void s2w_input_event(struct input_handle *handle, unsigned int type,
 				unsigned int code, int value) {
-#if S2W_DEBUG
+/*#if S2W_DEBUG
 	pr_info("sweep2wake: code: %s|%u, val: %i\n",
 		((code==ABS_MT_POSITION_X) ? "X" :
 		(code==ABS_MT_POSITION_Y) ? "Y" :
 		(code==ABS_MT_TRACKING_ID) ? "ID" :
 		"undef"), code, value);
-#endif
+#endif*/
 	if (code == ABS_MT_SLOT) {
 		sweep2wake_reset();
 		return;

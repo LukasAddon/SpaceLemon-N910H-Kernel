@@ -45,7 +45,7 @@
 #include <linux/input/input_booster.h>
 #endif
 
-#define LOGTAG "[doubletap2wake_gpio_sync]: "
+#define LOGTAG "[doubletap2wakegpiosync]: "
 
 struct device *sec_key;
 EXPORT_SYMBOL(sec_key);
@@ -74,23 +74,30 @@ struct gpio_keys_drvdata {
 	struct gpio_button_data data[0];
 };
 
-static void sync_system(struct work_struct *work);
+/*static void sync_system(struct work_struct *work);
 static DECLARE_WORK(sync_system_work, sync_system);
 struct wake_lock sync_wake_lock;
 
-static bool suspended = false;
+static bool suspended = false;*/
 
-static void sync_system(struct work_struct *work)
+/*static void sync_system(struct work_struct *work)
 {
 	if (suspended)
 		msleep(100);
-
-	pr_info("%s +\n", __func__);
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+			pr_info(LOGTAG"syncsystem call, gpiokeys\n");
+			pr_info("%s +\n", __func__);
+	#endif
+	
 	wake_lock(&sync_wake_lock);
 	emergency_sync();
 	wake_unlock(&sync_wake_lock);
-	pr_info("%s -\n", __func__);
-}
+	
+	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+			pr_info(LOGTAG"syncsystem end call, gpiokeys\n");
+			pr_info("%s -\n", __func__);
+	#endif
+}*/
 /*
  * SYSFS interface for enabling/disabling keys and switches:
  *
@@ -460,14 +467,14 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	unsigned int type = button->type ?: EV_KEY;
 	int state = (gpio_get_value_cansleep(button->gpio) ? 1 : 0) ^ button->active_low;
 	struct irq_desc *desc = irq_to_desc(gpio_to_irq(button->gpio));
-	#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+	/*#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 		if (button->code == KEY_POWER  && dt2w_switch ) {
 			schedule_work(&sync_system_work);
 			if (!!state) {
 				printk(KERN_INFO "PWR key is %s\n", state ? "pressed" : "released");
 			}
 		}	
-	#endif
+	#endif*/
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 	if ((button->code == KEY_POWER)) {
 		printk(KERN_INFO "GPIO-KEY : PWR key is %s[%d]\n",
@@ -536,7 +543,7 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 #endif
 }
 
-static void gpio_keys_early_suspend(struct power_suspend *handler)
+/*static void gpio_keys_early_suspend(struct power_suspend *handler)
 {
 	suspended = true;
 	return;
@@ -551,7 +558,7 @@ static void gpio_keys_late_resume(struct power_suspend *handler)
 static struct power_suspend gpio_suspend = {
 	.suspend = gpio_keys_early_suspend,
 	.resume = gpio_keys_late_resume,
-};
+};*/
 
 static void gpio_keys_gpio_work_func(struct work_struct *work)
 {
@@ -1178,25 +1185,22 @@ static struct platform_driver gpio_keys_device_driver = {
 
 static int __init gpio_keys_init(void)
 {
-	#ifdef CONFIG_POWERSUSPEND
-		//if (dt2w_switch ) {
+	/*#ifdef CONFIG_POWERSUSPEND
 			register_power_suspend(&gpio_suspend);
 			wake_lock_init(&sync_wake_lock, WAKE_LOCK_SUSPEND,
 			"sync_wake_lock");
-		//}	
-	#endif	
+	
+	#endif*/	
 	
 	return platform_driver_register(&gpio_keys_device_driver);
 }
 
 static void __exit gpio_keys_exit(void)
 {
-	#ifdef CONFIG_POWERSUSPEND
-		/*if (dt2w_switch ) {*/
+	/*#ifdef CONFIG_POWERSUSPEND
 			unregister_power_suspend(&gpio_suspend);
 			wake_lock_destroy(&sync_wake_lock);
-		/*}	*/
-	#endif		
+	#endif	*/	
 	//unregister_power_suspend
 	platform_driver_unregister(&gpio_keys_device_driver);
 }

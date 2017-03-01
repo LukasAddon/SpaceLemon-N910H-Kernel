@@ -8,7 +8,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
 */
-
+#include <linux/delay.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/errno.h>
@@ -95,6 +95,8 @@ extern void sensor_prox_report(unsigned int detected);
 #define LDI_RDDPM_REG		0x0A
 #define LDI_BOOSTER_VAL		0x9C
 #define LDI_ESDERR_REG		0xEE
+
+#define LOGTAG "[doubletap2wakelcd]: "
 
 #ifdef SMART_DIMMING_DEBUG
 #define smtd_dbg(format, arg...)	printk(format, ##arg)
@@ -2465,6 +2467,9 @@ static int s6e3ha2_displayon(struct mipi_dsim_device *dsim)
 	s6e3ha2_power(lcd, FB_BLANK_UNBLANK);
 
 	#ifdef CONFIG_POWERSUSPEND
+		#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+		pr_info(LOGTAG"s6e3ha2_displayon run\n");
+		#endif
 		set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (wakeup)
 	#endif
 
@@ -2483,7 +2488,17 @@ static int s6e3ha2_suspend(struct mipi_dsim_device *dsim)
 	s6e3ha2_power(lcd, FB_BLANK_POWERDOWN);
 	
 	#ifdef CONFIG_POWERSUSPEND
-		set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (sleep)
+	    msleep(75);
+		if (!flg_sensor_prox_detecting) { // LukasAddon : do not POWER_SUSPEND_ACTIVE if flg_sensor_prox_detecting=true
+			#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+			pr_info(LOGTAG"s6e3ha2_suspend hook true. sensor prox detecting\n");
+			#endif
+			set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE); // Yank555.lu : add hook to handle powersuspend tasks (sleep)
+		} else {
+			#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+			pr_info(LOGTAG"s6e3ha2_suspend hook false. sensor prox detecting\n");
+			#endif
+		}
 	#endif
 
 	return 0;
