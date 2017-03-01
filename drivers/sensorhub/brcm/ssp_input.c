@@ -448,6 +448,7 @@ void report_prox_data(struct ssp_data *data, struct sensor_value *proxdata)
 	ssp_dbg("[SSP] Proximity Sensor Detect : %u, raw : %u\n",
 		proxdata->prox[0], proxdata->prox[1]);
 
+	// LukasAddon : send sensor prox status to DT2W module
 	sensor_prox_report(proxdata->prox[0]);
 
 	data->buf[PROXIMITY_SENSOR].prox[0] = proxdata->prox[0];
