@@ -77,6 +77,8 @@
 struct wake_lock  report_wake_lock;
 #endif
 
+#define LOGTAG "[doubletap2wakeftsts]: "
+
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 #include <linux/input/doubletap2wake.h>
 #else
@@ -2560,7 +2562,9 @@ static int fts_stop_device(struct fts_ts_info *info)
 		}
 #endif
 		if (!dt2w_switch) {
-
+			#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+			pr_info(LOGTAG"ftsstopdevice call, dt2wswitch false\n");
+			#endif
 			fts_command(info, FTS_CMD_LOWPOWER_MODE); //FIXME
 		}
 
