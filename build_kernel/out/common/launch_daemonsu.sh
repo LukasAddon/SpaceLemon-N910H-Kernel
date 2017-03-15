@@ -47,18 +47,30 @@ loopsetup() {
 }
 
 resize() {
-  if [ `ls  -l /data/su.img | grep " 33554432 " >/dev/null 2>&1; echo $?` -eq 0 ]; then
-    log_print "resizing /data/su.img from 32M to 96M"
+  local LAST=
+  local SIZE=
+  for i in `ls -l /data/su.img`; do
+    if [ "$LAST" = "root" ]; then
+      if [ "$i" != "root" ]; then
+        SIZE=$i
+        break;
+      fi
+    fi
+    LAST=$i
+  done
+  log_print "/data/su.img: $SIZE bytes"
+  if [ "$SIZE" -lt "96000000" ]; then
+    log_print "resizing /data/su.img to 96M"
     e2fsck -p -f /data/su.img
     resize2fs /data/su.img 96M
   fi
 }
 
-if [ ! -d "/su/bin" ]; then
-  log_print "/su not mounted yet"
+REBOOT=false
 
-  # not mounted yet, do our thing
-  REBOOT=false
+if [ ! -d "/su/bin" ]; then
+  # not mounted yet, and doesn't exist already, merge
+  log_print "/su not mounted yet"
 
   # copy boot image backups
   log_print "copying boot image backups from /cache to /data"
@@ -146,54 +158,71 @@ if [ ! -d "/su/bin" ]; then
     rm /cache/su.img
   fi
 
-  # do we have an APK to install ?
-  if [ -f "/cache/SuperSU.apk" ]; then
-    cp /cache/SuperSU.apk /data/SuperSU.apk
-    rm /cache/SuperSU.apk
-  fi
-  if [ -f "/data/SuperSU.apk" ]; then
-    log_print "installing SuperSU APK in /data"
+  if [ ! -f "/data/su.img" ]; then
+    if [ -d "/.sufrp" ]; then
+      # create empty image
+      make_ext4fs -l 96M -a /su -S /.sufrp/file_contexts_image /data/su.img
+      chown 0.0 /data/su.img
+      chmod 0600 /data/su.img
+      chcon u:object_r:system_data_file:s0 /data/su.img
 
-    APKPATH=eu.chainfire.supersu-1
-    for i in `ls /data/app | grep eu.chainfire.supersu- | grep -v eu.chainfire.supersu.pro`; do
-      if [ `cat /data/system/packages.xml | grep $i >/dev/null 2>&1; echo $?` -eq 0 ]; then
-        APKPATH=$i
-        break;
-      fi
-    done
-    rm -rf /data/app/eu.chainfire.supersu-*
-
-    log_print "target path: /data/app/$APKPATH"
-
-    mkdir /data/app/$APKPATH
-    chown 1000.1000 /data/app/$APKPATH
-    chmod 0755 /data/app/$APKPATH
-    chcon u:object_r:apk_data_file:s0 /data/app/$APKPATH
-
-    cp /data/SuperSU.apk /data/app/$APKPATH/base.apk
-    chown 1000.1000 /data/app/$APKPATH/base.apk
-    chmod 0644 /data/app/$APKPATH/base.apk
-    chcon u:object_r:apk_data_file:s0 /data/app/$APKPATH/base.apk
-
-    rm /data/SuperSU.apk
-
-    sync
-
-    # just in case
-    REBOOT=true
-  fi
-
-  # sometimes we need to reboot, make it so
-  if ($REBOOT); then
-    log_print "rebooting"
-    if [ "$MODE" = "post-fs-data" ]; then
-      # avoid device freeze (reason unknown)
-      sh -c "sleep 5; reboot" &
-    else
-      reboot
+      # make sure the new image is the right size
+      resize
     fi
-    exit
   fi
+fi
+
+# do we have an APK to install ?
+if [ -f "/cache/SuperSU.apk" ]; then
+  cp /cache/SuperSU.apk /data/SuperSU.apk
+  rm /cache/SuperSU.apk
+fi
+if [ -f "/data/SuperSU.apk" ]; then
+  log_print "installing SuperSU APK in /data"
+
+  APKPATH=eu.chainfire.supersu-1
+  for i in `ls /data/app | grep eu.chainfire.supersu- | grep -v eu.chainfire.supersu.pro`; do
+    if [ `cat /data/system/packages.xml | grep $i >/dev/null 2>&1; echo $?` -eq 0 ]; then
+      APKPATH=$i
+      break;
+    fi
+  done
+  rm -rf /data/app/eu.chainfire.supersu-*
+
+  log_print "target path: /data/app/$APKPATH"
+
+  mkdir /data/app/$APKPATH
+  chown 1000.1000 /data/app/$APKPATH
+  chmod 0755 /data/app/$APKPATH
+  chcon u:object_r:apk_data_file:s0 /data/app/$APKPATH
+
+  cp /data/SuperSU.apk /data/app/$APKPATH/base.apk
+  chown 1000.1000 /data/app/$APKPATH/base.apk
+  chmod 0644 /data/app/$APKPATH/base.apk
+  chcon u:object_r:apk_data_file:s0 /data/app/$APKPATH/base.apk
+
+  rm /data/SuperSU.apk
+
+  sync
+
+  # just in case
+  REBOOT=true
+fi
+
+# sometimes we need to reboot, make it so
+if ($REBOOT); then
+  log_print "rebooting"
+  if [ "$MODE" = "post-fs-data" ]; then
+    # avoid device freeze (reason unknown)
+    sh -c "sleep 5; reboot" &
+  else
+    reboot
+  fi
+  exit
+fi
+
+if [ ! -d "/su/bin" ]; then
+  # not mounted yet, and doesn't exist already, mount
 
   # losetup is unreliable pre-M
   if [ `cat /proc/mounts | grep /su >/dev/null 2>&1; echo $?` -ne 0 ]; then
@@ -217,19 +246,26 @@ if [ ! -d "/su/bin" ]; then
     log_print "abort: mount failed"
     exit
   fi
+fi
 
-  # if other su binaries exist, route them to ours
-  mount -o bind /su/bin/su /sbin/su 2>/dev/null
-  mount -o bind /su/bin/su /system/bin/su 2>/dev/null
-  mount -o bind /su/bin/su /system/xbin/su 2>/dev/null
-
-  # poor man's overlay on /system/xbin
-  if [ -d "/su/xbin_bind" ]; then
-    cp -f -a /system/xbin/. /su/xbin_bind
-    rm -rf /su/xbin_bind/su
-    ln -s /su/bin/su /su/xbin_bind/su
-    mount -o bind /su/xbin_bind /system/xbin
+if [ ! -d "/su/bin" ]; then
+  # empty image
+  if [ -d "/.sufrp" ]; then
+    /.sufrp/frp_install
   fi
+fi
+
+# if other su binaries exist, route them to ours
+mount -o bind /su/bin/su /sbin/su 2>/dev/null
+mount -o bind /su/bin/su /system/bin/su 2>/dev/null
+mount -o bind /su/bin/su /system/xbin/su 2>/dev/null
+
+# poor man's overlay on /system/xbin
+if [ -d "/su/xbin_bind" ]; then
+  cp -f -a /system/xbin/. /su/xbin_bind
+  rm -rf /su/xbin_bind/su
+  ln -s /su/bin/su /su/xbin_bind/su
+  mount -o bind /su/xbin_bind /system/xbin
 fi
 
 # start daemon
@@ -257,9 +293,9 @@ else
           break
         fi
 
-        # sleep 16ms if usleep supported, warm up the CPU if not
-        # 16*16*16ms=4s maximum if usleep supported, else much shorter
-        usleep 16000
+        # sleep 240ms if usleep supported, warm up the CPU if not
+        # 16*16*240ms=60s maximum if usleep supported, else much shorter
+        usleep 240000
       done
     done
   fi
