@@ -10,8 +10,6 @@
  */
 
 #include <linux/module.h>
-
-#include <linux/powersuspend.h>
 #include <linux/init.h>
 #include <linux/fs.h>
 #include <linux/interrupt.h>
@@ -491,9 +489,9 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	}
 #else
 	if ((button->code == KEY_POWER) && !!state) {
-		printk(KERN_INFO "GPIO-KEY : key is pressed!!\n");
+		printk(KERN_INFO "GPIO-KEY : PWR key is pressed!!\n");
 	} else if ((button->code == KEY_HOMEPAGE) && !!state) {
-		printk(KERN_INFO "GPIO-KEY : key is pressed!\n");
+		printk(KERN_INFO "GPIO-KEY : HOME key is pressed!\n");	
 	}
 #endif
 
@@ -770,6 +768,7 @@ static void gpio_keys_report_state(struct gpio_keys_drvdata *ddata)
 			gpio_keys_gpio_report_event(bdata);
 	}
 	input_sync(input);
+	printk(KERN_INFO "GPIO-KEY : %s called!\n", __func__);
 }
 
 static int gpio_keys_open(struct input_dev *input)
@@ -1185,23 +1184,11 @@ static struct platform_driver gpio_keys_device_driver = {
 
 static int __init gpio_keys_init(void)
 {
-	/*#ifdef CONFIG_POWERSUSPEND
-			register_power_suspend(&gpio_suspend);
-			wake_lock_init(&sync_wake_lock, WAKE_LOCK_SUSPEND,
-			"sync_wake_lock");
-	
-	#endif*/	
-	
 	return platform_driver_register(&gpio_keys_device_driver);
 }
 
 static void __exit gpio_keys_exit(void)
 {
-	/*#ifdef CONFIG_POWERSUSPEND
-			unregister_power_suspend(&gpio_suspend);
-			wake_lock_destroy(&sync_wake_lock);
-	#endif	*/	
-	//unregister_power_suspend
 	platform_driver_unregister(&gpio_keys_device_driver);
 }
 
