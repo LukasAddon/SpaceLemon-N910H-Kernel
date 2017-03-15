@@ -432,7 +432,9 @@ static void exynos5_i2c_reset(struct exynos5_i2c *i2c)
 {
 	u32 i2c_ctl;
 
-	dev_dbg(i2c->dev, "exynos5_i2c_reset\n");
+	dev_err(i2c->dev, "exynos5_i2c_reset\n");
+
+	printk(KERN_ERR "Xtopher: exynos5_i2c_reset\n");
 
 	/* Set and clear the bit for reset */
 	i2c_ctl = readl(i2c->regs + HSI2C_CTL);
@@ -661,9 +663,9 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 			}
 
 			if (ret == -EAGAIN) {
-				dump_i2c_register(i2c);
+				//dump_i2c_register(i2c);
 				exynos5_i2c_reset(i2c);
-				dev_err(i2c->dev, "rx timeout\n");
+				dev_err(i2c->dev, "rx timeout 1 (dump disabled)\n");
 				return ret;
 			}
 		} else {
@@ -697,9 +699,9 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 			}
 
 			if (timeout == 0) {
-				dump_i2c_register(i2c);
+				//dump_i2c_register(i2c);
 				exynos5_i2c_reset(i2c);
-				dev_err(i2c->dev, "rx timeout\n");
+				dev_err(i2c->dev, "rx timeout 2 (dump disabled)\n");
 				ret = -EAGAIN;
 				return ret;
 			}
@@ -725,9 +727,9 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 				disable_irq(i2c->irq);
 
 			if (timeout == 0) {
-				dump_i2c_register(i2c);
+				//dump_i2c_register(i2c);
 				exynos5_i2c_reset(i2c);
-				dev_err(i2c->dev, "tx timeout\n");
+				dev_err(i2c->dev, "tx timeout 1 (dump disabled)\n");
 				return ret;
 			}
 
@@ -746,9 +748,9 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 					udelay(100);
 				}
 				if (ret == -EAGAIN) {
-					dump_i2c_register(i2c);
+					//dump_i2c_register(i2c);
 					exynos5_i2c_reset(i2c);
-					dev_err(i2c->dev, "tx timeout\n");
+					dev_err(i2c->dev, "tx timeout 2 (dump disabled)\n");
 					return ret;
 				}
 			} else {
@@ -792,9 +794,9 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 			}
 		}
 		if (ret == -EAGAIN) {
-			dump_i2c_register(i2c);
+			//dump_i2c_register(i2c);
 			exynos5_i2c_reset(i2c);
-			dev_err(i2c->dev, "tx timeout\n");
+			dev_err(i2c->dev, "tx timeout 3 (dump disabled)\n");
 			return ret;
 		}
 	}
@@ -805,7 +807,8 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 			struct i2c_msg *msgs, int num)
 {
-	struct exynos5_i2c *i2c = (struct exynos5_i2c *)adap->algo_data;
+	//struct exynos5_i2c *i2c = (struct exynos5_i2c *)adap->algo_data;
+	struct exynos5_i2c *i2c = adap->algo_data;
 	struct i2c_msg *msgs_ptr = msgs;
 	int retry, i = 0;
 	int ret = 0;
@@ -818,7 +821,7 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 
 	clk_prepare_enable(i2c->clk);
 	if (i2c->need_hw_init){
-		dev_dbg(i2c->dev, "exynos5_i2c_xfer call exynos5_i2c_reset\n");
+		dev_err(i2c->dev, "exynos5_i2c_xfer call exynos5_i2c_reset for init\n");
 		exynos5_i2c_reset(i2c);
 	}
 	for (retry = 0; retry < adap->retries; retry++) {
@@ -828,6 +831,7 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 			if (i2c->transfer_delay)
 				udelay(i2c->transfer_delay);
 
+			//LukasAddon xfer_msg with loop make some errors
 			ret = exynos5_i2c_xfer_msg(i2c, msgs_ptr, stop);
 			msgs_ptr++;
 
@@ -842,7 +846,7 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 		if ((i == num) && (ret != -EAGAIN))
 			break;
 
-		dev_dbg(i2c->dev, "retrying transfer (%d)\n", retry);
+		dev_err(i2c->dev, "retrying transfer (%d)\n", retry);
 
 		udelay(100);
 	}
@@ -856,6 +860,8 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 
  out:
 	clk_disable_unprepare(i2c->clk);
+	//pm_runtime_mark_last_busy(i2c->dev);
+	//pm_runtime_put_autosuspend(i2c->dev);	
 	return ret;
 }
 
@@ -1025,13 +1031,13 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
 	of_i2c_register_devices(&i2c->adap);
 	platform_set_drvdata(pdev, i2c);
 
-	clk_disable_unprepare(i2c->clk);
+	//clk_disable_unprepare(i2c->clk);
 
 #ifdef CONFIG_EXYNOS_HSI2C_RESET_DURING_DSTOP
 	list_add_tail(&i2c->node, &drvdata_list);
 #endif
 
-	return 0;
+	//return 0;
 
  err_clk:
 	clk_disable_unprepare(i2c->clk);

@@ -649,7 +649,7 @@ int hibernate(void)
 	if (error)
 		goto Exit;
 
-	printk(KERN_INFO "PM: Syncing filesystems ... ");
+	printk(KERN_INFO "PM: hibernate Syncing filesystems ... ");
 	sys_sync();
 	printk("done.\n");
 

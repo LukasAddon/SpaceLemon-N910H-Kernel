@@ -2517,10 +2517,6 @@ static int fts_stop_device(struct fts_ts_info *info)
 	tsp_debug_info(true, &info->client->dev, "%s\n", __func__);
 	mutex_lock(&info->device_mutex);
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-	/*if (dt2w_toggled) {
-		info->lowpower_mode = true;
-		dt2w_toggled = false;
-	}*/
 	if (dt2w_switch) {
 		info->lowpower_mode = true;
 	} else {
