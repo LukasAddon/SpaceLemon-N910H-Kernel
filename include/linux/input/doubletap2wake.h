@@ -17,12 +17,24 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#include <linux/suspend.h>
+#include <linux/suspend_ioctls.h>
+#include <linux/utsname.h>
+#include <linux/freezer.h>
+
 
 #ifndef _LINUX_DOUBLETAP2WAKE_H
 #define _LINUX_DOUBLETAP2WAKE_H
 
 extern int dt2w_switch;
-extern bool dt2w_toggled;
 extern bool flg_sensor_prox_detecting;
+extern bool flg_screen_report;
 
 #endif	/* _LINUX_DOUBLETAP2WAKE_H */
+
+/* kernel/power/autosleep.c */
+extern int pm_autosleep_init(void);
+extern int pm_autosleep_lock(void);
+extern void pm_autosleep_unlock(void);
+extern suspend_state_t pm_autosleep_state(void);
+extern int pm_autosleep_set_state(suspend_state_t state);
