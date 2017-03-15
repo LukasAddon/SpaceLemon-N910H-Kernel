@@ -610,7 +610,9 @@ static ssize_t hmtColorTemp_show(struct device *dev,
 {
 	struct mdnie_info *mdnie = dev_get_drvdata(dev);
 
-	return sprintf(buf, "hmt_mode: %d\n", mdnie->hmt_mode);
+	// LukasAddon - return only digit
+	//return sprintf(buf, "hmt_mode: %d\n", mdnie->hmt_mode);
+	return sprintf(buf, "%d\n", mdnie->hmt_mode);
 }
 
 static ssize_t hmtColorTemp_store(struct device *dev,
