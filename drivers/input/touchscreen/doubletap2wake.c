@@ -17,6 +17,8 @@
  *
  * v1.5 - remove Powersuspend code
  *
+ * v1.6 - fix doubletap detecting
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -58,7 +60,7 @@
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "Dennis Rassmann <showp1984@gmail.com>"
 #define DRIVER_DESCRIPTION "Doubletap2wake for almost any device"
-#define DRIVER_VERSION "1.5"
+#define DRIVER_VERSION "1.6"
 #define LOGTAG "[doubletap2wake]: "
 #define VIB_STRENGTH 		20
 
@@ -87,6 +89,7 @@ int vib_strength = VIB_STRENGTH;
 /* Resources */
 static struct wake_lock dt2w_wakelock;
 int dt2w_switch = DT2W_DEFAULT;
+static bool button_pressed = false;
 
 static unsigned long long tap_time_pre = 0;
 static int touch_x = 0, touch_y = 0, touch_nr = 0, x_pre = 0, y_pre = 0;
@@ -167,6 +170,7 @@ static void new_touch(int x, int y) {
 	y_pre = y;
 	touch_nr++;
 	#if DT2W_DEBUG
+	        pr_info(LOGTAG" touch count = %4d \n",touch_nr);
 	        //pr_info(LOGTAG"flg_sensor_prox_detecting:%s \n",(flg_sensor_prox_detecting) ? "true" : "false");
 			//pr_info(LOGTAG"flg_power_suspended:%s \n",(flg_power_suspended) ? "true" : "false");
 	        pr_info(LOGTAG"x,y(%4d,%4d) tap_time_pre:%llu\n",
@@ -185,16 +189,17 @@ static void detect_doubletap2wake(int x, int y, bool st)
          		return;
 		if (dt2w_switch == 1 && (y < 0 || y > 2559))
         		return;
-		if ((single_touch) && (dt2w_switch > 0) && (exec_count) && (touch_cnt)) {
-			touch_cnt = false;
+		if ((single_touch) && (dt2w_switch > 0) && (exec_count) /*&& (touch_cnt)*/) {
+			//touch_cnt = false;
 			if (touch_nr == 0) {
 				new_touch(x, y);
 			} else if (touch_nr == 1) {
 				if ((calc_feather(x, x_pre) < DT2W_FEATHER) &&
 			    	(calc_feather(y, y_pre) < DT2W_FEATHER) &&
-			    	((jiffies-tap_time_pre) < DT2W_TIME)) {
+			    	((jiffies-tap_time_pre) < DT2W_TIME)) {	
 			    	//touch_nr++;
 					#if DT2W_DEBUG
+							pr_info(LOGTAG" touch count = %4d \n",touch_nr);
 					        pr_info(LOGTAG"x,y(%4d,%4d) tap_time_pre:%lu\n",
 					                	x, y, jiffies);
 					#endif			    	
@@ -225,6 +230,7 @@ static void dt2w_input_callback(struct work_struct *unused) {
 
 static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 				unsigned int code, int value) {
+
 #if DT2W_DEBUG
 	/*pr_info("doubletap2wake: code: %s|%u, val: %i\n",
 		((code==ABS_MT_POSITION_X) ? "X" :
@@ -232,9 +238,11 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 		(code==ABS_MT_TRACKING_ID) ? "ID" :
 		"undef"), code, value);*/
 #endif
+	// do not detect if screen on or dt2w disabled
 	if (flg_screen_report || !dt2w_switch)
 		return;
 
+    // 0 step - reset if multitach detect
 	if (code == ABS_MT_SLOT) {
 		/* We did not handle EV_SYN event gracefully before we change
 		 * the SLOT. However we are simply resetting the touch count
@@ -244,32 +252,70 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 		 * and considered gracefully. This we do only if we have already
 		 * recognized one touch, Too much description, Huh...
 		 */
-		if (!touch_nr)
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" ABS_MT_SLOT detect\n");
+		#endif			
+		if (!touch_nr || button_pressed) {
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" ABS_MT_SLOT do reset touch\n");
+		#endif				
 			doubletap2wake_reset();
+		}
 		return;
 	}
 
+	// 4 step - detect ABS_MT_TRACKING_ID 
 	if (code == ABS_MT_TRACKING_ID && value == -1) {
-		touch_cnt = true;
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" ABS_MT_TRACKING_ID detect\n");
+		#endif
 		if ((!touch_x_called) || (!touch_y_called)) {
 		    return;
 		}
+		touch_cnt = true;
 	}
-	
-	if (code == ABS_MT_POSITION_X) {
+
+	//LukasAddon detect touch more accuracy
+	// 1 step - detect touch down
+	if (code == BTN_TOUCH && value == 1) {
+		button_pressed = true;
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" finger down\n");
+		#endif		
+	}	
+
+	// 5 step - detect touch up 
+	if (code == BTN_TOUCH && value == 0) {
+		button_pressed = false;
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" finger up\n");
+		#endif
+	}
+
+	// 2 step - detect X
+	if (code == ABS_MT_POSITION_X && button_pressed && !touch_x_called) {
 		touch_x = value;
 		touch_x_called = true;
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" detect X\n");
+		#endif		
 	}
 
-	if (code == ABS_MT_POSITION_Y) {
+	// 3 step - detect Y 
+	if (code == ABS_MT_POSITION_Y && button_pressed && !touch_y_called) {
 		touch_y = value;
 		touch_y_called = true;
+		#if DT2W_DEBUG
+			pr_info(LOGTAG" detect Y\n");
+		#endif		
 	}
 
-	if (touch_x_called && touch_y_called && touch_cnt) {	
+	// 6 step - clear data and call detect_doubletap2wake 
+	if (touch_x_called && touch_y_called && touch_cnt && !button_pressed) {
+		touch_cnt = false;	
 		// LukasAddon: wakelock up for 2 second
 		#if DT2W_DEBUG
-			pr_info(LOGTAG" wake up for HZ * 4\n");
+			pr_info(LOGTAG" wake up for HZ * 4 and do work\n");
 		#endif	
 		wake_lock_timeout(&dt2w_wakelock, HZ * 2);
 		touch_x_called = false;
