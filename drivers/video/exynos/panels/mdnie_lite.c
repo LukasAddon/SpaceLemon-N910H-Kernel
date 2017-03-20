@@ -22,6 +22,7 @@
 #define MDNIE_SYSFS_PREFIX		"/sdcard/mdnie/"
 #define PANEL_COORDINATE_PATH	"/sys/class/lcd/panel/color_coordinate"
 
+int     scenario_lock = 0;
 #define IS_DMB(idx)			(idx == DMB_NORMAL_MODE)
 #define IS_SCENARIO(idx)		((idx < SCENARIO_MAX) && !((idx > VIDEO_NORMAL_MODE) && (idx < CAMERA_MODE)))
 #define IS_ACCESSIBILITY(idx)		(idx && (idx < ACCESSIBILITY_MAX))
@@ -264,17 +265,17 @@ static ssize_t scenario_store(struct device *dev,
 	if (ret < 0)
 		return ret;
 
-	dev_info(dev, "%s: value=%d\n", __func__, value);
+	if (scenario_lock == 0) {
+		dev_info(dev, "%s: value=%d\n", __func__, value);
+		if (!SCENARIO_IS_VALID(value))
+			value = UI_MODE;
 
-	if (!SCENARIO_IS_VALID(value))
-		value = UI_MODE;
+		mutex_lock(&mdnie->lock);
+		mdnie->scenario = value;
+		mutex_unlock(&mdnie->lock);
 
-	mutex_lock(&mdnie->lock);
-	mdnie->scenario = value;
-	mutex_unlock(&mdnie->lock);
-
-	mdnie_update(mdnie);
-
+		mdnie_update(mdnie);		
+	}
 	return count;
 }
 
@@ -638,6 +639,26 @@ static ssize_t hmtColorTemp_store(struct device *dev,
 }
 #endif
 
+static ssize_t scenario_lock_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+
+	count += sprintf(buf, "%d\n", scenario_lock);
+
+	return count;
+}
+
+static ssize_t scenario_lock_store(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	if (buf[0] >= '0' && buf[0] <= '1' && buf[1] == '\n')
+                if (scenario_lock != buf[0] - '0')
+		        scenario_lock = buf[0] - '0';
+
+	return count;
+}
+
 static struct device_attribute mdnie_attributes[] = {
 	__ATTR(mode, 0664, mode_show, mode_store),
 	__ATTR(scenario, 0664, scenario_show, scenario_store),
@@ -648,6 +669,7 @@ static struct device_attribute mdnie_attributes[] = {
 	__ATTR(auto_brightness, 0664, auto_brightness_show, auto_brightness_store),
 	__ATTR(mdnie, 0444, mdnie_show, NULL),
 	__ATTR(sensorRGB, 0664, sensorRGB_show, sensorRGB_store),
+	__ATTR(scenario_lock, 0664, scenario_lock_show, scenario_lock_store),
 #ifdef CONFIG_LCD_HMT
 	__ATTR(hmt_color_temperature, 0664, hmtColorTemp_show, hmtColorTemp_store),
 #endif

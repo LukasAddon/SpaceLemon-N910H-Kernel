@@ -48,7 +48,16 @@ cat << CTAG
 	}},
 	{ SSpacer:{
 		height:2
-	}},	
+	}},
+	{ SCheckBox:{
+		label:"Scenario change lock!",
+		description:"not allow edit Scenario . Default is Disabled.",
+		default: `cat /sys/class/mdnie/mdnie/scenario_lock`,
+		action:"generic /sys/class/mdnie/mdnie/scenario_lock"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
 	{ SOptionList:{
 		title:"Scenario",
 		description:" This option will change screen scenario color scheme. Some apps can change this value (like Camera or Gallery)!!!! ",
