@@ -173,6 +173,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 			prev_coord = next_coord;
 			next_coord = DEFAULT_S2W_X_B1;
 			barrier[0] = true;
+			wake_lock_timeout(&s2w_wakelock, HZ*2);
 			if ((barrier[1] == true) ||
 					((sweep_coord < prev_coord) &&
 					(sweep_coord > next_coord) &&
@@ -209,6 +210,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 			reverse_prev_coord = reverse_next_coord;
 			reverse_next_coord = DEFAULT_S2W_X_B4;
 			reverse_barrier[0] = true;
+			wake_lock_timeout(&s2w_wakelock, HZ*2);
 			if ((reverse_barrier[1] == true) ||
 					((sweep_coord > reverse_prev_coord) &&
 					(sweep_coord < reverse_next_coord) &&
@@ -249,6 +251,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 			prev_coord = next_coord;
 			next_coord = DEFAULT_S2W_X_B1;
 			barrier[0] = true;
+			wake_lock_timeout(&s2w_wakelock, HZ*2);
 			if ((barrier[1] == true) ||
 					((sweep_coord < prev_coord) &&
 					(sweep_coord > next_coord) &&
@@ -285,6 +288,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 			reverse_prev_coord = reverse_next_coord;
 			reverse_next_coord = DEFAULT_S2W_X_B4;
 			reverse_barrier[0] = true;
+			wake_lock_timeout(&s2w_wakelock, HZ*2);
 			if ((reverse_barrier[1] == true) ||
 					((sweep_coord > reverse_prev_coord) &&
 					(sweep_coord < reverse_next_coord) &&
@@ -353,7 +357,6 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
 	}
 
 	if (touch_x_called && touch_y_called) {
-		wake_lock_timeout(&s2w_wakelock, HZ*2);
 		touch_x_called = false;
 		touch_y_called = false;
 		queue_work_on(0, s2w_input_wq, &s2w_input_work);
