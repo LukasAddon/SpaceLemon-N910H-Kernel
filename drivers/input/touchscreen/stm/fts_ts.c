@@ -1077,7 +1077,7 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 				break;
 			}
 
-			if ((!dt2w_switch && !s2w_wakeup) && info->fts_power_state == FTS_POWER_STATE_LOWPOWER)
+			if (!dt2w_switch && !s2w_wakeup && info->fts_power_state == FTS_POWER_STATE_LOWPOWER)
 				break;
 
 			x = data[1 + EventNum * FTS_EVENT_SIZE] +
@@ -1140,7 +1140,7 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 			break;
 
 		case EVENTID_LEAVE_POINTER:
-			if ((!dt2w_switch && !s2w_wakeup) && info->fts_power_state == FTS_POWER_STATE_LOWPOWER)
+			if (!dt2w_switch && !s2w_wakeup && info->fts_power_state == FTS_POWER_STATE_LOWPOWER)
 				break;
 
 			if (info->touch_count <= 0) {
