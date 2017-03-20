@@ -7,14 +7,15 @@
  *
  * v1.0 - 2013, Dennis Rassmann
  *
- * v1.1 - fix bugs and remove powersuspend.c support
+ * v1.1 - fix bugs and remove powersuspend.c support, 2017, Lukas Addon
  * 
- * v1.2 - add dt2w_screen_report to prevent dt2w detect when screen on
+ * v1.2 - add dt2w_screen_report to prevent dt2w detect when screen on, 2017, Lukas Addon
  *
- * v1.3 - first fixes for deep sleep
+ * v1.3 - first fixes for deep sleep, 2017, Lukas Addon
  *
- * v1.4 - now it work fine with Note4 exynos 
+ * v1.4 - now it work fine with Note4 exynos, 2017, Lukas Addon
  *
+ * v1.5 - remove Powersuspend code
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,9 +92,6 @@ static unsigned long long tap_time_pre = 0;
 static int touch_x = 0, touch_y = 0, touch_nr = 0, x_pre = 0, y_pre = 0;
 static bool touch_x_called = false, touch_y_called = false, touch_cnt = true;
 static bool scr_suspended = false, exec_count = true;
-#ifndef CONFIG_POWERSUSPEND
-static struct notifier_block dt2w_lcd_notif;
-#endif
 static struct input_dev * doubletap2wake_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);
 static struct work_struct dt2w_input_work;
@@ -116,8 +114,8 @@ __setup("dt2w=", read_dt2w_cmdline);
 
 /* reset on finger release */
 static void doubletap2wake_reset(void) {
-	//if (wake_lock_active(&dt2w_wakelock))
-	//	wake_unlock(&dt2w_wakelock);
+	if (wake_lock_active(&dt2w_wakelock))
+		wake_unlock(&dt2w_wakelock);
 	exec_count = true;
 	touch_nr = 0;
 	tap_time_pre = 0;
@@ -148,7 +146,7 @@ static DECLARE_WORK(doubletap2wake_presspwr_work, doubletap2wake_presspwr);
 
 /* PowerKey trigger */
 static void doubletap2wake_pwrtrigger(void) {
-	//set_vibrate(vib_strength);
+
 	schedule_work(&doubletap2wake_presspwr_work);
         return;
 }
@@ -174,7 +172,7 @@ static void new_touch(int x, int y) {
 	        pr_info(LOGTAG"x,y(%4d,%4d) tap_time_pre:%llu\n",
 	                	x, y, tap_time_pre);
 	#endif	
-	//wake_lock_timeout(&dt2w_wakelock, HZ/4);
+	wake_lock_timeout(&dt2w_wakelock, HZ*2);
 }
 
 /* Doubletap2wake main function */
