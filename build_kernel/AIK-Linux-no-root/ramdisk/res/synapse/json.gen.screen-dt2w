@@ -21,6 +21,15 @@ cat << CTAG
 	{ SDescription:{
 		description:""
 	}},
+    { SCheckBox:{
+        description:" Allows you to turn the screen on by swiping UNDER the navigation bar right > left or left > right. Default is Disabled.",
+        label:"Sweep2Wake",
+		default:`cat /sys/sweep2sleep/sweep2wake`,
+		action:"generic /sys/sweep2sleep/sweep2wake"
+	}},
+	{ SDescription:{
+		description:""
+	}},	
 	{ SCheckBox:{
 		label:"Double Tap To Wake Phone",
 		description:"Enable/Disable DT2W. Default is Disabled.",
@@ -39,7 +48,16 @@ cat << CTAG
 	}},
 	{ SSpacer:{
 		height:2
-	}},	
+	}},
+	{ SCheckBox:{
+		label:"Scenario change lock!",
+		description:"not allow edit Scenario . Default is Disabled.",
+		default: `cat /sys/class/mdnie/mdnie/scenario_lock`,
+		action:"generic /sys/class/mdnie/mdnie/scenario_lock"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
 	{ SOptionList:{
 		title:"Scenario",
 		description:" This option will change screen scenario color scheme. Some apps can change this value (like Camera or Gallery)!!!! ",
