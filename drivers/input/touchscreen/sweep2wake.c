@@ -3,6 +3,11 @@
  *
  *
  * Copyright (c) 2013, Dennis Rassmann <showp1984@gmail.com>
+ * Copyright (c) 2017, Lukas Addon <LukasAddon@gmail.com>
+ *
+ * v1.0 - 2013, Dennis Rassmann
+ *
+ * v1.1 - fix bugs and remove powersuspend.c support, 2017, Lukas Addon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
