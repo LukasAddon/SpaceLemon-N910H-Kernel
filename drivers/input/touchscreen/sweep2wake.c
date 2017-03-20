@@ -84,6 +84,8 @@
 
 /* Resources */
 int s2w_switch = S2W_DEFAULT, s2w = S2W_DEFAULT;
+int s2w_wakeup = S2W_DEFAULT;
+
 static int touch_x = 0, touch_y = 0;
 static bool touch_x_called = false, touch_y_called = false;
 static bool scr_suspended = false, exec_count = true;
@@ -155,6 +157,7 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 	int reverse_prev_coord = 0, reverse_next_coord = 0;
 	bool single_touch = st;
 
+	// swipe to sleep check
 	if ((single_touch) && (flg_screen_report == true) && (s2w_switch > 0)) {
 		scr_on_touch = true;
 		/* s2s: right->left */
@@ -229,6 +232,83 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 			}
 		}
 	}
+
+	// swipe to wakeup check
+	if ((single_touch) && (flg_screen_report == false) && (s2w_wakeup > 0)) {
+		scr_on_touch = true;
+		/* s2s: right->left */
+		prev_coord = DEFAULT_S2W_X_B5;
+		next_coord = DEFAULT_S2W_X_B2;
+		if ((barrier[0] == true) ||
+				((sweep_coord < prev_coord) &&
+				(sweep_coord > next_coord) &&
+				(sweep_height > DEFAULT_S2W_Y_LIMIT))) {	
+			prev_coord = next_coord;
+			next_coord = DEFAULT_S2W_X_B1;
+			barrier[0] = true;
+			if ((barrier[1] == true) ||
+					((sweep_coord < prev_coord) &&
+					(sweep_coord > next_coord) &&
+					(sweep_height >
+					DEFAULT_S2W_Y_LIMIT))) {
+		#if S2W_DEBUG
+       		pr_info(LOGTAG"x,y(%4d,%4d) right->left single:%s\n",
+				sweep_coord, sweep_height,
+				(single_touch) ? "true" : "false");
+		#endif				
+				prev_coord = next_coord;
+				barrier[1] = true;
+				if ((sweep_coord < prev_coord) &&
+						(sweep_height >
+						DEFAULT_S2W_Y_LIMIT)) {
+					if (sweep_coord <
+							DEFAULT_S2W_X_B0) {
+						if (exec_count) {
+							pr_info(LOGTAG"OFF\n");
+							sweep2wake_pwrswitch();
+							exec_count = false;
+						}
+					}
+				}
+			}
+		}
+		/* s2s: left->right */
+		reverse_prev_coord = DEFAULT_S2W_X_B0;
+		reverse_next_coord = DEFAULT_S2W_X_B3;
+		if ((reverse_barrier[0] == true) ||
+				((sweep_coord > reverse_prev_coord) &&
+				(sweep_coord < reverse_next_coord) &&
+				(sweep_height > DEFAULT_S2W_Y_LIMIT))) {
+			reverse_prev_coord = reverse_next_coord;
+			reverse_next_coord = DEFAULT_S2W_X_B4;
+			reverse_barrier[0] = true;
+			if ((reverse_barrier[1] == true) ||
+					((sweep_coord > reverse_prev_coord) &&
+					(sweep_coord < reverse_next_coord) &&
+					(sweep_height >
+					DEFAULT_S2W_Y_LIMIT))) {
+		#if S2W_DEBUG
+       		pr_info(LOGTAG"x,y(%4d,%4d) left->right single:%s\n",
+				sweep_coord, sweep_height,
+				(single_touch) ? "true" : "false");
+		#endif					
+				reverse_prev_coord = reverse_next_coord;
+				reverse_barrier[1] = true;
+				if ((sweep_coord > reverse_prev_coord) &&
+						(sweep_height >
+						DEFAULT_S2W_Y_LIMIT)) {
+					if (sweep_coord > DEFAULT_S2W_X_B5) {
+						if (exec_count) {
+							pr_info(LOGTAG"OFF\n");
+							sweep2wake_pwrswitch();
+							exec_count = false;
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
 
 static void s2w_input_callback(struct work_struct *unused) {
@@ -336,6 +416,30 @@ static struct input_handler s2w_input_handler = {
 /*
  * SYSFS stuff below here
  */
+//s2w_wakeup
+static ssize_t s2w_sweep2wake_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+
+	count += sprintf(buf, "%d\n", s2w_wakeup);
+
+	return count;
+}
+
+static ssize_t s2w_sweep2wake_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	if (buf[0] >= '0' && buf[0] <= '1' && buf[1] == '\n')
+                if (s2w_wakeup != buf[0] - '0')
+		        s2w_wakeup = buf[0] - '0';
+
+	return count;
+}
+
+static DEVICE_ATTR(sweep2wake, (S_IWUSR|S_IRUGO),
+	s2w_sweep2wake_show, s2w_sweep2wake_dump);
+
 static ssize_t s2w_sweep2sleep_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -421,9 +525,14 @@ static int __init sweep2wake_init(void)
 	}
 	rc = sysfs_create_file(sweep2sleep_kobj, &dev_attr_sweep2sleep.attr);
 	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for sweep2wake\n",
+		pr_warn("%s: sysfs_create_file failed for sleep\n",
 				__func__);
 	}
+	rc = sysfs_create_file(sweep2sleep_kobj, &dev_attr_sweep2wake.attr);
+	if (rc) {
+		pr_warn("%s: sysfs_create_file failed for sweep2wake\n",
+				__func__);
+	}	
 	rc = sysfs_create_file(sweep2sleep_kobj,
 			&dev_attr_sweep2wake_version.attr);
 	if (rc) {
