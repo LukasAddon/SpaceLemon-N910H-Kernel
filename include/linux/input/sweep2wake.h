@@ -22,5 +22,6 @@
 #define _LINUX_SWEEP2WAKE_H
 
 extern int s2w_switch;
+extern int s2w_wakeup;
 
 #endif	/* _LINUX_SWEEP2WAKE_H */
