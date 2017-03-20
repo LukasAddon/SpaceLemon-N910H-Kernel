@@ -163,7 +163,7 @@ static LIST_HEAD(drvdata_list);
 #define HSI2C_POLLING 0
 #define HSI2C_INTERRUPT 1
 
-#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(1000))
+#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(100))
 
 #define EXYNOS5_FIFO_SIZE		16
 
