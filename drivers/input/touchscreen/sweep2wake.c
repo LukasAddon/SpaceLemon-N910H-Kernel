@@ -9,6 +9,10 @@
  *
  * v1.1 - fix bugs and remove powersuspend.c support, 2017, Lukas Addon
  *
+ * v1.2 - add wakelock support, 2017, Lukas Addon
+ *
+ * v1.3 - do not enable  wakelock where s2s and s2w disabled, 2017, Lukas Addon
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -36,17 +40,12 @@
 #include <linux/workqueue.h>
 #include <linux/hrtimer.h>
 #include <linux/input.h>
-
+#include <linux/wakelock.h>
 
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "Dennis Rassmann <showp1984@gmail.com>"
 #define DRIVER_DESCRIPTION "Sweep2wake for almost any device"
-/* Credits:
- * v1.5 Modded for G2 as sweep2sleep only by Ayysir
- * v1.6 Added sweep2sleep from right to left + cleanups by Dorimanx
- * v1.7 Added LCD Notify if POWERSUSPEND or EARLYSUSPEND is not merged. + cleanups by Dorimanx.
- */
-#define DRIVER_VERSION "1.7"
+#define DRIVER_VERSION "1.3"
 #define LOGTAG "[sweep2wake]: "
 
 /* Tuneables */
@@ -85,6 +84,8 @@
 /* Resources */
 int s2w_switch = S2W_DEFAULT, s2w = S2W_DEFAULT;
 int s2w_wakeup = S2W_DEFAULT;
+
+static struct wake_lock s2w_wakelock;
 
 static int touch_x = 0, touch_y = 0;
 static bool touch_x_called = false, touch_y_called = false;
@@ -142,6 +143,8 @@ static void sweep2wake_pwrswitch(void) {
 
 /* reset on finger release */
 static void sweep2wake_reset(void) {
+	if (wake_lock_active(&s2w_wakelock))
+		wake_unlock(&s2w_wakelock);
 	exec_count = true;
 	barrier[0] = false;
 	barrier[1] = false;
@@ -325,6 +328,10 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
 		(code==ABS_MT_TRACKING_ID) ? "ID" :
 		"undef"), code, value);
 #endif*/
+	if (!s2w_switch && !s2w_wakeup) {
+		return;
+	}
+
 	if (code == ABS_MT_SLOT) {
 		sweep2wake_reset();
 		return;
@@ -346,6 +353,7 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
 	}
 
 	if (touch_x_called && touch_y_called) {
+		wake_lock_timeout(&s2w_wakelock, HZ*2);
 		touch_x_called = false;
 		touch_y_called = false;
 		queue_work_on(0, s2w_input_wq, &s2w_input_work);
@@ -497,6 +505,8 @@ static int __init sweep2wake_init(void)
 		pr_err("Can't allocate suspend autotest power button\n");
 		goto err_alloc_dev;
 	}
+
+	wake_lock_init(&s2w_wakelock, WAKE_LOCK_SUSPEND, "s2w_wakelock");
 
 	input_set_capability(sweep2wake_pwrdev, EV_KEY, KEY_POWER);
 	sweep2wake_pwrdev->name = "s2w_pwrkey";
