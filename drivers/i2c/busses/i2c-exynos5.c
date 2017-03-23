@@ -824,7 +824,8 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 		dev_err(i2c->dev, "exynos5_i2c_xfer call exynos5_i2c_reset for init\n");
 		exynos5_i2c_reset(i2c);
 	}
-	for (retry = 0; retry < adap->retries; retry++) {
+	// LukasAddon disable retries , only 
+	//for (retry = 0; retry < adap->retries; retry++) {
 		for (i = 0; i < num; i++) {
 			stop = (i == num - 1);
 
@@ -842,18 +843,17 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 				goto out;
 			}
 		}
+		//if ((i == num) && (ret != -EAGAIN))
+		//	break;
 
-		if ((i == num) && (ret != -EAGAIN))
-			break;
+		//dev_err(i2c->dev, "retrying transfer (%d)\n", retry);
 
-		dev_err(i2c->dev, "retrying transfer (%d)\n", retry);
-
-		udelay(100);
-	}
-
+		//udelay(100);
+	//}
 	if (i == num) {
 		ret = num;
 	} else {
+		/* Only one message, cannot access the device */
 		ret = -EREMOTEIO;
 		dev_warn(i2c->dev, "xfer message failed\n");
 	}
