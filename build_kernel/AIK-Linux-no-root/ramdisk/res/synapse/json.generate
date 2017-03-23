@@ -23,6 +23,7 @@ cat << CTAG
 		`. /res/synapse/json.gen.storage`,
 		`. /res/synapse/json.gen.boost`,
 		`. /res/synapse/json.gen.advanced`,
+        `. /res/synapse/json.gen.sysctl_vm`,
         `. /res/synapse/json.gen.logs`,
         `. /res/synapse/json.gen.backup-restore`,
     ]
