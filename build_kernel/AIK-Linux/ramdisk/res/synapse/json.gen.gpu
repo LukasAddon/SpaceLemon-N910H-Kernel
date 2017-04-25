@@ -84,7 +84,7 @@ cat << CTAG
                 unit:" MHz",
                 default:`cat /sys/devices/14ac0000.mali/min_clock`,
                 action:"generic /sys/devices/14ac0000.mali/min_clock",
-                values:[160, 266, 350, 420,]
+                values:[100, 160, 266, 350, 420,]
 	}},
 	{ SSpacer:{
 		height:1
