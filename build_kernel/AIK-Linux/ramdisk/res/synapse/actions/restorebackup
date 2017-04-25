@@ -67,14 +67,14 @@ case "$1" in
 	;;
 
 	keepconfig)
-		BCK_PROF=`$BB cat /res/synapse/SkyHigh/bck_prof`;
+		BCK_PROF=`$BB cat /sdcard/Synapse/bck_prof`;
 		BCK_PROF=`$BB echo ${BCK_PROF// /_}`;
 	
 		if [ "$BCK_PROF" == "None" ]; then
 			$BB echo "Enter a profile name first and then apply.";
 		else
 			cd $SYNAPSE_DATA;
-			$BB echo "None" > /res/synapse/SkyHigh/bck_prof;
+			$BB echo "None" > /sdcard/Synapse/bck_prof;
 			$BB tar -cz -f "$SYNAPSE_CONFIG_DIR/$BCK_PROF.tgz" *;
 			$BB echo "$BCK_PROF.tgz saved to /sdcard/Synapse. Reboot Device to see updated list.";
 			cd /;
@@ -116,14 +116,14 @@ case "$1" in
 	;;
 
 	keepboot)
-		BCK_PROF=`$BB cat /res/synapse/SkyHigh/bck_kernel`;
+		BCK_PROF=`$BB cat /sdcard/Synapse/bck_kernel`;
 		BCK_PROF=`$BB echo ${BCK_PROF// /_}`;
 	
 		if [ "$BCK_PROF" == "None" ]; then
 			$BB echo "Enter a kernel name first and then apply.";
 		else
 			$BB dd if="$2" of="$SYNAPSE_BOOT_DIR/$BCK_PROF.img" 2> /dev/null;
-			$BB echo "None" > /res/synapse/SkyHigh/bck_kernel;
+			$BB echo "None" > /sdcard/Synapse/bck_kernel;
 			$BB echo "$BCK_PROF.img saved to /sdcard/Synapse. Reboot Device to see updated list.";
 		fi;
 	;;
