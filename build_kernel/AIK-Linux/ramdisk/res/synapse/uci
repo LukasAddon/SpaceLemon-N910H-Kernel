@@ -4,9 +4,20 @@ BB=/sbin/busybox;
 
 CONFIG_JSON=/res/synapse/config.json
 ACTION_SCRIPTS=/res/synapse/actions/
+BP=/sdcard/Synapse/bck_prof
+BK=/sdcard/Synapse/bck_kernel
 
 if [ ! -f $CONFIG_JSON ]; then
 	source /res/synapse/json.generate > $CONFIG_JSON
+fi
+
+if [ ! -f $BP ]; then
+	$BB mkdir /sdcard/Synapse
+	$BB echo "None" > $BP
+fi
+
+if [ ! -f $BK ]; then
+	$BB echo "None" > $BK
 fi
 
 case "${1}" in
