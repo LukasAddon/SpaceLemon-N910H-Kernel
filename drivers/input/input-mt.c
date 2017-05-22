@@ -143,6 +143,9 @@ void input_mt_report_slot_state(struct input_dev *dev,
 	slot->frame = mt->frame;
 
 	if (!active) {
+        #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+                pr_info("doubletap2wake ABS_MT_TRACKING_ID -1 send event\n");
+        #endif
 		input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1);
 		return;
 	}
@@ -151,6 +154,11 @@ void input_mt_report_slot_state(struct input_dev *dev,
 	if (id < 0 || input_mt_get_value(slot, ABS_MT_TOOL_TYPE) != tool_type)
 		id = input_mt_new_trkid(mt);
 
+	#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+    	//if (id > 0) {
+			pr_info("doubletap2wake ABS_MT_TRACKING_ID = %d send event\n", id);
+		//}
+	#endif
 	input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, id);
 	input_event(dev, EV_ABS, ABS_MT_TOOL_TYPE, tool_type);
 }
@@ -257,6 +265,9 @@ void input_mt_sync_frame(struct input_dev *dev)
 		for (s = mt->slots; s != mt->slots + mt->num_slots; s++) {
 			if (input_mt_is_used(mt, s))
 				continue;
+			#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+							pr_info("doubletap2wake ABS_MT_TRACKING_ID send slot='%s'\n", (s - mt->slots));
+			#endif
 			input_mt_slot(dev, s - mt->slots);
 			input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1);
 		}
