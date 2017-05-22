@@ -87,6 +87,9 @@ static inline int input_mt_new_trkid(struct input_mt *mt)
 
 static inline void input_mt_slot(struct input_dev *dev, int slot)
 {
+    #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+        pr_info("doubletap2wake ABS_MT_SLOT %d send event\n",slot);
+    #endif
 	input_event(dev, EV_ABS, ABS_MT_SLOT, slot);
 }
 

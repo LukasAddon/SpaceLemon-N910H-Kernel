@@ -1038,7 +1038,10 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 				input_report_key(info->input_dev, BTN_SUBSCREEN_FLAG, 0);
 			}
 #endif
-
+            #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+                            pr_info("doubletap2wake line 1042 ABS_MT_POSITION_X = %d send event\n", x);
+                            pr_info("doubletap2wake line 1042 ABS_MT_POSITION_Y = %d send event\n", y);
+            #endif
 			input_report_abs(info->input_dev, ABS_MT_POSITION_X, x);
 			input_report_abs(info->input_dev, ABS_MT_POSITION_Y, y);
 			input_report_abs(info->input_dev, ABS_MT_DISTANCE, 255 - z);
@@ -1113,6 +1116,10 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 			input_report_key(info->input_dev, BTN_TOUCH, 1);
 			input_report_key(info->input_dev,
 					 BTN_TOOL_FINGER, 1);
+            #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+                            pr_info("doubletap2wake line 1120 ABS_MT_POSITION_X = %d send event\n", x);
+                            pr_info("doubletap2wake line 1120 ABS_MT_POSITION_Y = %d send event\n", y);
+            #endif
 			input_report_abs(info->input_dev,
 					 ABS_MT_POSITION_X, x);
 			input_report_abs(info->input_dev,
