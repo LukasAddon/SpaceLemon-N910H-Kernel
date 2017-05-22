@@ -82,13 +82,30 @@ cat << CTAG
 	}},	
 	{ SOptionList:{
 		title:"accessibility",
-		description:"Color mode rof screen",
+		description:"Color mode of screen",
 		default:`cat /sys/class/mdnie/mdnie/accessibility`,
 		action:"generic /sys/class/mdnie/mdnie/accessibility",
 		values:{ '0' : 'Standart',
 		 '1' : 'Inversed',
 		  '4' :'Negative',
 		   '5': 'Inversed Negative',
+		}
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"secret screen modes",
+		description:"all modes of screen",
+		default:`cat /sys/class/mdnie/mdnie/mode`,
+		action:"generic /sys/class/mdnie/mdnie/mode",
+		values:{
+		 '0' : 'DYNAMIC',
+		  '1' :'STANDARD',
+		   '2': 'NATURAL',
+		   '3' :'MOVIE',
+		   '4' :'AUTO',
+		   '5' :'READING',
 		}
 	}},
     ]
