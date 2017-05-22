@@ -142,6 +142,17 @@
 		battery,recharging_total_time = <5400>;
 		battery,charging_reset_time = <0>;
 
+		battery,swelling_high_temp_block = <500>;
+		battery,swelling_high_temp_recov = <450>;
+		battery,swelling_low_temp_block = <50>;
+		battery,swelling_low_temp_recov = <100>;
+		battery,swelling_chg_current = <1600>;
+		battery,swelling_topoff_current = <200>;
+		battery,swelling_drop_float_voltage = <4200>;
+		battery,swelling_high_rechg_voltage = <4150>;
+		battery,swelling_low_rechg_voltage = <4050>;
+		battery,swelling_block_time = <600>;
+
 		io-channels = <&exynos_adc 1>, <&exynos_adc 2>;
 		io-channel-names = "adc-temp", "chg-adc-temp";
 		#io-channel-cells = <2>;
