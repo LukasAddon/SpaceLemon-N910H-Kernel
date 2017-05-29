@@ -19,6 +19,10 @@
  *
  * v1.6 - fix doubletap detecting
  *
+ * v1.7 - disable system event, use direct function (you must call it from touch driver and screen driver)
+ *
+ * v1.8 - clean code, now file smaller and faster
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -58,9 +62,9 @@
 //#endif
 
 /* Version, author, desc, etc */
-#define DRIVER_AUTHOR "Dennis Rassmann <showp1984@gmail.com>"
+#define DRIVER_AUTHOR "LukasAddon <LukasAddon@gmail.com>"
 #define DRIVER_DESCRIPTION "Doubletap2wake for almost any device"
-#define DRIVER_VERSION "1.6"
+#define DRIVER_VERSION "1.8"
 #define LOGTAG "[doubletap2wake]: "
 #define VIB_STRENGTH 		20
 
@@ -135,7 +139,6 @@ static void doubletap2wake_presspwr(struct work_struct * doubletap2wake_presspwr
 		pr_info(LOGTAG" mutex_trylock is true in line 123 \n");
 		return;
 	}
-
 	input_report_key(doubletap2wake_pwrdev, KEY_POWER, 1);
 	input_sync(doubletap2wake_pwrdev);
 	msleep(DT2W_PWRKEY_DUR);
@@ -222,43 +225,33 @@ static void detect_doubletap2wake(int x, int y, bool st)
 	}
 }
 
-static void dt2w_input_callback(struct work_struct *unused) {
-
-	detect_doubletap2wake(touch_x, touch_y, true);
-	return;
-}
-
-static void dt2w_input_event(struct input_handle *handle, unsigned int type,
-				unsigned int code, int value) {
+//static void dt2w_input_event(struct input_handle *handle, unsigned int type,
+void dt2w_input_event(unsigned int code, int value) {
 
 #if DT2W_DEBUG
-	/*pr_info("doubletap2wake: code: %s|%u, val: %i\n",
-		((code==ABS_MT_POSITION_X) ? "X" :
-		(code==ABS_MT_POSITION_Y) ? "Y" :
-		(code==ABS_MT_TRACKING_ID) ? "ID" :
-		"undef"), code, value);*/
+//	pr_info("doubletap2wake: code: %s|%u, val: %i\n",
+//		((code==ABS_MT_POSITION_X) ? "ABS_MT_POSITION_X" :
+//		(code==ABS_MT_POSITION_Y) ? "ABS_MT_POSITION_Y" :
+//		(code==ABS_MT_TRACKING_ID) ? "ABS_MT_TRACKING_ID" :
+//        (code==ABS_MT_SLOT) ? "ABS_MT_SLOT" :
+//        (code==BTN_TOUCH) ? "BTN_TOUCH" :
+//        (code==0x39) ? "ABS_MT_TRACKING_ID HEX " :
+//		"undef"), code, value);
+//    pr_info("doubletap2wake: code: %u, val: %i\n",code, value);
 #endif
 	// do not detect if screen on or dt2w disabled
 	if (flg_screen_report || !dt2w_switch)
 		return;
 
     // 0 step - reset if multitach detect
-	if (code == ABS_MT_SLOT) {
-		/* We did not handle EV_SYN event gracefully before we change
-		 * the SLOT. However we are simply resetting the touch count
-		 * here which results the loss of the previous touch. Then we
-		 * need two more touches for dt2w.
-		 * So, let us not reset the touch as EV_SYN is not handled
-		 * and considered gracefully. This we do only if we have already
-		 * recognized one touch, Too much description, Huh...
-		 */
+	if (code == ABS_MT_SLOT && value > 0) {
 		#if DT2W_DEBUG
-			pr_info(LOGTAG" ABS_MT_SLOT detect\n");
-		#endif			
-		if (!touch_nr || button_pressed) {
-		#if DT2W_DEBUG
-			pr_info(LOGTAG" ABS_MT_SLOT do reset touch\n");
-		#endif				
+			pr_info(LOGTAG" ABS_MT_SLOT = %d detect\n", value);
+		#endif
+		if (button_pressed) {
+            #if DT2W_DEBUG
+                pr_info(LOGTAG" ABS_MT_SLOT do reset touch\n");
+            #endif
 			doubletap2wake_reset();
 		}
 		return;
@@ -313,77 +306,22 @@ static void dt2w_input_event(struct input_handle *handle, unsigned int type,
 	// 6 step - clear data and call detect_doubletap2wake 
 	if (touch_x_called && touch_y_called && touch_cnt && !button_pressed) {
 		touch_cnt = false;	
-		// LukasAddon: wakelock up for 2 second
+		// LukasAddon: wakelock up for 1 second
 		#if DT2W_DEBUG
-			pr_info(LOGTAG" wake up for HZ * 4 and do work\n");
+			pr_info(LOGTAG" wake up for HZ  and do work\n");
 		#endif	
 		wake_lock_timeout(&dt2w_wakelock, HZ * 2);
 		touch_x_called = false;
 		touch_y_called = false;
-		schedule_work_on(0, &dt2w_input_work);
-		return;
+        // direct call method
+		detect_doubletap2wake(touch_x,touch_y,true);
+
+        // disable old code
+        //schedule_work_on(0, &dt2w_input_work);
+        return;
 	}
 }
-
-static int input_dev_filter(struct input_dev *dev) {
-	if (strstr(dev->name, "touch") ||
-		strstr(dev->name, "stm") ) {
-		return 0;
-	} else {
-		return 1;
-	}
-}
-
-static int dt2w_input_connect(struct input_handler *handler,
-				struct input_dev *dev, const struct input_device_id *id) {
-	struct input_handle *handle;
-	int error;
-
-	if (input_dev_filter(dev))
-		return -ENODEV;
-
-	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
-	if (!handle)
-		return -ENOMEM;
-
-	handle->dev = dev;
-	handle->handler = handler;
-	handle->name = "dt2w";
-
-	error = input_register_handle(handle);
-	if (error)
-		goto err2;
-
-	error = input_open_device(handle);
-	if (error)
-		goto err1;
-
-	return 0;
-err1:
-	input_unregister_handle(handle);
-err2:
-	kfree(handle);
-	return error;
-}
-
-static void dt2w_input_disconnect(struct input_handle *handle) {
-	input_close_device(handle);
-	input_unregister_handle(handle);
-	kfree(handle);
-}
-
-static const struct input_device_id dt2w_ids[] = {
-	{ .driver_info = 1 },
-	{ },
-};
-
-static struct input_handler dt2w_input_handler = {
-	.event		= dt2w_input_event,
-	.connect	= dt2w_input_connect,
-	.disconnect	= dt2w_input_disconnect,
-	.name		= "dt2w_inputreq",
-	.id_table	= dt2w_ids,
-};
+EXPORT_SYMBOL(dt2w_input_event);
 
 /* sensor stuff */
 void sensor_prox_report(unsigned int detected)
@@ -484,11 +422,6 @@ static int __init doubletap2wake_init(void)
 		goto err_input_dev;
 	}
 
-	INIT_WORK(&dt2w_input_work, dt2w_input_callback);
-	rc = input_register_handler(&dt2w_input_handler);
-	if (rc)
-		pr_err("%s: Failed to register dt2w_input_handler\n", __func__);
-
 	wake_lock_init(&dt2w_wakelock, WAKE_LOCK_SUSPEND, "dt2w_wakelock");
 
 #ifndef ANDROID_TOUCH_DECLARED
@@ -519,7 +452,7 @@ static void __exit doubletap2wake_exit(void)
 #ifndef ANDROID_TOUCH_DECLARED
 	kobject_del(android_touch_kobj);
 #endif
-	input_unregister_handler(&dt2w_input_handler);
+	//input_unregister_handler(&dt2w_input_handler);
 	input_unregister_device(doubletap2wake_pwrdev);
 	input_free_device(doubletap2wake_pwrdev);
 	return;

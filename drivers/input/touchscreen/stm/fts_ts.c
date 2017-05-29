@@ -81,12 +81,14 @@ struct wake_lock  report_wake_lock;
 
 #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
 #include <linux/input/doubletap2wake.h>
+extern void dt2w_input_event(unsigned int code, int value);
 #else
 #define dt2w_switch 0
 #endif
 
 #ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
 #include <linux/input/sweep2wake.h>
+extern void s2w_input_event(unsigned int code, int value);
 #else
 #define s2w_wakeup 0
 #endif
@@ -1039,11 +1041,22 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 			}
 #endif
             #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+                            pr_info("doubletap2wake line 1042 BTN_TOUCH = 0 send event\n");
                             pr_info("doubletap2wake line 1042 ABS_MT_POSITION_X = %d send event\n", x);
                             pr_info("doubletap2wake line 1042 ABS_MT_POSITION_Y = %d send event\n", y);
             #endif
 			input_report_abs(info->input_dev, ABS_MT_POSITION_X, x);
 			input_report_abs(info->input_dev, ABS_MT_POSITION_Y, y);
+            #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+                            dt2w_input_event(BTN_TOUCH, 0);
+                            dt2w_input_event(ABS_MT_POSITION_X, x);
+                            dt2w_input_event(ABS_MT_POSITION_Y, y);
+            #endif
+            #ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+                            s2w_input_event(BTN_TOUCH, 0);
+                            s2w_input_event(ABS_MT_POSITION_X, x);
+                            s2w_input_event(ABS_MT_POSITION_Y, y);
+            #endif
 			input_report_abs(info->input_dev, ABS_MT_DISTANCE, 255 - z);
 			break;
 
@@ -1112,20 +1125,37 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 			input_mt_report_slot_state(info->input_dev,
 						   MT_TOOL_FINGER,
 						   1 + (palm << 1));
+            //#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+            //    pr_info("doubletap2wake (1133) ABS_MT_SLOT send event\n");
+            //#endif
+            //#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+
+                //dt2w_input_event(ABS_MT_SLOT,  TouchID);
+                //dt2w_input_event(ABS_MT_TRACKING_ID,  1 + (palm << 1));
+            //#endif
 
 			input_report_key(info->input_dev, BTN_TOUCH, 1);
 			input_report_key(info->input_dev,
 					 BTN_TOOL_FINGER, 1);
             #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
-                            pr_info("doubletap2wake line 1120 ABS_MT_POSITION_X = %d send event\n", x);
-                            pr_info("doubletap2wake line 1120 ABS_MT_POSITION_Y = %d send event\n", y);
+                            //pr_info("doubletap2wake line 1120 ABS_MT_POSITION_X = %d send event\n", x);
+                            //pr_info("doubletap2wake line 1120 ABS_MT_POSITION_Y = %d send event\n", y);
             #endif
 			input_report_abs(info->input_dev,
 					 ABS_MT_POSITION_X, x);
 			input_report_abs(info->input_dev,
 					 ABS_MT_POSITION_Y, y);
-
-			input_report_abs(info->input_dev,
+            #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+                dt2w_input_event(BTN_TOUCH, 1);
+                dt2w_input_event(ABS_MT_POSITION_X, x);
+                dt2w_input_event(ABS_MT_POSITION_Y, y);
+            #endif
+            #ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+                        s2w_input_event(BTN_TOUCH, 1);
+                        s2w_input_event(ABS_MT_POSITION_X, x);
+                        s2w_input_event(ABS_MT_POSITION_Y, y);
+            #endif
+                input_report_abs(info->input_dev,
 					 ABS_MT_TOUCH_MAJOR, max(bw,
 								 bh));
 
@@ -1160,6 +1190,7 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 
 			input_mt_slot(info->input_dev, TouchID);
 
+
 #if defined(FTS_SUPPORT_SIDE_GESTURE)
 			if (info->board->support_sidegesture) {
 				if (longpress_release[TouchID] == 1) {
@@ -1176,10 +1207,27 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 
 			input_mt_report_slot_state(info->input_dev,
 						   MT_TOOL_FINGER, 0);
+//            #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+//                pr_info("doubletap2wake (1217) ABS_MT_TRACKING_ID -1 send event\n");
+//            #endif
+//            #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+//                            // if input_mt_report_slot_state have last parameter == 0
+//                            // then call ABS_MT_TRACKING_ID with -1
+//                            dt2w_input_event(ABS_MT_TRACKING_ID,  -1);
+//            #endif
 
 			if (info->touch_count == 0) {
 				/* Clear BTN_TOUCH when All touch are released  */
 				input_report_key(info->input_dev, BTN_TOUCH, 0);
+                #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
+                                pr_info("doubletap2wake line 1226 BTN_TOUCH = 0 send event\n");
+                #endif
+                #ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+                                dt2w_input_event(BTN_TOUCH, 0);
+                #endif
+                #ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+                        s2w_input_event(BTN_TOUCH, 0);
+                #endif
 #ifdef FTS_SUPPORT_STRINGLIB
 				input_report_key(info->input_dev, KEY_REAR_CAMERA_DETECTED, 0);
 				input_report_key(info->input_dev, KEY_FRONT_CAMERA_DETECTED, 0);
@@ -1512,7 +1560,7 @@ void tsp_charger_infom(bool en)
 	pr_err("[TSP]%s: ta:%d\n",	__func__, en);
 
 	if (fts_charger_callbacks && fts_charger_callbacks->inform_charger)
-		fts_charger_callbacks->inform_charger(fts_charger_callbacks, en);	
+		fts_charger_callbacks->inform_charger(fts_charger_callbacks, en);
 }
 static void fts_tsp_register_callback(void *cb)
 {
@@ -2407,7 +2455,6 @@ void fts_release_all_finger(struct fts_ts_info *info)
 	for (i = 0; i < FINGER_MAX; i++) {
 		input_mt_slot(info->input_dev, i);
 		input_mt_report_slot_state(info->input_dev, MT_TOOL_FINGER, 0);
-
 		if ((info->finger[i].state == EVENTID_ENTER_POINTER) ||
 			(info->finger[i].state == EVENTID_MOTION_POINTER)) {
 			info->touch_count--;
@@ -2572,7 +2619,7 @@ static int fts_stop_device(struct fts_ts_info *info)
 #endif
 		if ((!dt2w_switch && !s2w_wakeup)) {
 			#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
-			pr_info(LOGTAG"ftsstopdevice call, dt2wswitch false\n");
+			    pr_info(LOGTAG"ftsstopdevice call, dt2wswitch false\n");
 			#endif
 			fts_command(info, FTS_CMD_LOWPOWER_MODE); //FIXME
 		}
