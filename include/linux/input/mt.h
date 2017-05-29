@@ -21,6 +21,12 @@
 #define INPUT_MT_TRACK		0x0008	/* use in-kernel tracking */
 #define INPUT_MT_SEMI_MT	0x0010	/* semi-mt device, finger count handled manually */
 
+//#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+extern void dt2w_input_event(unsigned int code, int value);
+//#endif
+//#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+extern void s2w_input_event(unsigned int code, int value);
+//#endif
 /**
  * struct input_mt_slot - represents the state of an input MT slot
  * @abs: holds current values of ABS_MT axes for this slot
@@ -88,8 +94,10 @@ static inline int input_mt_new_trkid(struct input_mt *mt)
 static inline void input_mt_slot(struct input_dev *dev, int slot)
 {
     #ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
-        pr_info("doubletap2wake ABS_MT_SLOT %d send event\n",slot);
+        pr_info("doubletap2wake (94) ABS_MT_SLOT == %d send event\n",slot);
     #endif
+    dt2w_input_event(ABS_MT_SLOT, slot);
+    s2w_input_event(ABS_MT_SLOT, slot);
 	input_event(dev, EV_ABS, ABS_MT_SLOT, slot);
 }
 
