@@ -13,6 +13,10 @@
  *
  * v1.3 - do not enable  wakelock where s2s and s2w disabled, 2017, Lukas Addon
  *
+ * v1.4 - disable system event, use direct function (you must call it from touch driver and screen driver)
+ *
+ * v1.5 - clean code, now file smaller and faster
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -43,9 +47,9 @@
 #include <linux/wakelock.h>
 
 /* Version, author, desc, etc */
-#define DRIVER_AUTHOR "Dennis Rassmann <showp1984@gmail.com>"
+#define DRIVER_AUTHOR "LukasAddon <LukasAddon@gmail.com>"
 #define DRIVER_DESCRIPTION "Sweep2wake for almost any device"
-#define DRIVER_VERSION "1.3"
+#define DRIVER_VERSION "1.5"
 #define LOGTAG "[sweep2wake]: "
 
 /* Tuneables */
@@ -94,7 +98,7 @@ static bool scr_on_touch = false, barrier[2] = {false, false};
 static bool reverse_barrier[2] = {false, false};
 static struct input_dev * sweep2wake_pwrdev;
 static DEFINE_MUTEX(pwrkeyworklock);
-static struct workqueue_struct *s2w_input_wq;
+//static struct workqueue_struct *s2w_input_wq;
 static struct work_struct s2w_input_work;
 
 /* Read cmdline for s2w */
@@ -318,12 +322,8 @@ static void detect_sweep2wake(int sweep_coord, int sweep_height, bool st)
 
 }
 
-static void s2w_input_callback(struct work_struct *unused) {
-	detect_sweep2wake(touch_x, touch_y, true);
-	return;
-}
-
-static void s2w_input_event(struct input_handle *handle, unsigned int type,
+//static void s2w_input_event(struct input_handle *handle, unsigned int type,
+void s2w_input_event(
 				unsigned int code, int value) {
 /*#if S2W_DEBUG
 	pr_info("sweep2wake: code: %s|%u, val: %i\n",
@@ -336,7 +336,7 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
 		return;
 	}
 
-	if (code == ABS_MT_SLOT) {
+	if (code == ABS_MT_SLOT && value > 0) {
 		sweep2wake_reset();
 		return;
 	}
@@ -359,70 +359,73 @@ static void s2w_input_event(struct input_handle *handle, unsigned int type,
 	if (touch_x_called && touch_y_called) {
 		touch_x_called = false;
 		touch_y_called = false;
-		queue_work_on(0, s2w_input_wq, &s2w_input_work);
+
+		detect_sweep2wake(touch_x, touch_y, true);
+		//queue_work_on(0, s2w_input_wq, &s2w_input_work);
 	}
 }
+EXPORT_SYMBOL(s2w_input_event);
 
-static int input_dev_filter(struct input_dev *dev) {
-	if (strstr(dev->name, "touch") ||
-	    strstr(dev->name, "lge_touch_core")) {
-		return 0;
-	} else {
-		return 1;
-	}
-}
-
-static int s2w_input_connect(struct input_handler *handler,
-				struct input_dev *dev,
-				const struct input_device_id *id) {
-	struct input_handle *handle;
-	int error;
-
-	if (input_dev_filter(dev))
-		return -ENODEV;
-
-	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
-	if (!handle)
-		return -ENOMEM;
-
-	handle->dev = dev;
-	handle->handler = handler;
-	handle->name = "s2w";
-
-	error = input_register_handle(handle);
-	if (error)
-		goto err2;
-
-	error = input_open_device(handle);
-	if (error)
-		goto err1;
-
-	return 0;
-err1:
-	input_unregister_handle(handle);
-err2:
-	kfree(handle);
-	return error;
-}
-
-static void s2w_input_disconnect(struct input_handle *handle) {
-	input_close_device(handle);
-	input_unregister_handle(handle);
-	kfree(handle);
-}
-
-static const struct input_device_id s2w_ids[] = {
-	{ .driver_info = 1 },
-	{ },
-};
-
-static struct input_handler s2w_input_handler = {
-	.event		= s2w_input_event,
-	.connect	= s2w_input_connect,
-	.disconnect	= s2w_input_disconnect,
-	.name		= "s2w_inputreq",
-	.id_table	= s2w_ids,
-};
+//static int input_dev_filter(struct input_dev *dev) {
+//	if (strstr(dev->name, "touch") ||
+//	    strstr(dev->name, "lge_touch_core")) {
+//		return 0;
+//	} else {
+//		return 1;
+//	}
+//}
+//
+//static int s2w_input_connect(struct input_handler *handler,
+//				struct input_dev *dev,
+//				const struct input_device_id *id) {
+//	struct input_handle *handle;
+//	int error;
+//
+//	if (input_dev_filter(dev))
+//		return -ENODEV;
+//
+//	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
+//	if (!handle)
+//		return -ENOMEM;
+//
+//	handle->dev = dev;
+//	handle->handler = handler;
+//	handle->name = "s2w";
+//
+//	error = input_register_handle(handle);
+//	if (error)
+//		goto err2;
+//
+//	error = input_open_device(handle);
+//	if (error)
+//		goto err1;
+//
+//	return 0;
+//err1:
+//	input_unregister_handle(handle);
+//err2:
+//	kfree(handle);
+//	return error;
+//}
+//
+//static void s2w_input_disconnect(struct input_handle *handle) {
+//	input_close_device(handle);
+//	input_unregister_handle(handle);
+//	kfree(handle);
+//}
+//
+//static const struct input_device_id s2w_ids[] = {
+//	{ .driver_info = 1 },
+//	{ },
+//};
+//
+//static struct input_handler s2w_input_handler = {
+//	.event		= s2w_input_event,
+//	.connect	= s2w_input_connect,
+//	.disconnect	= s2w_input_disconnect,
+//	.name		= "s2w_inputreq",
+//	.id_table	= s2w_ids,
+//};
 
 /*
  * SYSFS stuff below here
@@ -521,15 +524,16 @@ static int __init sweep2wake_init(void)
 		goto err_input_dev;
 	}
 
-	s2w_input_wq = create_workqueue("s2wiwq");
-	if (!s2w_input_wq) {
-		pr_err("%s: Failed to create s2wiwq workqueue\n", __func__);
-		return -EFAULT;
-	}
-	INIT_WORK(&s2w_input_work, s2w_input_callback);
-	rc = input_register_handler(&s2w_input_handler);
-	if (rc)
-		pr_err("%s: Failed to register s2w_input_handler\n", __func__);
+//	s2w_input_wq = create_workqueue("s2wiwq");
+//	if (!s2w_input_wq) {
+//		pr_err("%s: Failed to create s2wiwq workqueue\n", __func__);
+//		return -EFAULT;
+//	}
+
+//	INIT_WORK(&s2w_input_work, s2w_input_callback);
+//	rc = input_register_handler(&s2w_input_handler);
+//	if (rc)
+//		pr_err("%s: Failed to register s2w_input_handler\n", __func__);
 
 	sweep2sleep_kobj = kobject_create_and_add("sweep2sleep", NULL) ;
 	if (sweep2sleep_kobj == NULL) {
@@ -564,9 +568,6 @@ err_alloc_dev:
 static void __exit sweep2wake_exit(void)
 {
 	kobject_del(sweep2sleep_kobj);
-
-	input_unregister_handler(&s2w_input_handler);
-	destroy_workqueue(s2w_input_wq);
 	input_unregister_device(sweep2wake_pwrdev);
 	input_free_device(sweep2wake_pwrdev);
 	return;
