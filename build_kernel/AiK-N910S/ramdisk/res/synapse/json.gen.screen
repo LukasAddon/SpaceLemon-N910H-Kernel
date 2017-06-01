@@ -1,0 +1,23 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:SCREEN,
+    elements:[
+	{ SCheckBox:{
+                description:" LCD Power Reduce for backlight. Auto adjust the display brightness based on the on-screen image to save power. If you like brighter screen at the cost of battery drain, then turn it off. Default is Enabled.",
+                label:"LCD Power Reduce",
+                action:"generic /sys/class/lcd/panel/power_reduce"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+                description:" Allows you to turn the screen off by swiping UNDER the navigation bar right > left or left > right. Default is Disabled.",
+                label:"Sweep2Sleep",
+		default:`cat /sys/sweep2sleep/sweep2sleep`,
+		action:"generic /sys/sweep2sleep/sweep2sleep"
+	}},
+    ]
+}
+CTAG

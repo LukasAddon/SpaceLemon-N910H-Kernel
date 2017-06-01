@@ -288,11 +288,6 @@ on late-init
     trigger early-boot
     trigger boot
 
-service injectsu /system/bin/sh /sbin/injectsu.sh
-    class core
-    user root
-    oneshot
-
 on post-fs
     start sec-sh
     start logd
@@ -1685,11 +1680,6 @@ on property:service.vpnclientd.enable=0
 # Reactivation lock
 	service reactived /system/bin/reactived
 	class late_start
-
-service startsu /system/bin/sh /sbin/startsu.sh
-    class main
-    user root
-    oneshot
 
 # Execute files in /etc/init.d during boot
 service userinit /system/xbin/busybox run-parts /system/etc/init.d 

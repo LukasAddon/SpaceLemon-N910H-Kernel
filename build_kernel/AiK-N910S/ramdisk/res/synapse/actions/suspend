@@ -1,0 +1,47 @@
+case $1 in 
+powersuspend)
+  P=/sys/kernel/power_suspend/power_suspend_mode
+  if [ ! -z $2 ]; then
+  if [ $2 == Autosleep_hook ]; then
+    echo 0 > $P
+  elif [ $2 == Userspace_trigger ]; then
+    echo 1 > $P
+  elif [ $2 == DisplayPanel_hook ]; then
+    echo 2 > $P
+  elif [ $2 == Hybrid_hook ]; then
+    echo 3 > $P
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Autosleep_hook
+  elif [ $copy == 1 ]; then
+    echo Userspace_trigger
+  elif [ $copy == 2 ]; then
+    echo DisplayPanel_hook
+  elif [ $copy == 3 ]; then
+    echo Hybrid_hook
+  fi
+  ;;
+dt2w)
+  P=/res/synapse/SkyHigh/dt2w
+  if [ ! -z $2 ]; then
+  if [ $2 == DT2W_OFF ]; then
+    echo "DT2W_OFF" > $P
+    echo "0" > /sys/android_touch/doubletap2wake
+  elif [ $2 == DT2W_ON_Lower_Half_Screen ]; then
+    echo "DT2W_ON_Lower_Half_Screen" > $P
+    echo "1" > /sys/android_touch/doubletap2wake
+  elif [ $2 == DT2W_ON_FULL_Screen ]; then
+    echo "DT2W_ON_FULL_Screen" > $P
+    echo "2" > /sys/android_touch/doubletap2wake
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == DT2W_OFF ]; then
+    echo DT2W_OFF
+  elif [ $copy == DT2W_ON_Lower_Half_Screen ]; then
+    echo DT2W_ON_Lower_Half_Screen
+  elif [ $copy == DT2W_ON_FULL_Screen ]; then
+    echo DT2W_ON_FULL_Screen
+  fi
+  ;;
+esac
