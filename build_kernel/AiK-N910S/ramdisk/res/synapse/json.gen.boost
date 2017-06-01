@@ -1,0 +1,65 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:INPUT BOOST,
+    elements:[
+	{ SPane:{
+		title:"Input-Booster",
+		description:" A57, A53, MIF, INT & HMP boost values for Input-Booster Levels."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" 0 - OFF"
+	}},
+	{ SDescription:{
+		description:" 1 - SIP (default SIP)"
+	}},
+	{ SDescription:{
+		description:" 2 - Default"
+	}},
+	{ SDescription:{
+		description:" 3 - Hangout SIP"
+	}},
+	{ SDescription:{
+		description:" 4 - Browsable App's"
+	}},
+	{ SDescription:{
+		description:" 5 - Light SIP, MMS, .."
+	}},
+	{ SDescription:{
+		description:" 9 - Max for benchmark tool"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"Touch & Pen Boost Level",
+		description:" Select how the Input-Booster reacts to touch & pen events.\n",
+                default:`cat /sys/class/input_booster/touch/level`,
+                action:"tuning touchboost",
+		values:[0, 1, 2, 3, 4, 5, 9,],
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SPane:{
+		title:"Scrolling Cache control",
+		description:" Disable to increase in-app scrolling speed and responsiveness. Default is (2). If you experience problems, set to (1). REBOOT REQUIRED !!"
+	}},
+	{ SDescription:{
+		description:"\n 0- force to enable regardless of app setting.\n 1- enable unless app specifies.\n 2- disable unless app specifies.\n 3- force to disable regardless of app setting.\n"
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/devtools scr_cache)`,
+                action:"devtools scr_cache",
+		values:[0, 1, 2, 3,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG

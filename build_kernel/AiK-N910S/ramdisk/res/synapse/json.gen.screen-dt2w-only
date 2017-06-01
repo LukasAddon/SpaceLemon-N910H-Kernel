@@ -1,0 +1,23 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:SCREEN,
+    elements:[
+    { SCheckBox:{
+                description:" LCD Power Reduce for backlight. Auto adjust the display brightness based on the on-screen image to save power. If you like brighter screen at the cost of battery drain, then turn it off. Default is Enabled.",
+                label:"LCD Power Reduce",
+                action:"generic /sys/class/lcd/panel/power_reduce"
+	}},
+    { SDescription:{
+		description:""
+	}},
+	{ SCheckBox:{
+		label:"Double Tap To Wake Phone",
+		description:"Enable/Disable DT2W. Default is Disabled.",
+		default: `cat /sys/android_touch/doubletap2wake`,
+		action:"generic /sys/android_touch/doubletap2wake"
+	}},
+    ]
+}
+CTAG
