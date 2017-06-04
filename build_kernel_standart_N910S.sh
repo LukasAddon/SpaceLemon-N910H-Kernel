@@ -17,7 +17,7 @@ echo "build kernel"
 make exynos5433-trelte_kor_open_12.dtb
 make ARCH=arm -j1
 
-GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-trelteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
+GETVER=`grep '-SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-trelteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
