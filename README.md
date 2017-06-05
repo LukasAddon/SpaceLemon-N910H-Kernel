@@ -15,20 +15,27 @@
 	- edit MakeFile
 
         line 197
+	
                     CROSS_COMPILE	?=../arm-eabi-5.2/bin/arm-eabi-
 
 
     - run build_kernel_***.sh
+    
           N910H/C
+	  
                 build_kernel_standart.sh  - standart battery with root
+		
                 build_kernel_standart_no_root.sh - standart battery
+		
                 build_kernel_zerolemon.sh  - zerolemon battery with root
+		
                 build_kernel_zerolemon_no_root.sh - zerolemon battery
-          N910S
-                build_kernel_standart_N910S.sh
-                build_kernel_zerolemon_N910S.sh
-          N910K
-                build_kernel_standart_N910K.sh
+		
+          N910S/K/L
+	  
+                build_kernel_standart_N910S_K_L.sh
+		
+                build_kernel_zerolemon_N910S_K_L.sh
 
 2. Output files
 
