@@ -44,5 +44,5 @@ cp -f build_kernel/AiK-N910S/image-new.img build_kernel/out/boot.img
 
 cd build_kernel/out/
 
-zip -r N910S-SpaceLemon_v${GETVER}_zerolemon.zip ./
+zip -r N910S-K-L-SpaceLemon_v${GETVER}_zerolemon.zip ./
 

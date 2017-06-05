@@ -10,14 +10,14 @@ BK=build_kernel
 
 cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
-#make clean
+make clean
 echo "make config"
 make exynos5433-trelteskt_defconfig
 echo "build kernel"
 make exynos5433-trelte_kor_open_12.dtb
-make ARCH=arm -j1
+make ARCH=arm -j4
 
-GETVER=`grep '-SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-trelteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
+GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-trelteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
@@ -44,5 +44,5 @@ cp -f build_kernel/AiK-N910S/image-new.img build_kernel/out/boot.img
 
 cd build_kernel/out/
 
-zip -r N910S-SpaceLemon_v${GETVER}_Standart.zip ./
+zip -r N910S-K-L-SpaceLemon_v${GETVER}_Standart.zip ./
 
