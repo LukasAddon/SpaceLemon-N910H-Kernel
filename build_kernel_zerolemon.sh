@@ -15,7 +15,7 @@ echo "make config"
 make trelte_00_defconfig
 echo "build kernel"
 make exynos5433-tre_eur_open_16.dtb
-make ARCH=arm -j4
+make ARCH=arm -j3
 
 GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/trelte_00_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
@@ -48,4 +48,18 @@ mkdir system
 mkdir data
 
 zip -r SpaceLemon_v${GETVER}_zerolemon.zip ./
+
+# Magisk version
+cd ../../
+
+rm -f build_kernel/out-magisk/*.zip
+
+cp -f build_kernel/AIK-Linux/image-new.img build_kernel/out-magisk/boot.img
+
+cd build_kernel/out-magisk/
+
+mkdir system
+mkdir data
+
+zip -r SpaceLemon_v${GETVER}_zerolemon_magisk.zip ./
 
