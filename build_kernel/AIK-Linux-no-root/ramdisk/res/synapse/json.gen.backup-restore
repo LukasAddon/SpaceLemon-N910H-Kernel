@@ -19,7 +19,7 @@ cat << CTAG
 	{ SGeneric:{
 		title:"Profile Name",
 		default:"None",
-		action:"generic /res/synapse/SkyHigh/bck_prof",
+		action:"generic /sdcard/Synapse/bck_prof",
 	}},
 	{ SSpacer:{
 		height:1
@@ -37,7 +37,7 @@ cat << CTAG
 			{
 				on:APPLY,
 				do:[ REFRESH, APPLY ],
-				to:"generic /res/synapse/SkyHigh/bck_prof"
+				to:"generic /sdcard/Synapse/bck_prof"
 			}
 		]
 	}},
@@ -50,7 +50,7 @@ cat << CTAG
 		action:"restorebackup pickconfig",
 		default:"None",
 		values:[ "None",
-			`for BAK in \`/res/synapse/actions/restorebackup listconfig\`; do
+			`for BAK in $(/res/synapse/actions/restorebackup listconfig); do
 				echo "\"$BAK\","
 			done`
 		],
@@ -58,7 +58,7 @@ cat << CTAG
 			{
 				on:APPLY,
 				do:[ REFRESH, APPLY ],
-				to:"generic /res/synapse/SkyHigh/bck_prof"
+				to:"generic /sdcard/Synapse/bck_prof"
 			}
 		]
 	}},
@@ -115,7 +115,7 @@ cat << CTAG
 	{ SGeneric:{
 		title:"Kernel Name",
 		default:"None",
-		action:"generic /res/synapse/SkyHigh/bck_kernel",
+		action:"generic /sdcard/Synapse/bck_kernel",
 	}},
 	{ SSpacer:{
 		height:1
@@ -133,7 +133,7 @@ cat << CTAG
 			{
 				on:APPLY,
 				do:[ REFRESH, APPLY ],
-				to:"generic /res/synapse/SkyHigh/bck_kernel"
+				to:"generic /sdcard/Synapse/bck_kernel"
 			}
 		]
 	}},
