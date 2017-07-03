@@ -18,6 +18,10 @@
 #include <linux/rbtree.h>
 #include <linux/sched.h>
 
+#ifdef CONFIG_ARIZONA_CONTROL
+#include <linux/mfd/arizona/control.h>
+#endif
+
 #define CREATE_TRACE_POINTS
 #include <trace/events/regmap.h>
 
@@ -1165,6 +1169,12 @@ int _regmap_write(struct regmap *map, unsigned int reg,
 {
 	int ret;
 	void *context = _regmap_map_get_context(map);
+
+#ifdef CONFIG_ARIZONA_CONTROL
+	mutex_unlock(&map->mutex);
+	arizona_control_regmap_hook(map, reg, &val);
+	mutex_lock(&map->mutex);
+#endif
 
 	if (!map->cache_bypass && !map->defer_caching) {
 		ret = regcache_write(map, reg, val);
