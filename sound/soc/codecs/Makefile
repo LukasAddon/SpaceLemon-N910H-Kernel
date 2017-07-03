@@ -16,6 +16,9 @@ snd-soc-ak4642-objs := ak4642.o
 snd-soc-ak4671-objs := ak4671.o
 snd-soc-ak5386-objs := ak5386.o
 snd-soc-arizona-objs := arizona.o
+ifeq ($(CONFIG_ARIZONA_CONTROL),y)
+snd-soc-arizona-objs += arizona-control.o
+endif
 snd-soc-cq93vc-objs := cq93vc.o
 snd-soc-cs42l51-objs := cs42l51.o
 snd-soc-cs42l52-objs := cs42l52.o
