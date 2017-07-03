@@ -1,0 +1,124 @@
+set_progress(1.000000);
+
+
+#clear the recovery console screen
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+ui_print(" ");
+
+ui_print("#################################");
+ui_print("#     'SpaceLemon Kernel V2'    #");
+ui_print("#  FOR SM-N910H GALAXY NOTE 4!  #");
+ui_print("#       ....INSTALLING....      #");
+ui_print("#################################");
+
+#mount system
+mount("ext4", "EMMC", "/dev/block/mmcblk0p18", "/system");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p21", "/data");
+
+package_extract_dir("system", "/system");
+package_extract_dir("data", "/data");
+set_perm_recursive(0, 2000, 0777, 0777, "/system/etc/init.d");
+
+ui_print("Flash Kernel........");
+assert(package_extract_file("boot.img", "/tmp/boot.img"),
+show_progress(0.100000, 20);
+write_raw_image("/tmp/boot.img", "/dev/block/mmcblk0p9"),
+show_progress(0.100000, 40);
+delete("/tmp/boot.img"));
+show_progress(0.100000, 50);
+
+ui_print("Deleting Knox associated files and folders...");
+ui_print("");
+delete_recursive ("/system/container");
+delete_recursive ("/system/preloadedsso");
+delete_recursive ("/system/etc/secure_storage/com.sec.knox.store");
+delete_recursive ("/system/app/Bridge");
+delete_recursive ("/system/app/ELMAgent");
+delete_recursive ("/system/app/KnoxAttestationAgent");
+delete_recursive ("/system/app/KnoxSetupWizardClient");
+delete_recursive ("/system/app/RCPComponents");
+delete_recursive ("/system/app/SecurityLogAgent");
+delete_recursive ("/system/app/UniversalMDMClient");
+delete_recursive ("/system/priv-app/KLMSAgent");
+delete_recursive ("/system/priv-app/SPDClient");
+delete_recursive ("/system/app/SwitchKnoxI");
+delete_recursive ("/system/app/SwitchKnoxII");
+delete_recursive ("/system/app/KnoxFolderContainer");
+
+unmount("/system");
+unmount("/data");
+ui_print(" ");
+ui_print("********************************");
+ui_print("Install Magisk");
+ui_print("********************************");
+
+
+package_extract_dir("armv7", "/tmp/magisk/arm/");
+package_extract_dir("common", "/tmp/magisk/common/");
+
+ui_print("Setup Magisk System...");
+package_extract_file("corola/root.sh", "/tmp/root.sh");
+set_perm(0, 0, 0777, "/tmp/root.sh");
+run_program("/tmp/root.sh","3", "27" ,  "/1.zip" );
+
+show_progress(0.100000, 80);
+
+ui_print("Install...");
+package_extract_dir("system", "/system");
+set_progress(0.8);
+unmount("/system");
+unmount("/data");
+set_progress(0.9);
+ui_print("#################################");
+ui_print("#       INSTALL COMPLETE!       #");
+ui_print("#         PLEASE REBOOT         #");
+ui_print("#################################");
+show_progress(0.100000, 100);
