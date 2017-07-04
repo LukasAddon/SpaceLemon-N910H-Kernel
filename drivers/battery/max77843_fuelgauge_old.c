@@ -323,7 +323,7 @@ static int fg_read_soc(struct max77843_fuelgauge_data *fuelgauge)
 		return -1;
 	}
 
-	soc = fg_read_vfsoc(fuelgauge);
+	soc = ((data[1] * 100) + (data[0] * 100 / 256)) / 10;
 
 #ifdef BATTERY_LOG_MESSAGE
 	pr_debug("%s: raw capacity (%d)\n", __func__, soc);
@@ -1243,24 +1243,6 @@ static void max77843_fg_get_scaled_capacity(
 }
 
 /* capacity is integer */
-static void max77843_fg_skip_abnormal_capacity(
-		struct max77843_fuelgauge_data *fuelgauge,
-		union power_supply_propval *val)
-{
-	pr_info("%s : NOW(%d), OLD(%d)\n",
-			__func__, val->intval, fuelgauge->capacity_old);
-
-	/* keep SOC stable in abnormal status */
-	if (!fuelgauge->is_charging &&
-		fuelgauge->capacity_old > 0 &&
-		fuelgauge->capacity_old < val->intval) {
-		pr_err("%s: capacity (old %d : new %d)\n",
-			   __func__, fuelgauge->capacity_old, val->intval);
-		val->intval = fuelgauge->capacity_old;
-	}
-}
-
-/* capacity is integer */
 static void max77843_fg_get_atomic_capacity(
 		struct max77843_fuelgauge_data *fuelgauge,
 		union power_supply_propval *val)
@@ -1269,11 +1251,27 @@ static void max77843_fg_get_atomic_capacity(
 	pr_info("%s : NOW(%d), OLD(%d)\n",
 			__func__, val->intval, fuelgauge->capacity_old);
 
-	if (fuelgauge->capacity_old < val->intval)
-		val->intval = fuelgauge->capacity_old + 1;
-	else if (fuelgauge->capacity_old > val->intval)
-		val->intval = fuelgauge->capacity_old - 1;
+	if (fuelgauge->pdata->capacity_calculation_type &
+		SEC_FUELGAUGE_CAPACITY_TYPE_ATOMIC) {
+		if (fuelgauge->capacity_old < val->intval)
+			val->intval = fuelgauge->capacity_old + 1;
+		else if (fuelgauge->capacity_old > val->intval)
+			val->intval = fuelgauge->capacity_old - 1;
+	}
 
+	/* keep SOC stable in abnormal status */
+	if (fuelgauge->pdata->capacity_calculation_type &
+		SEC_FUELGAUGE_CAPACITY_TYPE_SKIP_ABNORMAL) {
+		if (!fuelgauge->is_charging &&
+			fuelgauge->capacity_old < val->intval) {
+			pr_err("%s: capacity (old %d : new %d)\n",
+				   __func__, fuelgauge->capacity_old, val->intval);
+			val->intval = fuelgauge->capacity_old;
+		}
+	}
+
+	/* updated old capacity */
+	fuelgauge->capacity_old = val->intval;
 }
 
 static int max77843_fg_calculate_dynamic_scale(
@@ -1312,6 +1310,16 @@ static int max77843_fg_calculate_dynamic_scale(
 		fuelgauge->capacity_max =
 				(fuelgauge->capacity_max * 99 / 100);
 		fuelgauge->capacity_old = 100;
+	}
+
+	if (fuelgauge->capacity_max <
+		fuelgauge->pdata->capacity_max -
+		fuelgauge->pdata->capacity_max_margin) {
+		fuelgauge->capacity_max =
+				fuelgauge->pdata->capacity_max -
+				fuelgauge->pdata->capacity_max_margin;
+		pr_debug("%s: capacity_max (%d)", __func__,
+				 fuelgauge->capacity_max);
 	}
 
 	pr_info("%s: %d is used for capacity_max, capacity(%d)\n",
@@ -1496,16 +1504,6 @@ static int max77843_fg_get_property(struct power_supply *psy,
 											   fuelgauge->pdata->fuel_alert_soc);
 				}
 
-				/* skip current soc for abnormal case below.
-                 * Some voltage-based fuelgauges return bigger raw soc
-                 * than previous raw soc if voltage is changed dramatically
-                 * in discharging actually.
-                 */
-				if (fuelgauge->pdata->capacity_calculation_type &
-					SEC_FUELGAUGE_CAPACITY_TYPE_SKIP_ABNORMAL)
-					max77843_fg_skip_abnormal_capacity(fuelgauge, val);
-
-
 				/* (Only for atomic capacity)
                  * In initial time, capacity_old is 0.
                  * and in resume from sleep,
@@ -1521,12 +1519,9 @@ static int max77843_fg_get_property(struct power_supply *psy,
 				}
 
 				if (fuelgauge->pdata->capacity_calculation_type &
-					SEC_FUELGAUGE_CAPACITY_TYPE_ATOMIC)
+					(SEC_FUELGAUGE_CAPACITY_TYPE_ATOMIC |
+					 SEC_FUELGAUGE_CAPACITY_TYPE_SKIP_ABNORMAL))
 					max77843_fg_get_atomic_capacity(fuelgauge, val);
-
-				/* updated old capacity */
-				fuelgauge->capacity_old = val->intval;
-
 			}
 			break;
 			/* Battery Temperature */
@@ -1884,7 +1879,8 @@ static int __devinit max77843_fuelgauge_probe(struct platform_device *pdev)
 
 	reg_data = max77843_read_word(fuelgauge->i2c, 0xD0);
 
-	if (reg_data >= 900 && reg_data <= 1000 && reg_data != fuelgauge->capacity_max) {
+	if ((reg_data >= (fuelgauge->pdata->capacity_max - fuelgauge->pdata->capacity_max_margin )) &&
+		reg_data <= 1000 && reg_data != fuelgauge->capacity_max) {
 		pr_info("%s : Capacity Max Update (%d) -> (%d)\n",
 				__func__, fuelgauge->capacity_max, reg_data);
 		fuelgauge->capacity_max = reg_data;
