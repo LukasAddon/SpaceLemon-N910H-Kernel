@@ -1,0 +1,23 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+rild.libpath=/system/lib/libsec-ril.so
+persist.security.ams.enforcing=3
+ro.secure=1
+ro.allow.mock.location=0
+ro.debuggable=0
+ro.adb.secure=1
+persist.sys.usb.config=mtp
+ro.zygote=zygote32
+dalvik.vm.image-dex2oat-Xms=64m
+dalvik.vm.image-dex2oat-Xmx=64m
+dalvik.vm.dex2oat-Xms=64m
+dalvik.vm.dex2oat-Xmx=512m
+ro.dalvik.vm.native.bridge=0
+debug.atrace.tags.enableflags=0
+#
+# BOOTIMAGE_BUILD_PROPERTIES
+#
+ro.bootimage.build.date=Wed Aug 17 18:44:26 KST 2016
+ro.bootimage.build.date.utc=1471427066
+ro.bootimage.build.fingerprint=samsung/tre3calteskt/tre3calteskt:6.0.1/MMB29K/N916SKSU2DPH6:user/test-keys
