@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="false">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="02f8ef60-72cf-44cf-afaa-3eece8680830" name="Default" comment="" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="394">
+      <file leaf-file-name="fts_ts.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/input/touchscreen/stm/fts_ts.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-936">
+              <caret line="990" column="0" lean-forward="false" selection-start-line="990" selection-start-column="0" selection-end-line="990" selection-end-column="0" />
+              <folding>
+                <element signature="e#2635#2734#0" expanded="true" />
+                <element signature="e#2808#2902#0" expanded="true" />
+                <element signature="e#27984#28148#0" expanded="true" />
+                <element signature="e#28736#28903#0" expanded="true" />
+                <element signature="e#29000#29164#0" expanded="true" />
+                <element signature="e#29615#29638#0" expanded="true" />
+                <element signature="e#30950#31167#0" expanded="true" />
+                <element signature="e#32348#32491#0" expanded="true" />
+                <element signature="e#32584#32740#0" expanded="true" />
+                <element signature="e#32978#33037#0" expanded="true" />
+                <element signature="e#33086#33178#0" expanded="true" />
+                <element signature="e#33665#34032#0" expanded="true" />
+                <element signature="e#35009#35040#0" expanded="true" />
+                <element signature="e#35141#35171#0" expanded="true" />
+                <element signature="e#35228#35360#0" expanded="true" />
+                <element signature="e#35462#35628#0" expanded="true" />
+                <element signature="e#35669#35837#0" expanded="true" />
+                <element signature="e#35881#35979#0" expanded="true" />
+                <element signature="e#36115#36345#0" expanded="true" />
+                <element signature="e#36783#36891#0" expanded="true" />
+                <element signature="e#36933#37682#0" expanded="true" />
+                <element signature="e#37721#39991#0" expanded="true" />
+                <element signature="e#40144#40623#0" expanded="true" />
+                <element signature="e#41069#41358#0" expanded="true" />
+                <element signature="e#41824#42110#0" expanded="true" />
+                <element signature="e#42770#43041#0" expanded="true" />
+                <element signature="e#43103#43728#0" expanded="true" />
+                <element signature="e#44247#44397#0" expanded="true" />
+                <element signature="e#44843#44980#0" expanded="true" />
+                <element signature="e#45645#52372#0" expanded="true" />
+                <element signature="e#54607#54707#0" expanded="true" />
+                <element signature="e#54747#54811#0" expanded="true" />
+                <element signature="e#54843#54894#0" expanded="true" />
+                <element signature="e#55016#55106#0" expanded="true" />
+                <element signature="e#55143#55206#0" expanded="true" />
+                <element signature="e#55694#55723#0" expanded="true" />
+                <element signature="e#56197#56344#0" expanded="true" />
+                <element signature="e#57436#57491#0" expanded="true" />
+                <element signature="e#57840#57931#0" expanded="true" />
+                <element signature="e#57971#58120#0" expanded="true" />
+                <element signature="e#58158#58336#0" expanded="true" />
+                <element signature="e#58374#58623#0" expanded="true" />
+                <element signature="e#58664#58755#0" expanded="true" />
+                <element signature="e#59543#59606#0" expanded="true" />
+                <element signature="e#59653#59756#0" expanded="true" />
+                <element signature="e#60247#60319#0" expanded="true" />
+                <element signature="e#60584#60697#0" expanded="true" />
+                <element signature="e#60738#60963#0" expanded="true" />
+                <element signature="e#61000#61154#0" expanded="true" />
+                <element signature="e#61192#62980#0" expanded="true" />
+                <element signature="e#63071#63169#0" expanded="true" />
+                <element signature="e#63792#63839#0" expanded="true" />
+                <element signature="e#64023#64623#0" expanded="true" />
+                <element signature="e#64839#65199#0" expanded="true" />
+                <element signature="e#65409#65499#0" expanded="true" />
+                <element signature="e#66208#66246#0" expanded="true" />
+                <element signature="e#66360#69152#0" expanded="true" />
+                <element signature="e#69346#69745#0" expanded="true" />
+                <element signature="e#69786#69812#0" expanded="true" />
+                <element signature="e#69944#70024#0" expanded="true" />
+                <element signature="e#70282#70348#0" expanded="true" />
+                <element signature="e#70411#70507#0" expanded="true" />
+                <element signature="e#71494#71650#0" expanded="true" />
+                <element signature="e#71690#71847#0" expanded="true" />
+                <element signature="e#71883#71972#0" expanded="true" />
+                <element signature="e#72010#72200#0" expanded="true" />
+                <element signature="e#72241#72336#0" expanded="true" />
+                <element signature="e#72374#72445#0" expanded="true" />
+                <element signature="e#72519#73618#0" expanded="true" />
+                <element signature="e#74451#74557#0" expanded="true" />
+                <element signature="e#74755#74817#0" expanded="true" />
+                <element signature="e#74882#75036#0" expanded="true" />
+                <element signature="e#75523#75645#0" expanded="true" />
+                <element signature="e#75749#75805#0" expanded="true" />
+                <element signature="e#75917#76021#0" expanded="true" />
+                <element signature="e#76210#76236#0" expanded="true" />
+                <element signature="e#76277#76303#0" expanded="true" />
+                <element signature="e#76522#76548#0" expanded="true" />
+                <element signature="e#76589#76615#0" expanded="true" />
+                <element signature="e#76975#77029#0" expanded="true" />
+                <element signature="e#77398#77424#0" expanded="true" />
+                <element signature="e#77778#77986#0" expanded="true" />
+                <element signature="e#78053#78103#0" expanded="true" />
+                <element signature="e#78150#78527#0" expanded="true" />
+                <element signature="e#78707#78812#0" expanded="true" />
+                <element signature="e#78904#79008#0" expanded="true" />
+                <element signature="e#79337#79614#0" expanded="true" />
+                <element signature="e#80092#80709#0" expanded="true" />
+                <element signature="e#80811#81249#0" expanded="true" />
+                <element signature="e#81360#81466#0" expanded="true" />
+                <element signature="e#81492#81599#0" expanded="true" />
+                <element signature="e#81779#81813#0" expanded="true" />
+                <element signature="e#81843#81865#0" expanded="true" />
+                <element signature="e#82046#82092#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="trelte_00_defconfig" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/arch/arm/configs/trelte_00_defconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="27" column="1" lean-forward="true" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="max77823_fuelgauge.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/battery/max77823_fuelgauge.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="648">
+              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+              <folding>
+                <element signature="e#7320#46318#0" expanded="true" />
+                <element signature="e#47792#47846#0" expanded="true" />
+                <element signature="e#48882#52888#0" expanded="true" />
+                <element signature="e#52947#58331#0" expanded="true" />
+                <element signature="e#60443#63053#0" expanded="true" />
+                <element signature="e#63898#64235#0" expanded="true" />
+                <element signature="e#64752#64806#0" expanded="true" />
+                <element signature="e#66628#66705#0" expanded="true" />
+                <element signature="e#67376#67543#0" expanded="true" />
+                <element signature="e#67838#67871#0" expanded="true" />
+                <element signature="e#67947#67991#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="random.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/char/random.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5076">
+              <caret line="282" column="3" lean-forward="false" selection-start-line="282" selection-start-column="3" selection-end-line="282" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="max77843_fuelgauge.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/battery/max77843_fuelgauge.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="33858">
+              <caret line="1881" column="71" lean-forward="false" selection-start-line="1881" selection-start-column="71" selection-end-line="1881" selection-end-column="71" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Makefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="1445" column="45" lean-forward="false" selection-start-line="1445" selection-start-column="45" selection-end-line="1445" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kbuild" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Kbuild">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mic_reg_5430.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/decon_display/mic_reg_5430.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2502">
+              <caret line="139" column="4" lean-forward="false" selection-start-line="139" selection-start-column="4" selection-end-line="139" selection-end-column="4" />
+              <folding>
+                <element signature="e#3443#3497#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="decon_pm_exynos5430.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/decon_display/decon_pm_exynos5430.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5094">
+              <caret line="283" column="0" lean-forward="false" selection-start-line="283" selection-start-column="0" selection-end-line="283" selection-end-column="0" />
+              <folding>
+                <element signature="e#962#1016#0" expanded="true" />
+                <element signature="e#9419#9527#0" expanded="true" />
+                <element signature="e#9655#9763#0" expanded="true" />
+                <element signature="e#9850#10294#0" expanded="true" />
+                <element signature="e#10336#10948#0" expanded="true" />
+                <element signature="e#11048#11156#0" expanded="true" />
+                <element signature="e#11270#11356#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gpio.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/gpio.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="core.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/core.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="21" column="35" lean-forward="false" selection-start-line="21" selection-start-column="35" selection-end-line="21" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="registers.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/registers.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="39042">
+              <caret line="2169" column="56" lean-forward="false" selection-start-line="2169" selection-start-column="56" selection-end-line="2169" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="florida.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sound/soc/codecs/florida.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="42588">
+              <caret line="2366" column="13" lean-forward="false" selection-start-line="2366" selection-start-column="13" selection-end-line="2366" selection-end-column="13" />
+              <folding>
+                <element signature="e#866#904#0" expanded="true" />
+                <element signature="e#913#933#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="clearwater.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sound/soc/codecs/clearwater.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mdnie_tuning.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/mdnie_tuning.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2862">
+              <caret line="159" column="5" lean-forward="false" selection-start-line="159" selection-start-column="5" selection-end-line="159" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mdnie.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/mdnie.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2484">
+              <caret line="138" column="40" lean-forward="false" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="40" />
+              <folding>
+                <element signature="e#778#875#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mdnie_lite.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/mdnie_lite.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6246">
+              <caret line="347" column="1" lean-forward="false" selection-start-line="347" selection-start-column="1" selection-end-line="347" selection-end-column="1" />
+              <folding>
+                <marker date="1459840308000" expanded="false" signature="16649:16724" ph="..." />
+                <marker date="1459840308000" expanded="true" signature="16849:17476" ph="{...}" />
+                <marker date="1459840308000" expanded="true" signature="17533:17692" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="s6e3ha2_mipi_lcd.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/s6e3ha2_mipi_lcd.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2970">
+              <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+              <folding>
+                <marker date="1459840308000" expanded="true" signature="61900:61914" ph="{...}" />
+                <marker date="1459840308000" expanded="true" signature="61973:61987" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dynamic_aid_s6e3ha2.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/dynamic_aid_s6e3ha2.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="10764">
+              <caret line="598" column="30" lean-forward="false" selection-start-line="598" selection-start-column="30" selection-end-line="598" selection-end-column="30" />
+              <folding>
+                <element signature="e#68#92#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mdnie_lite_chagall.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/decon_display/mdnie_lite_chagall.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="12366">
+              <caret line="687" column="50" lean-forward="false" selection-start-line="687" selection-start-column="38" selection-end-line="687" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="s6e3ha2_param.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/s6e3ha2_param.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7074">
+              <caret line="393" column="0" lean-forward="false" selection-start-line="393" selection-start-column="0" selection-end-line="393" selection-end-column="0" />
+              <folding>
+                <element signature="e#3684#3752#0" expanded="true" />
+                <element signature="e#9887#12246#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="regmap.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/base/regmap/regmap.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="21078">
+              <caret line="1171" column="23" lean-forward="false" selection-start-line="1171" selection-start-column="23" selection-end-line="1171" selection-end-column="23" />
+              <folding>
+                <element signature="e#28620#28718#0" expanded="true" />
+                <element signature="e#28940#29034#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sound/soc/codecs/Makefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1440">
+              <caret line="80" column="18" lean-forward="false" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kconfig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sound/soc/codecs/Kconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7848">
+              <caret line="436" column="25" lean-forward="false" selection-start-line="436" selection-start-column="7" selection-end-line="436" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kconfig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/input/Kconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4176">
+              <caret line="232" column="33" lean-forward="false" selection-start-line="232" selection-start-column="22" selection-end-line="232" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kconfig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/drivers/input/touchscreen/Kconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16398">
+              <caret line="911" column="0" lean-forward="false" selection-start-line="911" selection-start-column="0" selection-end-line="911" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/arch/arm/configs/trelte_00_defconfig" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1855" />
+    <option name="height" value="987" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arch" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arch" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpaceLemon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arch" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="175000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="65" y="-4" width="1855" height="987" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40216085" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Execute Anonymous" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24094355" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.43615258" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Salesforce" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32827005" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299578" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Execute Anonymous" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.335865" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18742344" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32827005" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Salesforce" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="3" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/drivers/input/touchscreen/Kconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16398">
+          <caret line="911" column="0" lean-forward="false" selection-start-line="911" selection-start-column="0" selection-end-line="911" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/base/regmap/regmap.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21078">
+          <caret line="1171" column="23" lean-forward="false" selection-start-line="1171" selection-start-column="23" selection-end-line="1171" selection-end-column="23" />
+          <folding>
+            <element signature="e#28620#28718#0" expanded="true" />
+            <element signature="e#28940#29034#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.gen.audio">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="27" column="41" lean-forward="false" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.gen.audio-old">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.generate">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="44" lean-forward="false" selection-start-line="13" selection-start-column="44" selection-end-line="13" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/mdnie.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2484">
+          <caret line="138" column="40" lean-forward="false" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="40" />
+          <folding>
+            <element signature="e#778#875#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56934">
+          <caret line="3163" column="1" lean-forward="false" selection-start-line="3163" selection-start-column="1" selection-end-line="3163" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/s6e3ha2_mipi_lcd.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2970">
+          <caret line="165" column="0" lean-forward="false" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+          <folding>
+            <marker date="1459840308000" expanded="true" signature="61900:61914" ph="{...}" />
+            <marker date="1459840308000" expanded="true" signature="61973:61987" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel_standart_N910S_K_L.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="63" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AiK-N910S/ramdisk/res/synapse/json.generate">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="44" lean-forward="false" selection-start-line="13" selection-start-column="44" selection-end-line="13" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel_standart_no_root.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" column="18" lean-forward="false" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel_zerolemon_N910S_K_L.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="35" lean-forward="false" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/boot/dts/exynos5433-tre3calte_kor_open_05.dts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13662">
+          <caret line="759" column="24" lean-forward="false" selection-start-line="759" selection-start-column="24" selection-end-line="759" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/boot/dts/exynos5433-tre3calte_kor_open_14.dts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14058">
+          <caret line="781" column="24" lean-forward="false" selection-start-line="781" selection-start-column="24" selection-end-line="781" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3calteskt_defconfig" />
+    <entry file="file://$PROJECT_DIR$/build_kernel_zerolemon_no_root.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="49" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel_zerolemon_N916S_K_L.sh" />
+    <entry file="file://$PROJECT_DIR$/build_kernel_standart_N916S_K_L.sh" />
+    <entry file="file://$PROJECT_DIR$/drivers/input/keyboard/gpio_keys.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/input/input.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="25" column="23" lean-forward="false" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-trelteskt_defconfig" />
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.gen.boost">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="41" column="41" lean-forward="false" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux-no-root/ramdisk/res/synapse/json.generate">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="11" lean-forward="false" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/arizona-control_old.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="27" column="56" lean-forward="false" selection-start-line="27" selection-start-column="56" selection-end-line="27" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/out/corola/root.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="758">
+          <caret line="1338" column="53" lean-forward="false" selection-start-line="1338" selection-start-column="45" selection-end-line="1338" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/out-magisk/corola/root.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="16" column="15" lean-forward="false" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/panels/s6e3ha2_param.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7074">
+          <caret line="393" column="0" lean-forward="false" selection-start-line="393" selection-start-column="0" selection-end-line="393" selection-end-column="0" />
+          <folding>
+            <element signature="e#3684#3752#0" expanded="true" />
+            <element signature="e#9887#12246#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules.order" />
+    <entry file="file://$PROJECT_DIR$/build_kernel_zerolemon.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="846">
+          <caret line="47" column="10" lean-forward="false" selection-start-line="47" selection-start-column="10" selection-end-line="47" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/decon_display/mic_reg.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1014">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/decon_display/mic_reg_5430.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2502">
+          <caret line="139" column="4" lean-forward="false" selection-start-line="139" selection-start-column="4" selection-end-line="139" selection-end-column="4" />
+          <folding>
+            <element signature="e#3443#3497#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/input/touchscreen/stm/fts_ts.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-936">
+          <caret line="990" column="0" lean-forward="false" selection-start-line="990" selection-start-column="0" selection-end-line="990" selection-end-column="0" />
+          <folding>
+            <element signature="e#2635#2734#0" expanded="true" />
+            <element signature="e#2808#2902#0" expanded="true" />
+            <element signature="e#27984#28148#0" expanded="true" />
+            <element signature="e#28736#28903#0" expanded="true" />
+            <element signature="e#29000#29164#0" expanded="true" />
+            <element signature="e#29615#29638#0" expanded="true" />
+            <element signature="e#30950#31167#0" expanded="true" />
+            <element signature="e#32348#32491#0" expanded="true" />
+            <element signature="e#32584#32740#0" expanded="true" />
+            <element signature="e#32978#33037#0" expanded="true" />
+            <element signature="e#33086#33178#0" expanded="true" />
+            <element signature="e#33665#34032#0" expanded="true" />
+            <element signature="e#35009#35040#0" expanded="true" />
+            <element signature="e#35141#35171#0" expanded="true" />
+            <element signature="e#35228#35360#0" expanded="true" />
+            <element signature="e#35462#35628#0" expanded="true" />
+            <element signature="e#35669#35837#0" expanded="true" />
+            <element signature="e#35881#35979#0" expanded="true" />
+            <element signature="e#36115#36345#0" expanded="true" />
+            <element signature="e#36783#36891#0" expanded="true" />
+            <element signature="e#36933#37682#0" expanded="true" />
+            <element signature="e#37721#39991#0" expanded="true" />
+            <element signature="e#40144#40623#0" expanded="true" />
+            <element signature="e#41069#41358#0" expanded="true" />
+            <element signature="e#41824#42110#0" expanded="true" />
+            <element signature="e#42770#43041#0" expanded="true" />
+            <element signature="e#43103#43728#0" expanded="true" />
+            <element signature="e#44247#44397#0" expanded="true" />
+            <element signature="e#44843#44980#0" expanded="true" />
+            <element signature="e#45645#52372#0" expanded="true" />
+            <element signature="e#54607#54707#0" expanded="true" />
+            <element signature="e#54747#54811#0" expanded="true" />
+            <element signature="e#54843#54894#0" expanded="true" />
+            <element signature="e#55016#55106#0" expanded="true" />
+            <element signature="e#55143#55206#0" expanded="true" />
+            <element signature="e#55694#55723#0" expanded="true" />
+            <element signature="e#56197#56344#0" expanded="true" />
+            <element signature="e#57436#57491#0" expanded="true" />
+            <element signature="e#57840#57931#0" expanded="true" />
+            <element signature="e#57971#58120#0" expanded="true" />
+            <element signature="e#58158#58336#0" expanded="true" />
+            <element signature="e#58374#58623#0" expanded="true" />
+            <element signature="e#58664#58755#0" expanded="true" />
+            <element signature="e#59543#59606#0" expanded="true" />
+            <element signature="e#59653#59756#0" expanded="true" />
+            <element signature="e#60247#60319#0" expanded="true" />
+            <element signature="e#60584#60697#0" expanded="true" />
+            <element signature="e#60738#60963#0" expanded="true" />
+            <element signature="e#61000#61154#0" expanded="true" />
+            <element signature="e#61192#62980#0" expanded="true" />
+            <element signature="e#63071#63169#0" expanded="true" />
+            <element signature="e#63792#63839#0" expanded="true" />
+            <element signature="e#64023#64623#0" expanded="true" />
+            <element signature="e#64839#65199#0" expanded="true" />
+            <element signature="e#65409#65499#0" expanded="true" />
+            <element signature="e#66208#66246#0" expanded="true" />
+            <element signature="e#66360#69152#0" expanded="true" />
+            <element signature="e#69346#69745#0" expanded="true" />
+            <element signature="e#69786#69812#0" expanded="true" />
+            <element signature="e#69944#70024#0" expanded="true" />
+            <element signature="e#70282#70348#0" expanded="true" />
+            <element signature="e#70411#70507#0" expanded="true" />
+            <element signature="e#71494#71650#0" expanded="true" />
+            <element signature="e#71690#71847#0" expanded="true" />
+            <element signature="e#71883#71972#0" expanded="true" />
+            <element signature="e#72010#72200#0" expanded="true" />
+            <element signature="e#72241#72336#0" expanded="true" />
+            <element signature="e#72374#72445#0" expanded="true" />
+            <element signature="e#72519#73618#0" expanded="true" />
+            <element signature="e#74451#74557#0" expanded="true" />
+            <element signature="e#74755#74817#0" expanded="true" />
+            <element signature="e#74882#75036#0" expanded="true" />
+            <element signature="e#75523#75645#0" expanded="true" />
+            <element signature="e#75749#75805#0" expanded="true" />
+            <element signature="e#75917#76021#0" expanded="true" />
+            <element signature="e#76210#76236#0" expanded="true" />
+            <element signature="e#76277#76303#0" expanded="true" />
+            <element signature="e#76522#76548#0" expanded="true" />
+            <element signature="e#76589#76615#0" expanded="true" />
+            <element signature="e#76975#77029#0" expanded="true" />
+            <element signature="e#77398#77424#0" expanded="true" />
+            <element signature="e#77778#77986#0" expanded="true" />
+            <element signature="e#78053#78103#0" expanded="true" />
+            <element signature="e#78150#78527#0" expanded="true" />
+            <element signature="e#78707#78812#0" expanded="true" />
+            <element signature="e#78904#79008#0" expanded="true" />
+            <element signature="e#79337#79614#0" expanded="true" />
+            <element signature="e#80092#80709#0" expanded="true" />
+            <element signature="e#80811#81249#0" expanded="true" />
+            <element signature="e#81360#81466#0" expanded="true" />
+            <element signature="e#81492#81599#0" expanded="true" />
+            <element signature="e#81779#81813#0" expanded="true" />
+            <element signature="e#81843#81865#0" expanded="true" />
+            <element signature="e#82046#82092#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drivers/video/exynos/decon_display/decon_pm_exynos5430.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5094">
+          <caret line="283" column="0" lean-forward="false" selection-start-line="283" selection-start-column="0" selection-end-line="283" selection-end-column="0" />
+          <folding>
+            <element signature="e#962#1016#0" expanded="true" />
+            <element signature="e#9419#9527#0" expanded="true" />
+            <element signature="e#9655#9763#0" expanded="true" />
+            <element signature="e#9850#10294#0" expanded="true" />
+            <element signature="e#10336#10948#0" expanded="true" />
+            <element signature="e#11048#11156#0" expanded="true" />
+            <element signature="e#11270#11356#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/clearwater.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1440">
+          <caret line="80" column="18" lean-forward="false" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/Kconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7848">
+          <caret line="436" column="25" lean-forward="false" selection-start-line="436" selection-start-column="7" selection-end-line="436" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/florida.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42588">
+          <caret line="2366" column="13" lean-forward="false" selection-start-line="2366" selection-start-column="13" selection-end-line="2366" selection-end-column="13" />
+          <folding>
+            <element signature="e#866#904#0" expanded="true" />
+            <element signature="e#913#933#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/gpio.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/core.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="35" lean-forward="false" selection-start-line="21" selection-start-column="35" selection-end-line="21" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/control.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="30" lean-forward="false" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/include/linux/mfd/arizona/registers.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39042">
+          <caret line="2169" column="56" lean-forward="false" selection-start-line="2169" selection-start-column="56" selection-end-line="2169" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/arizona-control_new.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8280">
+          <caret line="460" column="0" lean-forward="false" selection-start-line="460" selection-start-column="0" selection-end-line="460" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sound/soc/codecs/arizona-control.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding>
+            <element signature="e#17686#17737#0" expanded="true" />
+            <element signature="e#19789#19893#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.gen.screen">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/actions/generic">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel/AIK-Linux/ramdisk/res/synapse/json.gen.screen-dt2w">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="93" column="15" lean-forward="false" selection-start-line="93" selection-start-column="15" selection-end-line="93" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_kernel_standart.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Kbuild">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="1445" column="45" lean-forward="false" selection-start-line="1445" selection-start-column="45" selection-end-line="1445" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/trelte_00_defconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="27" column="1" lean-forward="true" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
