@@ -1,0 +1,3 @@
+/include/config/
+/arch/arm/include/generated/
+/include/generated/autoconf.h
