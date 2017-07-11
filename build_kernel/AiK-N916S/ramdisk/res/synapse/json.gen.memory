@@ -1,0 +1,109 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:MEMORY,
+    elements:[
+	{ SPane:{
+		title:"Memory state"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live LiveMemory"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+                title:"Virtual NAND swap",
+                description:"The disk size represents the amount of data allowed to fit into the ramdisk"
+        }},
+        { SOptionList:{
+                default:`echo $(/res/synapse/actions/swaps vnswap0)`,
+                action:"swaps vnswap0",
+                values:[Disabled, Enabled,]
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"ZSwap memory pool",
+		description:" ZSwap memory pool percentage of main memory that may be used as compressed page cache. Default is 20.",
+		min:0, max:50, unit:" %", step:1,
+		default:`cat /sys/module/zswap/parameters/max_pool_percent`,
+                action:"generic /sys/module/zswap/parameters/max_pool_percent"
+	}},
+    	{ SSeekBar:{
+        	title:"dirty_background_ratio",
+        	description:" Dirty background memory buffer, more you set, more memory will be used for write buffer for background operations, buffer is released on need to free RAM. The set value is a percentage of total system memory, the number of pages at which the pdflush background writeback daemon will start writing out dirty data. Default is 5.",
+        	min:0,
+		max:100, 
+		unit:" %", 
+		step:5,
+        	default:`cat /proc/sys/vm/dirty_background_ratio`,
+       		action:"generic /proc/sys/vm/dirty_background_ratio",
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+        	title:"dirty_ratio",
+        	description:" Dirty real time memory buffer, more you set, more memory will be used for write buffer for real time operations, buffer is released on need to free RAM. The set value is a percentage of total system memory, the number of pages at which a process which is generating disk writes will itself start writing out dirty data. Default is 20.",
+        	min:0,
+		max:100,
+		unit:" %",
+		step:5,
+       	 	default:`cat /proc/sys/vm/dirty_ratio`,
+        	action:"generic /proc/sys/vm/dirty_ratio",
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"Drop Caches (Clear VFS Cache After Boot)",
+		description:" This option will force rebuild of file system cache based on actual app usage rather than boot/startup processes. NOTE: This process can take from 1-2 minutes (Enable for better file system read/write performance).",
+		default:0,
+		action:"dropcaches /res/synapse/SkyHigh/dropcaches_prof",
+		values:{ 0:"Disabled", 1:"Enabled"
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		title:"Laptop Mode (Auto FS Writeback Delay Mode)",
+		description:" This option will delay the writebacks of file system bits cached in RAM while screen is ON (Enable for better performance @ slight risk of possible data loss if crashed or sudden loss of power).",
+		default:`$BB cat /proc/sys/vm/laptop_mode`,
+		action:"generic /proc/sys/vm/laptop_mode",
+		values:{ 0:"Disabled", 1:"Enabled"
+		}
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+                title:"Virtual machine swappiness",
+                description:"A low value means the kernel will try to avoid swapping as much as possible where a higher value instead will make the kernel aggressively try to use swap space.",
+                min:0, max:200, unit:"%", step:1,
+                default:`cat /proc/sys/vm/swappiness`,
+                action:"generic /proc/sys/vm/swappiness"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+    	{ SSeekBar:{
+		title:"Adaptive vfs_cache_pressure on Suspend / Resume",
+		description:" Value used to control the tendency of the kernel to reclaim the memory which is used for caching of directory and inode objects. Low values save battery while idle, but may cause stutter with longer up times. Default: screen is ON is 100 & screen OFF is fixed at 20.",
+		unit:" %",
+		step:1,
+		min:0,
+		max:150,
+		default:`cat /proc/sys/vm/vfs_cache_pressure`,
+		action:"generic /proc/sys/vm/vfs_cache_pressure"
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG

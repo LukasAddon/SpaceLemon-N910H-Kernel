@@ -12,12 +12,14 @@ cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgaug
 echo "Clear Folder"
 make clean
 echo "make config"
-make trelte_00_defconfig
+make exynos5433-tre3calteskt_defconfig
 echo "build kernel"
-make exynos5433-tre_eur_open_16.dtb
-make ARCH=arm -j4
+make exynos5433-tre3calte_kor_open_05.dtb
+make exynos5433-tre3calte_kor_open_14.dtb
+make ARCH=arm -j1
 
-GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/trelte_00_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
+
+GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-tre3calteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
@@ -33,14 +35,14 @@ sizT=$(head -n 1 sizT)
 rm -rf sizT
 echo "$sizT Kb"
 
-cp -f arch/arm/boot/zImage build_kernel/AIK-Linux-no-root/split_img/boot.img-zImage 
-cp -f ./dt.img build_kernel/AIK-Linux-no-root/split_img/boot.img-dtb
+cp -f arch/arm/boot/zImage build_kernel/AiK-N916S/split_img/boot.img-zImage
+cp -f ./dt.img build_kernel/AiK-N916S/split_img/boot.img-dtb
 
-build_kernel/AIK-Linux-no-root/repackimg.sh
+build_kernel/AiK-N916S/repackimg.sh
 
 rm -f build_kernel/out-no-root/*.zip
 
-cp -f build_kernel/AIK-Linux-no-root/image-new.img build_kernel/out-no-root/boot.img
+cp -f build_kernel/AiK-N916S/image-new.img build_kernel/out-no-root/boot.img
 
 cd build_kernel/out-no-root/
 

@@ -16,6 +16,10 @@ import /init.container.rc
 import /init.rilcommon.rc
 
 on early-init
+    # Ensure some kernel boot defaults are set
+    write /sys/devices/14ac0000.mali/max_clock 700
+    #write /sys/devices/14ac0000.mali/min_clock 266
+
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
@@ -1397,12 +1401,12 @@ service media /system/bin/mediaserver
 service apaservice /system/bin/apaservice
     class main
     user jack
-    group inet sdcard_rw sdcard_r media_rw shell
+    group system inet sdcard_rw sdcard_r media_rw shell
 
 service jackservice /system/bin/jackservice
     class main
     user jack
-    group audio inet shell
+    group system audio inet shell
     
 # One shot invocation to deal with encrypted volume.
 service defaultcrypto /system/bin/vdc --wait cryptfs mountdefaultencrypted
@@ -1677,3 +1681,15 @@ on property:service.vpnclientd.enable=0
 # Reactivation lock
 	service reactived /system/bin/reactived
 	class late_start
+# Execute files in /etc/init.d during boot
+service userinit /system/xbin/busybox run-parts /system/etc/init.d 
+    oneshot 
+    class late_start 
+    user root 
+    group root
+
+# Call Post-init script
+service post-init /sbin/post-init.sh
+    class core
+    user root
+    oneshot

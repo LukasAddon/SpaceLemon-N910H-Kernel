@@ -11,15 +11,43 @@ on init
     mkdir /preload 0771 system system
 
     # See storage config details at http://source.android.com/tech/storage/
+    mkdir /mnt/media_rw/extSdCard 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveA 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveB 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveC 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveD 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveE 0700 media_rw media_rw
+    mkdir /mnt/media_rw/UsbDriveF 0700 media_rw media_rw
+
+    # See storage config details at http://source.android.com/tech/storage/
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root
 
+    #export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    #export EMULATED_STORAGE_TARGET /storage/emulated
     # Support legacy paths
     symlink /sdcard /mnt/sdcard
 
     export EXTERNAL_STORAGE /sdcard
 
-    #export SECONDARY_STORAGE /storage/extSdCard
+    # map "real" external storages paths also in same way. backwards compatibility.
+    symlink /storage/extSdCard /mnt/extSdCard
+    symlink /storage/UsbDriveA /mnt/UsbDriveA
+    symlink /storage/UsbDriveB /mnt/UsbDriveB
+    symlink /storage/UsbDriveC /mnt/UsbDriveC
+    symlink /storage/UsbDriveD /mnt/UsbDriveD
+    symlink /storage/UsbDriveE /mnt/UsbDriveE
+    symlink /storage/UsbDriveF /mnt/UsbDriveF
+
+    export SECONDARY_STORAGE /storage/extSdCard
+
+    mkdir /storage/extSdCard 0700 root root
+    mkdir /storage/UsbDriveA 0700 root root
+    mkdir /storage/UsbDriveB 0700 root root
+    mkdir /storage/UsbDriveC 0700 root root
+    mkdir /storage/UsbDriveD 0700 root root
+    mkdir /storage/UsbDriveE 0700 root root
+    mkdir /storage/UsbDriveF 0700 root root
 
     symlink /data/app /factory
 
@@ -130,6 +158,14 @@ on boot
     chmod 0660 /efs/prov/ffffffff00000000000000000000000c.tlbin
 # CS socket
     mkdir /dev/socket/cs_socket 0770 system system
+
+#GPU
+#unify sysfs node for GPU
+    chmod 0444 /sys/devices/platform/gpusysfs/gpu_clock
+    chmod 0644 /sys/devices/platform/gpusysfs/gpu_governor
+    chmod 0644 /sys/devices/platform/gpusysfs/fps
+    chown system shell /sys/devices/platform/gpusysfs/gpu_governor
+    chown system shell /sys/devices/platform/gpusysfs/fps
 
     # PMS DVFS
     chown radio system /sys/power/cpufreq_table

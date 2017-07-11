@@ -1,0 +1,52 @@
+# By UpInTheAir for SkyHigh kernels
+
+BB=/sbin/busybox;
+
+case $1 in
+knox_security)
+  $BB mount -t rootfs -o remount,rw rootfs;
+  P=/res/synapse/SkyHigh/knox
+  if [ ! -z $2 ]; then
+  if [ $2 == NO_ACTION ]; then
+    echo 0 > $P
+  elif [ $2 == Disabled ]; then
+    echo 1 > $P
+    am force-stop com.samsung.klmsagent 2> /dev/null;
+    am force-stop com.sec.enterprise.knox.attestation 2> /dev/null;
+    am force-stop com.sec.knox.bridge 2> /dev/null;
+    am force-stop com.sec.knox.seandroid 2> /dev/null;
+    am force-stop com.sec.knox.knoxsetupwizardclient 2> /dev/null;
+    am force-stop com.sec.knox.cocktailprovider 2> /dev/null;
+    sleep 1;
+    pm disable com.samsung.klmsagent 2> /dev/null;
+    pm disable com.sec.enterprise.knox.attestation 2> /dev/null;
+    pm disable com.sec.knox.bridge 2> /dev/null;
+    pm disable com.sec.knox.seandroid 2> /dev/null;
+    pm disable com.sec.knox.knoxsetupwizardclient 2> /dev/null;
+    pm disable com.sec.knox.cocktailprovider 2> /dev/null;
+  elif [ $2 == Enabled ]; then
+    echo 2 > $P
+    am start -a android.intent.action.MAIN -n com.samsung.klmsagent/.MainActivity 2> /dev/null;
+    am start -a android.intent.action.MAIN -n com.sec.enterprise.knox.attestation/.MainActivity 2> /dev/null;
+    am start -a android.intent.action.MAIN -n com.sec.knox.bridge/.MainActivity 2> /dev/null;
+    am start -a android.intent.action.MAIN -n com.sec.knox.seandroid/.MainActivity 2> /dev/null;
+    am start -a android.intent.action.MAIN -n com.sec.knox.knoxsetupwizardclient/.MainActivity 2> /dev/null;
+    am start -a android.intent.action.MAIN -n com.sec.knox.cocktailprovider/.MainActivity 2> /dev/null;
+    sleep 1;
+    pm enable com.samsung.klmsagent 2> /dev/null;
+    pm enable com.sec.enterprise.knox.attestation 2> /dev/null;
+    pm enable com.sec.knox.bridge 2> /dev/null;
+    pm enable com.sec.knox.seandroid 2> /dev/null;
+    pm enable com.sec.knox.knoxsetupwizardclient 2> /dev/null;
+    pm enable com.sec.knox.cocktailprovider 2> /dev/null;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo NO_ACTION
+  elif [ $copy == 1 ]; then
+    echo Disabled
+  elif [ $copy == 2 ]; then
+    echo Enabled
+  fi
+  ;;
+esac
