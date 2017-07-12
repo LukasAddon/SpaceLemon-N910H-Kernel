@@ -8,31 +8,33 @@
 
 		From android git server , codesourcery and etc ..
 
-		 - arm-eabi-5.2
+		 - Linaro 5.2
 
 		
 
-	- edit build_kernel.sh
+	- edit MakeFile
 
-		edit "CROSS_COMPILE" to set proper toolchain.
-
-		  EX) export CROSS_COMPILE=$(android platform directory)/android/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
-
-
-
-	- run defconfig
-
-	  $ make trelte_00_defconfig
-
-	  $ make -j64
+        line 197
+	
+                    CROSS_COMPILE	?=../arm-eabi-5.2/bin/arm-eabi-
 
 
-
+    - run build_kernel_***.sh
+    
+          N916S/K/L
+	  
+                build_kernel_standart.sh  - standart battery with root
+		
+                build_kernel_standart_no_root.sh - standart battery
+		
+                build_kernel_zerolemon.sh  - zerolemon battery with root
+		
+                build_kernel_zerolemon_no_root.sh - zerolemon battery
+		
 2. Output files
 
-	- Kernel : arch/arm/boot/Image
+	- Kernel zip for TWRP : build_kernel/out and build_kernel/out-no-root
 
-	- module : modules/*.ko
 
 
 
