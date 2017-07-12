@@ -16,7 +16,7 @@ make exynos5433-tre3calteskt_defconfig
 echo "build kernel"
 make exynos5433-tre3calte_kor_open_05.dtb
 make exynos5433-tre3calte_kor_open_14.dtb
-make ARCH=arm -j1
+make ARCH=arm -j4
 
 GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-tre3calteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
