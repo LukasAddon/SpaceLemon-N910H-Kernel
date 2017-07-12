@@ -55,7 +55,7 @@ ui_print(" ");
 
 ui_print("#################################");
 ui_print("#     'SpaceLemon Kernel V2'    #");
-ui_print("#  FOR SM-N910H GALAXY NOTE 4!  #");
+ui_print("#  FOR SM-N916SKL GALAXY NOTE 4!#");
 ui_print("#       ....INSTALLING....      #");
 ui_print("#################################");
 

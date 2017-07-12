@@ -12,14 +12,14 @@ cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgaug
 echo "Clear Folder"
 make clean
 echo "make config"
-make exynos5433-tre3calteskt_defconfig
+make exynos5433-tre3caltelgt_defconfig
 echo "build kernel"
 make exynos5433-tre3calte_kor_open_05.dtb
 make exynos5433-tre3calte_kor_open_14.dtb
-make ARCH=arm -j1
+make ARCH=arm -j4
 
 
-GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-tre3calteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
+GETVER=`grep 'SpaceLemon-Battery-Standart-v.*' arch/arm/configs/exynos5433-tre3caltelgt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
 
@@ -49,5 +49,5 @@ cd build_kernel/out-no-root/
 mkdir system
 mkdir data
 
-zip -r SpaceLemon_v${GETVER}_standart_battery_no_root.zip ./
+zip -r N916S_K_L_SpaceLemon_v${GETVER}_standart_battery_no_root.zip ./
 

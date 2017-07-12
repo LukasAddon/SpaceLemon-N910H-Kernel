@@ -48,5 +48,5 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r SpaceLemon_v${GETVER}_zerolemon.zip ./
+zip -r N916S_K_L_SpaceLemon_v${GETVER}_zerolemon.zip ./
 
