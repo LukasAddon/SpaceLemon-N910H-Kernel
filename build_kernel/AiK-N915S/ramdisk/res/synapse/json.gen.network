@@ -1,0 +1,139 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:NETWORK,
+    elements:[
+    	{ SPane:{
+		title:"TCP Congestion Control",
+		description:" Select your preferred WIFI TCP algorithm. Regulates upload and download affecting throughput in various ways. Default is Westwood+."
+    	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		default:`cat proc/sys/net/ipv4/tcp_congestion_control`,
+		action:"generic proc/sys/net/ipv4/tcp_congestion_control",
+		values:[`while read values; do busybox printf "%s, \n" $values; done < proc/sys/net/ipv4/tcp_available_congestion_control`]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STitleBar:{
+		title:"Screen mirroring / AllShare Cast fix"
+	}},
+	{ SDescription:{
+		description:" Possible screen mirroring / AllShare Cast fix for rooted devices, works for some. Turn OFF WIFI first. Default is Enabled."
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/mirror mirror_fix)`,
+		action:"mirror mirror_fix",
+		values:[Disabled, Enabled,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STitleBar:{
+		title:"Clean WIFI Lease"
+	}},
+	{ SDescription:{
+		description:" Clean WIFI DHCP IP Lease. Push the button to activate!"
+	}},
+	{ SButton:{
+		label:"Clean WIFI Lease",
+		action:"devtools fix_wifi"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"TCP/IP Network Security Tweak",
+		description:" Protect against SYN & DoS attack etc. Default is Disabled."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/network tcp_security)`,
+		action:"network tcp_security",
+		values:[Disabled, Enabled,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"TCP/IP Network Speed Tweak",
+		description:" Optimize TCP buffer sizes for various networks. Default is Enabled."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/network tcp_speed)`,
+		action:"network tcp_speed",
+		values:[Disabled, Enabled,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"3G DNS Tweaks",
+		description:" Allows you to set the default DNS (Domain Name System) for 3G connections. Use this to potentially speed up your browsing experience (depending on DNS location) and improve your security. Default is Google.",
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" * You must have a mobile data network connection before applying new DNS *"
+	}},
+	{ SSpacer:{
+ 		height:1
+ 	}},
+	{ SLiveLabel:{
+		title:"Current DNS",
+		refresh:3000,
+		action:"live dns"
+	}},
+	{ SSpacer:{
+ 		height:1
+ 	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/network dns)`,
+		action:"network dns",
+		values:[Disabled, Google, OpenDNS, Comodo, Level3, Norton_DNS, Smart_Viper, Yandex,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"GPS Region",
+		description:" Select GPS-Time-Zone for faster GPS lock! Use your region!\n A backup is automatically generated as /system/etc/gps.conf.bak, so by selecting Original will revert to original gps.conf."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" Note: No_Action will automatically be set so Synapse will load chosen gps.conf on next boot."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+                title:"Current region",
+		refresh:3000,
+		action:"live gps"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/network gps_zone)`,
+		action:"network gps_zone",
+		values:[No_Action, Original, Asia, Europe, Oceania, North_America, South_America, Africa,]
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG
