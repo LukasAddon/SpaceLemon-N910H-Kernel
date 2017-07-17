@@ -1,0 +1,22 @@
+BB=/sbin/busybox;
+
+case $1 in
+susp)
+  echo `cat /sys/kernel/power_suspend/power_suspend_version`
+  ;;
+fsync)
+  echo `cat /sys/kernel/dyn_fsync/Dyn_fsync_version`
+  ;;
+fast)
+  echo `cat /sys/kernel/fast_charge/info`
+  ;;
+asv)
+  #echo `cat /sys/kernel/debug/asv_group|grep group`
+  STATE="";
+  cat /sys/kernel/debug/asv_group|grep group > /data/data/asvstat
+  while read GROUP D1 D2 D3 NUM ; do
+      STATE="$STATE $GROUP : $NUM @n";
+  done < /data/data/asvstat
+  $BB echo "$STATE";
+  ;;
+esac
