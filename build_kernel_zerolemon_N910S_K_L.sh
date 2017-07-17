@@ -11,9 +11,14 @@ BK=build_kernel
 cp ./drivers/battery/max77843_fuelgauge_ZL.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
 make clean
+rm -rf  include/config/*
 echo "make config"
 make exynos5433-trelteskt_defconfig
 echo "build kernel"
+make exynos5433-trelte_kor_open_06.dtb
+make exynos5433-trelte_kor_open_07.dtb
+make exynos5433-trelte_kor_open_09.dtb
+make exynos5433-trelte_kor_open_11.dtb
 make exynos5433-trelte_kor_open_12.dtb
 make ARCH=arm -j4
 
