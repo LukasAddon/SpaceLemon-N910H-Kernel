@@ -1,0 +1,14 @@
+on boot
+#for datarouter
+    chown system system /dev/dun
+    chown system system /dev/ttyGS0
+    chown system system /dev/ttyGS1
+    chown system system /dev/ttyGS2
+    chown system system /dev/ttyGS3
+
+on fs
+#RIL diagexe for CP
+service DIAG-daemon /system/bin/diagexe
+    class main
+    user root
+    group system radio inet net_raw
