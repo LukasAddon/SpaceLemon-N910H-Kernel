@@ -11,6 +11,7 @@ BK=build_kernel
 cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
 make clean
+rm -rf  include/config/*
 echo "make config"
 make trelte_00_defconfig
 echo "build kernel"
