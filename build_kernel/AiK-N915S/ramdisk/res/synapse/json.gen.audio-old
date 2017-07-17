@@ -1,0 +1,188 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:AUDIO,
+    elements:[
+	{ SPane:{ 
+		title:"Headphone Amplification",
+		description:" Headphone amplification increases volume only on headphones and headsets. The controlled input is the digital input volume for the audio DAC."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"Headphone left channel volume",
+		min:80, max:150, unit:" dB", weight:0.5, offset:128,
+		default:`cat /sys/class/misc/wolfson_control/headphone_left`,
+                action:"generic /sys/class/misc/wolfson_control/headphone_left"
+	}},
+	{ SSeekBar:{
+		title:"Headphone right channel volume",
+		min:80, max:150, unit:" dB", weight:0.5, offset:128,
+		default:`cat /sys/class/misc/wolfson_control/headphone_right`,
+                action:"generic /sys/class/misc/wolfson_control/headphone_right"
+	}},
+	{ SCheckBox:{
+		description:" Enables mono output",
+		label:"Mono mixer",
+		default:`cat /sys/class/misc/wolfson_control/switch_hp_mono`,
+                action:"generic /sys/class/misc/wolfson_control/switch_hp_mono"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{ 
+		title:"Speaker Amplification",
+		description:" Speaker amplification increases volume on the external speaker and earpiece. Speaker volumes are expressed as deltas to Samsung's audio profiles, so not to completely override them."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"Main speaker volume",
+		min:-8, max:16, unit:" dB", weight:0.5,
+		default:`cat /sys/class/misc/wolfson_control/speaker_volume`,
+                action:"generic /sys/class/misc/wolfson_control/speaker_volume"
+	}},
+	{ SSeekBar:{
+		title:"Earpiece volume",
+		min:-8, max:16, unit:" dB", weight:0.5,
+		default:`cat /sys/class/misc/wolfson_control/earpiece_volume`,
+                action:"generic /sys/class/misc/wolfson_control/earpiece_volume"
+	}},
+	{ SCheckBox:{
+		description:" Disables the main speaker when audio is outputted via headphones; all audio routed to the speaker is disabled (!!!).",
+		label:"Privacy mode",
+		default:`cat /sys/class/misc/wolfson_control/switch_sp_privacy`,
+                action:"generic /sys/class/misc/wolfson_control/switch_sp_privacy"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{ 
+		title:"HP Equalizer settings",
+		description:" Controls the hardware equalizer."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		description:" Enable headphone equalizer for gain controls.",
+		label:"Enable headphone equalizer",
+		default:`cat /sys/class/misc/wolfson_control/switch_eq_headphone`,
+                action:"generic /sys/class/misc/wolfson_control/switch_eq_headphone"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"Band 1 gain",
+		description:"Cutoff-frequency: 96 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_1`,
+                action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_1"
+	}},
+	{ SSeekBar:{
+		title:"Band 2 gain",
+		description:" Center-frequency: 273 Hz, bandwidth: 551 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_2`,
+                action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_2"
+	}},
+	{ SSeekBar:{
+		title:"Band 3 gain",
+		description:" Center-frequency: 784 Hz, bandwidth: 1560 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_3`,
+                action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_3"
+	}},
+	{ SSeekBar:{
+		title:"Band 4 gain",
+		description:" Center-frequency: 2206 Hz, bandwidth: 4409 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_4`,
+                action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_4"
+	}},
+	{ SSeekBar:{
+		title:"Band 5 gain",
+		description:" Cutoff-frequency: 6340 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_hp_gain_5`,
+                action:"generic /sys/class/misc/wolfson_control/eq_hp_gain_5"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{ 
+		title:"SP DSP settings",
+		description:" Use stock DSP processing."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		label:"Enable speaker DSP",
+		default:`cat /sys/class/misc/wolfson_control/switch_sp_dsp`,
+                action:"generic /sys/class/misc/wolfson_control/switch_sp_dsp"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{ 
+		title:"SP Equalizer settings",
+		description:" Controls the hardware equalizer."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		description:" Enable speaker equalizer for gain controls.",
+		label:"Enable speaker equalizer",
+		default:`cat /sys/class/misc/wolfson_control/switch_eq_speaker`,
+                action:"generic /sys/class/misc/wolfson_control/switch_eq_speaker"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"Band 1 gain",
+		description:" Cutoff-frequency: 160 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_1`,
+                action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_1"
+	}},
+	{ SSeekBar:{
+		title:"Band 2 gain",
+		description:" Center-frequency: 500 Hz, bandwidth: 1050 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_2`,
+                action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_2"
+	}},
+	{ SSeekBar:{
+		title:"Band 3 gain",
+		description:" Center-frequency: 2800 Hz, bandwidth: 2200 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_3`,
+                action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_3"
+	}},
+	{ SSeekBar:{
+		title:"Band 4 gain",
+		description:" Center-frequency: 7600 Hz, bandwidth: 4500 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_4`,
+                action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_4"
+	}},
+	{ SSeekBar:{
+		title:"Band 5 gain",
+		description:" Cutoff-frequency: 20000 Hz",
+		min:-12, max:12, unit:" dB",
+		default:`cat /sys/class/misc/wolfson_control/eq_sp_gain_5`,
+                action:"generic /sys/class/misc/wolfson_control/eq_sp_gain_5"
+	}}
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG
