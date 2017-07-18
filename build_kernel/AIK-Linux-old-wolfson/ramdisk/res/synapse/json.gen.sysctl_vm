@@ -1,0 +1,40 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:VM SYSCTL,
+    elements:[
+	{ STitleBar:{
+		title:"VM SYSCTL"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ STreeDescriptor:{
+		path:"/proc/sys/vm",
+		generic: {
+			directory: {},
+			element: {
+				SGeneric: { title:"@BASENAME" }
+			}
+		},
+		exclude: [
+			"compact_memory",
+			"dirty_background_bytes",
+			"dirty_background_ratio",
+			"dirty_bytes",
+			"dirty_ratio",
+			"dirty_writeback_active_centisecs",
+			"dirty_writeback_centisecs",
+			"dirty_writeback_suspend_centisecs",
+			"drop_caches",
+			"dynamic_dirty_writeback",
+			"laptop_mode",
+			"swappiness",
+			"user_reserve_kbytes",
+			"vfs_cache_pressure"
+		]
+	}},
+    ]
+}
+CTAG

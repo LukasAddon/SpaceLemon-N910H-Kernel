@@ -1,0 +1,33 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:SECURITY,
+    elements:[
+	{ SPane:{
+		title:"Enable or Disable KNOX",
+		description:" Disabling will prevent Samsung security feature and allow some apps to run outside the secure container. KEEP DISABLED !!"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" NOTE: This process can take ~1 minute and device may be UNRESPONSIVE during this time, PLEASE WAIT for the process to finish !"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" After set Disabled or Enabled, set to NO_ACTION so Synapse will complete loading faster every boot ! KNOX will still be Disabled or Enabled."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SOptionList:{
+		default:`echo $(/res/synapse/actions/security knox_security)`,
+		action:"security knox_security",
+		values:[NO_ACTION, Disabled, Enabled,]
+	}},
+    ]
+}
+CTAG

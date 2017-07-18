@@ -1,0 +1,137 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:ADVANCED,
+    elements:[
+	{ SPane:{
+		title:"Scheduler AUTO-Tunables"
+      	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		description:" Disable auto-scaling of scheduler tunables with hotplug. The tunables will vary across devices in unpredictable ways if allowed to scale with cpu cores. Default is Enabled (in stock kernels).",
+		label:"Enable or Disable Scheduler AUTO-Tunables",
+		default:`cat /proc/sys/kernel/sched_tunable_scaling`,
+		action:"generic /proc/sys/kernel/sched_tunable_scaling"
+	}},
+      	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+                title:"HMP Thresholds up/down ratios for task migrating",
+                description:"Adjust HMP ratios for up/down scaling for tasks migrating from little to big domain and from big to little domain. Higher Upthresholds value make less battery using because domain more use Little domain."
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+        { SSeekBar:{
+                title:"HMP UP Thresholds",
+		description:" Min. load required for migrating tasks to a faster domain.",
+                min:0, max:1023, unit:"", step:1,
+                default:`cat /sys/kernel/hmp/up_threshold`,
+                action:"generic /sys/kernel/hmp/up_threshold"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+        { SSeekBar:{
+                title:"HMP DOWN Thresholds",
+		description:" Max. load allowed for tasks migrating to a slower domain.",
+                min:0, max:1023, unit:"", step:1,
+                default:`cat /sys/kernel/hmp/down_threshold`,
+                action:"generic /sys/kernel/hmp/down_threshold"
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"FSync On/Off toggle",
+		description:"Enabling/Disabling FSync. Disable for better file system performance at the risk of data lost when phone crashes. Default Enabled."
+	}},
+	{ SOptionList:{
+		default:`$BB cat /sys/module/sync/parameters/fsync_enabled`,
+		action:"generic /sys/module/sync/parameters/fsync_enabled",
+		values:{N:"Disabled FSync", Y:"Enabled FSync(Default)"}
+	}},
+      	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"Kernel Entropy"
+      	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+		title:"Entropy Available",
+		refresh:1000,
+		action:"live entropy"
+	}},
+	{ SSeekBar:{
+		title:"Read Wakeup Threshold",
+		max:2048, min:64, step:64,
+		default:`cat /proc/sys/kernel/random/read_wakeup_threshold`,
+		action:"generic /proc/sys/kernel/random/read_wakeup_threshold"
+	}},
+	{ SSeekBar:{
+		title:"Write Wakeup Threshold",
+		max:2048, min:64, step:64,
+		default:`cat /proc/sys/kernel/random/write_wakeup_threshold`,
+		action:"generic /proc/sys/kernel/random/write_wakeup_threshold"
+	}},
+      	{ SSpacer:{
+		height:1
+	}},
+      	{ SPane:{
+		title:"Gentle Fair Sleepers"
+      	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		description:" Sleeper Fairness is a concept used by CFS which treat sleeping/waiting tasks as if they were in a run queue. This implies tasks which spend most of the time waiting for an user input and such will get a fair share of CPU when they need it. Disabling Gentle Fair Sleepers could improve UI responsiveness. Default is Disabled.",
+		label:"Enable or Disable Gentle Fair Sleepers",
+		default:`cat /sys/kernel/sched/gentle_fair_sleepers`,
+		action:"generic /sys/kernel/sched/gentle_fair_sleepers"
+	}},
+      	{ SSpacer:{
+		height:1
+	}},
+      	{ SPane:{
+		title:"Arch Power"
+      	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SCheckBox:{
+		description:" Arch Power patch causes arch dependent power functions to be used instead of generic high resolution timer ticks and double ticks. Default is Enabled.",
+		label:"Enable or Disable Arch Power",
+		default:`cat /sys/kernel/sched/arch_power`,
+		action:"generic /sys/kernel/sched/arch_power"
+	}},
+      	{ SSpacer:{
+		height:1
+	}},
+      	{ SPane:{
+		title:"Randomisation"
+      	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SSeekBar:{
+		title:"randomize_va_space",
+		description:" Disabling (0) virtual address randomisation may improve GUI responsiveness. Default is 0.",
+		max:2,
+		min:0,
+		step:1,
+		default:`cat /proc/sys/kernel/randomize_va_space`,
+		action:"generic /proc/sys/kernel/randomize_va_space"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG
