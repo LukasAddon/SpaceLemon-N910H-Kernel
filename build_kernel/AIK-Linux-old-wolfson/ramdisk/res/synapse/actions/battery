@@ -1,0 +1,33 @@
+# By UpInTheAir for SkyHigh kernels
+
+BB=/sbin/busybox;
+
+case $1 in
+fuel-gauge)
+P=/sys/devices/battery.30/power_supply/battery/fg_reset_cap;
+$BB chmod 666 $P;
+  echo 1 > $P
+  echo "The fuel gauge chip is reset. Give it some time to normalize the gauge."
+  sleep 2;
+  ;;
+fastcharge)
+  P=/sys/kernel/fast_charge/force_fast_charge
+  if [ ! -z $2 ]; then
+  if [ $2 == Disabled ]; then
+    echo 0 > $P
+  elif [ $2 == Enabled_FastCharge ]; then
+    echo 1 > $P
+  elif [ $2 == Enabled_FastCharge_with_Custom_Levels ]; then
+    echo 2 > $P
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Disabled
+  elif [ $copy == 1 ]; then
+    echo Enabled_FastCharge
+  elif [ $copy == 2 ]; then
+    echo Enabled_FastCharge_with_Custom_Levels
+  fi
+  ;;
+esac
+

@@ -1,0 +1,37 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:CPU VOLT,
+    elements:[
+	{ SPane:{
+		title:"CPU voltage control",
+		description:" Decreasing voltage will lower power consumption of the CPU. Increasing it on overclocked frequencies improves stability. Too low voltage may cause instabilities and freezes." 
+        }},
+	{ SSpacer:{
+		height:1
+	}},
+        { SPane:{ title:"A57 big Cores" }},
+`
+while read FREQ VOLT; do
+LABEL=$(expr $FREQ / 1000)
+        echo '{ SSeekBar:{'
+                echo 'title:"'$LABEL' MHz", default:'$VOLT', '
+                echo 'action:"cpuvolt '${FREQ}'", unit:" mV", weight:0.001, min:600000, max:1350000, step:6250 }}, '
+done < /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_volt_table
+`
+	{ SSpacer:{
+		height:1
+	}},
+        { SPane:{ title:"A53 LITTLE Cores" }},
+`
+while read FREQ VOLT; do
+LABEL=$(expr $FREQ / 1000)
+        echo '{ SSeekBar:{'
+                echo 'title:"'$LABEL' MHz", default:'$VOLT', '
+                echo 'action:"kfcvolt '${FREQ}'", unit:" mV", weight:0.001, min:600000, max:1400000, step:6250 }}, '
+done < /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_volt_table
+`
+    ]
+}
+CTAG

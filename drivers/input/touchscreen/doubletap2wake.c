@@ -185,11 +185,17 @@ static void new_touch(int x, int y) {
 /* Doubletap2wake main function */
 static void detect_doubletap2wake(int x, int y, bool st)
 {
-	if (!flg_sensor_prox_detecting) {	
+	if (!flg_sensor_prox_detecting) {
 
-        	bool single_touch = st;
-		if (x < 0 || x > 1439 )
-         		return;
+		bool single_touch = st;
+		#ifdef CONFIG_DECON_LCD_S6E3HA2  // note 4 standart screen  2560x1440
+			if (x < 0 || x > 1439 )
+					return;
+		#else  // note 4 edge screen  2560x1600
+			if (x < 0 || x > 1599 )
+				return;
+		#endif
+
 		if (dt2w_switch == 1 && (y < 0 || y > 2559))
         		return;
 		if ((single_touch) && (dt2w_switch > 0) && (exec_count) /*&& (touch_cnt)*/) {

@@ -1,0 +1,93 @@
+# By UpInTheAir for SkyHigh kernels
+
+BB=/sbin/busybox;
+
+case $1 in
+usb_mode)
+  $BB mount -t rootfs -o remount,rw rootfs;
+  P=/res/synapse/SkyHigh/mass_storage
+  if [ ! -z $2 ]; then
+  if [ $2 == DEFAULT ]; then
+    echo 0 > $P
+  elif [ $2 == MTP ]; then
+    echo 1 > $P
+	setprop sys.usb.config mtp,adb;
+	setprop persist.sys.usb.config mtp,adb;
+	echo "0" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
+	echo "" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+	echo "0" > /sys/class/android_usb/android0/enable;
+	echo "04e8" > /sys/class/android_usb/android0/idVendor;
+	echo "6860" > /sys/class/android_usb/android0/idProduct;
+	echo "mtp,adb" > /sys/class/android_usb/android0/functions;
+	echo "0" > /sys/class/android_usb/android0/bDeviceClass;
+	echo "1" > /sys/class/android_usb/android0/enable;
+	start adbd
+	setprop sys.usb.state mtp,adb;
+  elif [ $2 == PTP ]; then
+    echo 2 > $P
+	setprop sys.usb.config ptp,adb;
+	setprop persist.sys.usb.config ptp,adb;
+	echo "0" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
+	echo "" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+	echo "0" > /sys/class/android_usb/android0/enable;
+	echo "04e8" > /sys/class/android_usb/android0/idVendor;
+	echo "6866" > /sys/class/android_usb/android0/idProduct;
+	echo "mtp,adb" > /sys/class/android_usb/android0/functions;
+	echo "0" > /sys/class/android_usb/android0/bDeviceClass;
+	echo "1" > /sys/class/android_usb/android0/enable;
+	start adbd
+	setprop sys.usb.state ptp,adb;
+  elif [ $2 == UMS ]; then
+    echo 3 > $P
+	setprop sys.usb.config mass_storage,adb;
+	setprop persist.sys.usb.config mass_storage,adb;
+	echo "0" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
+        # not work but i leave this old code
+	echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+	echo "0" > /sys/class/android_usb/android0/enable;
+	echo "04e8" > /sys/class/android_usb/android0/idVendor;
+	echo "685e" > /sys/class/android_usb/android0/idProduct;
+	echo "mass_storage,adb" > /sys/class/android_usb/android0/functions;
+	echo "1" > /sys/class/android_usb/android0/enable;
+	start adbd
+	setprop sys.usb.state mass_storage,adb;
+        # remount microsd card after mass storage up. and then all working
+        # usb cable must be connected before use this function
+        echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+  elif [ $2 == CD_ROM ]; then
+    echo 4 > $P
+	setprop sys.usb.config mass_storage,adb;
+	setprop persist.sys.usb.config mass_storage,adb;
+	echo "1" > /sys/class/android_usb/android0/f_mass_storage/lun/cdrom;
+	echo "/dev/block/vold/disk:179,32" > /sys/class/android_usb/android0/f_mass_storage/lun/file;
+	echo "0" > /sys/class/android_usb/android0/enable;
+	echo "04e8" > /sys/class/android_usb/android0/idVendor;
+	echo "685e" > /sys/class/android_usb/android0/idProduct;
+	echo "mass_storage,adb" > /sys/class/android_usb/android0/functions;
+	echo "1" > /sys/class/android_usb/android0/enable;
+	start adbd
+	setprop sys.usb.state mass_storage,adb;
+   elif [ $2 == USB_KEYBOARD-MOUSE ]; then
+    echo 5 > $P
+	echo "0" > /sys/class/android_usb/android0/enable;
+	echo "1" > /sys/module/g_android/parameters/usb_keyboard;
+	echo "mtp,adb,hid" > /sys/class/android_usb/android0/functions;
+	echo "1" > /sys/class/android_usb/android0/enable;
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo DEFAULT
+  elif [ $copy == 1 ]; then
+    echo MTP
+  elif [ $copy == 2 ]; then
+    echo PTP
+  elif [ $copy == 3 ]; then
+    echo UMS
+  elif [ $copy == 4 ]; then
+    echo CD_ROM
+  elif [ $copy == 5 ]; then
+    echo USB_KEYBOARD-MOUSE
+  $BB mount -t rootfs -o remount,ro rootfs;
+  fi
+  ;;
+esac
