@@ -9,7 +9,7 @@ DTS=arch/arm/boot/dts
 BK=build_kernel
 
 # rename old wolfson to current sound mod
-cp ./sound/soc/codecs/arizona-control_old.c .sound/soc/codecs/arizona-control.c
+cp ./sound/soc/codecs/arizona-control_old.c ./sound/soc/codecs/arizona-control.c
 # rename zerolemon  to current battery mod
 cp ./drivers/battery/max77843_fuelgauge_ZL.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"

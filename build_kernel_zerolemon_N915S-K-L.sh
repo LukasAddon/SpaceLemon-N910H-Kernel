@@ -20,7 +20,7 @@ make exynos5433-tbelte_kor_open_09.dtb
 make exynos5433-tbelte_kor_open_11.dtb
 make exynos5433-tbelte_kor_open_12.dtb
 make exynos5433-tbelte_kor_open_14.dtb
-make ARCH=arm -j1
+make ARCH=arm -j4
 
 GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/exynos5433-tbelteskt_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
