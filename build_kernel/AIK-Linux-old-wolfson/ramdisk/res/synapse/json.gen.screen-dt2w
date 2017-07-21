@@ -108,6 +108,46 @@ cat << CTAG
 		   '5' :'READING',
 		}
 	}},
+	{ SSpacer:{
+		height:2
+	}},
+    { SLiveLabel:{
+        title:"Current accelerometer rotation",
+        refresh:3000,
+        action:"settings get system accelerometer_rotation"
+    }},
+    { SButton:{
+        label:"enable auto rotation sensor",
+        action:"settings put system accelerometer_rotation 1"
+    }},
+    { SButton:{
+        label:"disable auto rotation sensor",
+        action:"settings put system accelerometer_rotation 0"
+    }},
+	{ SSpacer:{
+		height:2
+	}},
+    { SLiveLabel:{
+        title:"user rotation mode",
+        refresh:3000,
+        action:"settings get system user_rotation"
+    }},
+    { SButton:{
+        label:"0 Protrait",
+        action:"settings put system user_rotation 0"
+    }},
+    { SButton:{
+        label:"1 Landscape",
+        action:"settings put system user_rotation 1"
+    }},
+    { SButton:{
+        label:"2 Protrait Reversed",
+        action:"settings put system user_rotation 2"
+    }},
+    { SButton:{
+        label:"3 Landscape Reversed",
+        action:"settings put system user_rotation 3"
+    }},
     ]
 }
 CTAG

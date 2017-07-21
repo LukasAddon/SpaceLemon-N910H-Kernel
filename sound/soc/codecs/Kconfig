@@ -148,12 +148,6 @@ config SND_SOC_ALL_CODECS
 config SND_SOC_88PM860X
 	tristate
 
-config ARIZONA_CONTROL
-	bool "ARIZONA_CONTROL drivers"
-	default n
-	help
-	  This disables the sleep function of modified touchscreen drivers.
-
 config SND_SOC_ARIZONA
 	tristate
 	default y if SND_SOC_WM5102=y
@@ -605,5 +599,10 @@ config SND_SOC_TPA6130A2
 
 config SND_SOC_NXP_TFA9897
 	tristate
+
+config ARIZONA_CONTROL
+	bool "Arizona sysfs interface"
+	depends on SND_SOC_ARIZONA
+	default n
 
 source "sound/soc/codecs/audience/Kconfig"	
