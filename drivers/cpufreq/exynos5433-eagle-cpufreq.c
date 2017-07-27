@@ -404,7 +404,7 @@ static void __init set_volt_table_CA15(void)
 		max_support_idx_CA15 = L7;	/* 1.8 GHz */
 		break;
 	default :
-		max_support_idx_CA15 = L6;	/* 1.9 GHz */
+		max_support_idx_CA15 = L4;	/* 2.1 GHz */
 	}
 
 	if (is_max_limit_sample() == 1)
@@ -413,7 +413,7 @@ static void __init set_volt_table_CA15(void)
 	max_support_idx_CA15 = L13;	/* 1.2 GHz */
 #endif
 
-	min_support_idx_CA15 = L18;	/* 700 MHz */
+	min_support_idx_CA15 = L21;	/* 400 MHz */
 
 	pr_info("CPUFREQ of CA15 max_freq : L%d %u khz\n", max_support_idx_CA15,
 		exynos5433_freq_table_CA15[max_support_idx_CA15].frequency);
