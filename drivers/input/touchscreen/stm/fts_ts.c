@@ -1125,14 +1125,6 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
 			input_mt_report_slot_state(info->input_dev,
 						   MT_TOOL_FINGER,
 						   1 + (palm << 1));
-            //#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE_DEBUG
-            //    pr_info("doubletap2wake (1133) ABS_MT_SLOT send event\n");
-            //#endif
-            //#ifndef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-
-                //dt2w_input_event(ABS_MT_SLOT,  TouchID);
-                //dt2w_input_event(ABS_MT_TRACKING_ID,  1 + (palm << 1));
-            //#endif
 
 			input_report_key(info->input_dev, BTN_TOUCH, 1);
 			input_report_key(info->input_dev,
@@ -1226,7 +1218,7 @@ static unsigned char fts_event_handler_type_b(struct fts_ts_info *info,
                                 dt2w_input_event(BTN_TOUCH, 0);
                 #endif
                 #ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
-                        s2w_input_event(BTN_TOUCH, 0);
+                        		s2w_input_event(BTN_TOUCH, 0);
                 #endif
 #ifdef FTS_SUPPORT_STRINGLIB
 				input_report_key(info->input_dev, KEY_REAR_CAMERA_DETECTED, 0);

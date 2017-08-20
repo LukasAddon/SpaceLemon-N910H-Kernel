@@ -1,0 +1,44 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:SATURATION,
+    elements:[
+	{ SCheckBox:{
+                description:"Enable to control all option. Hook will set mode=DYNAMIC and scenario=VT and you cant change it.",
+                label:"Mdnie Hook",
+                action:"generic /sys/class/mdnie/mdnie/hook"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"Color Saturation",
+		description:"default is normal",
+		default:`cat /sys/class/mdnie/mdnie/mdnie_saturation`,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_saturation",
+		values:{
+		  '1' :'NORMAL',
+		   '2': 'HIGH',
+		   '3' :'ULTRA',
+		}
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"Color Sharpness",
+		description:"default is 192",
+		default:`cat /sys/class/mdnie/mdnie/mdnie_sharp`,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_sharp",
+		values:{
+		   '64': '64 - Video Sharpness',
+		   '150' :'150 - ',
+		   '192' :'192 - Default',
+		   '220' :'220 - High',
+		   '255' :'255 - Ultra',
+		}
+	}},
+    ]
+}
+CTAG

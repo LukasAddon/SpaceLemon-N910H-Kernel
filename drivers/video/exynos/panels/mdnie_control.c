@@ -2,7 +2,7 @@
  * mdnie_control.c - mDNIe register sequence intercept and control
  *
  * @Author	: Andrei F. <https://github.com/AndreiLux>
- * @Date	: February 2013
+ * @Date	: February 2013 - May 2015
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -15,87 +15,115 @@
 #include <linux/sysfs.h>
 #include <linux/device.h>
 
-#include "mdnie.h"
+#include "./panels/mdnie.h"
 
-#define REFRESH_DELAY		HZ / 2
-static struct delayed_work mdnie_refresh_work;
+#define DEBUG 0
 
-static bool reg_hook = 0;
+#ifdef CONFIG_EXYNOS_DECON_MDNIE_LITE
+#define MDNIE_LITE
+struct mdnie_command *cmds;
+#endif
+
+struct mdnie_info *g_mdnie;
+
+static int reg_hook = 0;
+#ifndef MDNIE_LITE
 static bool sequence_hook = 0;
-
-/* Defined as negative deltas */
-static int br_reduction = 75;
-static int br_takeover_point = 30;
-static int br_brightness_delta = 20;
-static int br_component_reduction = 0;
-
-static int black_component_increase = 0;
-static int black_component_increase_value = 0;
-static int black_component_increase_point = 255;
+#endif
 
 enum mdnie_registers {
-    EFFECT_MASTER1	= 0x08,	/*SCR2 CC1 | CS2 DE1 | LoG8 WIENER4 NR2 HDR1*/
-    EFFECT_MASTER2	= 0x09,	/*MCM off*/
-    EFFECT_MASTER3	= 0x39,	/*UC off*/
+    CS_HG_RY	= 0x50,	/*CS hg ry*/
+    CS_HG_GC	= 0x51,	/*CS hg gc*/
+    CS_HG_BM	= 0x52,	/*CS hg bm*/
+    CS_WEIGHT_GRTH	= 0x53,	/*CS weight grayTH*/
 
-    DE_EGTH		= 0xb0,	/*DE egth*/
-    DE_PE		= 0xb2, /*DE pe*/
-    DE_PF		= 0xb3,	/*DE pf*/
-    DE_PB		= 0xb4,	/*DE pb*/
-    DE_NE		= 0xb5,	/*DE ne*/
-    DE_NF		= 0xb6,	/*DE nf*/
-    DE_NB		= 0xb7,	/*DE nb*/
-    DE_MAX_RATIO	= 0xb8,	/*DE max ratio*/
-    DE_MIN_RATIO	= 0xb9,	/*DE min ratio*/
+    SCR_S_RR_YR	= 0x9a,	/*ASCR skin_Rr skin_Yr*/
+    SCR_S_RG_YG	= 0x9b,	/*ASCR skin_Rg skin_Yg*/
+    SCR_S_RB_YB	= 0x9c,	/*ASCR skin_Rb skin_Yb*/
 
-    CS_HG_RY	= 0xc0,	/*CS hg ry*/
-    CS_HG_GC	= 0xc1,	/*CS hg gc*/
-    CS_HG_BM	= 0xc2,	/*CS hg bm*/
-    CS_WEIGHT_GRTH	= 0xc3,	/*CS weight grayTH*/
+    SCR_S_MR_WR	= 0x9d,	/*ASCR skin_Mr skin_Wr*/
+    SCR_S_MG_WG	= 0x9e,	/*ASCR skin_Mg skin_Wg*/
+    SCR_S_MB_WB	= 0x9f,	/*ASCR skin_Mb skin_Wb*/
 
-    SCR_RR_CR	= 0x71,	/*SCR RrCr*/
-    SCR_RG_CG	= 0x72,	/*SCR RgCg*/
-    SCR_RB_CB	= 0x73,	/*SCR RbCb*/
+    SCR_RR_CR	= 0xa1,	/*SCR RrCr*/
+    SCR_RG_CG	= 0xa2,	/*SCR RgCg*/
+    SCR_RB_CB	= 0xa3,	/*SCR RbCb*/
 
-    SCR_GR_MR	= 0x74,	/*SCR GrMr*/
-    SCR_GG_MG	= 0x75,	/*SCR GgMg*/
-    SCR_GB_MB	= 0x76,	/*SCR GbMb*/
+    SCR_GR_MR	= 0xa4,	/*SCR GrMr*/
+    SCR_GG_MG	= 0xa5,	/*SCR GgMg*/
+    SCR_GB_MB	= 0xa6,	/*SCR GbMb*/
 
-    SCR_BR_YR	= 0x77,	/*SCR BrYr*/
-    SCR_BG_YG	= 0x78,	/*SCR BgYg*/
-    SCR_BB_YB	= 0x79,	/*SCR BbYb*/
+    SCR_BR_YR	= 0xa7,	/*SCR BrYr*/
+    SCR_BG_YG	= 0xa8,	/*SCR BgYg*/
+    SCR_BB_YB	= 0xa9,	/*SCR BbYb*/
 
-    SCR_KR_WR	= 0x7a,	/*SCR KrWr*/
-    SCR_KG_WG	= 0x7b,	/*SCR KgWg*/
-    SCR_KB_WB	= 0x7c,	/*SCR KbWb*/
+    SCR_KR_WR	= 0xaa,	/*SCR KrWr*/
+    SCR_KG_WG	= 0xab,	/*SCR KgWg*/
+    SCR_KB_WB	= 0xac,	/*SCR KbWb*/
 
-    CC_CHSEL_STR	= 0x3f,	/*CC chsel strength*/
-    CC_0		= 0x40,	/*CC lut r   0*/
-    CC_1		= 0x41,	/*CC lut r  16 144*/
-    CC_2		= 0x42,	/*CC lut r  32 160*/
-    CC_3		= 0x43,	/*CC lut r  48 176*/
-    CC_4		= 0x44,	/*CC lut r  64 192*/
-    CC_5		= 0x45,	/*CC lut r  80 208*/
-    CC_6		= 0x46,	/*CC lut r  96 224*/
-    CC_7		= 0x47,	/*CC lut r 112 240*/
-    CC_8		= 0x48	/*CC lut r 128 255*/
+    CC_CHSEL_STR	= 0x5f,	/*CC chsel strength*/
+    CC_0		= 0x60,	/*CC lut r   0*/
+    CC_1		= 0x61,	/*CC lut r  16 144*/
+    CC_2		= 0x62,	/*CC lut r  32 160*/
+    CC_3		= 0x63,	/*CC lut r  48 176*/
+    CC_4		= 0x64,	/*CC lut r  64 192*/
+    CC_5		= 0x65,	/*CC lut r  80 208*/
+    CC_6		= 0x66,	/*CC lut r  96 224*/
+    CC_7		= 0x67,	/*CC lut r 112 240*/
+    CC_8		= 0x68	/*CC lut r 128 255*/
 };
 
+#ifndef MDNIE_LITE
 static unsigned short master_sequence[] = {
-        0x0000, 0x0000,	 0x0008, 0x0300,  0x0009, 0x0000,  0x000a, 0x0000,
-        0x00b0, 0x0080,  0x00b2, 0x0000,  0x00b3, 0x0040,  0x00b4, 0x0040,
-        0x00b5, 0x0040,  0x00b6, 0x0040,  0x00b7, 0x0040,  0x00b8, 0x1000,
-        0x00b9, 0x0100,  0x00c0, 0x1010,  0x00c1, 0x1010,  0x00c2, 0x1010,
-
-        0x00c3, 0x1804,  0x0000, 0x0001,  0x003f, 0x0080,  0x0040, 0x0000,
-        0x0041, 0x1090,  0x0042, 0x1da0,  0x0043, 0x30b0,  0x0044, 0x40c0,
-        0x0045, 0x50d0,  0x0046, 0x60e0,  0x0047, 0x70f0,  0x0048, 0x80ff,
-        0x0071, 0xd981,  0x0072, 0x1cf6,  0x0073, 0x13ec,  0x0074, 0x52e0,
-
-        0x0075, 0xee34,  0x0076, 0x1ff5,  0x0077, 0x1ce9,  0x0078, 0x1ff3,
-        0x0079, 0xeb40,  0x007a, 0x00ff,  0x007b, 0x00fa,  0x007c, 0x00f3,
-        0x00ff, 0x0000,  0xffff, 0x0000
+        0x06,0x0006,
+        0x07,0x0000,
+        0x08,0x0006,
+        0x09,0x0006,
+        0x0a,0x0006,
+        0x0b,0x0007,
+        0x50,0x1010,
+        0x51,0x1010,
+        0x52,0x1010,
+        0x53,0x0014,
+        0x5f,0x0080,
+        0x60,0x0000,
+        0x61,0x22b1,
+        0x62,0x38be,
+        0x63,0x4cc9,
+        0x64,0x63d5,
+        0x65,0x7ae0,
+        0x67,0x97f5,
+        0x90,0x1000,
+        0x91,0x6a9a,
+        0x92,0x251a,
+        0x93,0x162a,
+        0x94,0x0000,
+        0x95,0x375a,
+        0x96,0x4ec5,
+        0x97,0x5d17,
+        0x98,0x30c3,
+        0x9a,0xffff,
+        0x9b,0x00ff,
+        0x9c,0x0000,
+        0x9d,0xffff,
+        0x9e,0x00ff,
+        0x9f,0xffff,
+        0xa1,0xd994,
+        0xa2,0x20f0,
+        0xa3,0x2ced,
+        0xa4,0x8ae4,
+        0xa5,0xe72f,
+        0xa6,0x50e3,
+        0xa7,0x38f6,
+        0xa8,0x1dee,
+        0xa9,0xdd59,
+        0xaa,0xff00,
+        0xab,0xf700,
+        0xac,0xef00,
+        0xff,0x0000,
+        END_SEQ,0x0000,
 };
+#endif
 
 static ssize_t show_mdnie_property(struct device *dev,
                                    struct device_attribute *attr, char *buf);
@@ -125,130 +153,235 @@ static ssize_t store_mdnie_property(struct device *dev,
 struct mdnie_effect {
     const struct device_attribute	attribute;
     u8				reg;
-    u16				mask;
+    unsigned short			mask;
     u8				shift;
     int				value;
     bool				abs;
-    u16				regval;
+    mdnie_t				regval;
 };
 
-struct mdnie_effect mdnie_controls[] = {
+#ifdef MDNIE_LITE
+#define r(x,y) x
+#else
+#define r(x,y) y
+#endif
 
-        /* Master switches */
-
-        _effect("s_channel_filters"	, EFFECT_MASTER1, (1 << 9), 9 , 0, 1 ),
-        _effect("s_gamma_curve"		, EFFECT_MASTER1, (1 << 8), 8 , 0, 1 ),
-
-        _effect("s_chroma_saturation"	, EFFECT_MASTER1, (1 << 5), 5 , 0, 1 ),
-        _effect("s_edge_enhancement"	, EFFECT_MASTER1, (1 << 4), 4 , 0, 0 ),
-
-        _effect("s_log"			, EFFECT_MASTER1, (1 << 3), 3 , 0, 0 ),
-        _effect("s_wiener"		, EFFECT_MASTER1, (1 << 2), 2 , 0, 0 ),
-        _effect("s_noise_reduction"	, EFFECT_MASTER1, (1 << 1), 1 , 0, 0 ),
-        _effect("s_high_dynamic_range"	, EFFECT_MASTER1, (1 << 0), 0 , 0, 0 ),
-
-        /* Ditigal edge enhancement */
-
-        _effect("de_egth"		, DE_EGTH	, 0x00ff, 0	, 0, 128),
-
-        _effect("de_positive_e"		, DE_PE		, 0x00ff, 0	, 0, 48	),
-        _effect("de_positive_f"		, DE_PF		, 0x00ff, 0	, 0, 96	),
-        _effect("de_positive_b"		, DE_PB		, 0x00ff, 0	, 0, 96	),
-
-        _effect("de_negative_e"		, DE_NE		, 0x00ff, 0	, 0, 48	),
-        _effect("de_negative_f"		, DE_NF		, 0x00ff, 0	, 0, 96	),
-        _effect("de_negative_b"		, DE_NB		, 0x00ff, 0	, 0, 96	),
-
-        _effect("de_min_ratio"		, DE_MIN_RATIO	, 0xffff, 0	, 0, 256),
-        _effect("de_max_ratio"		, DE_MAX_RATIO	, 0xffff, 0	, 0, 4096),
+static struct mdnie_effect mdnie_controls[] = {
+#ifdef MDNIE_LITE
+_effect("lce_on gain"		, 1		, 0x00ff, 0	,1, 152	),
+	_effect("lce_color_gain"	, 2		, 0x00ff, 0	,1, 36	),
+	_effect("lce_scene"		, 3		, 0x00ff, 0	,1, 16	),
+	_effect("lce_min_diff"		, 4		, 0x00ff, 0	,1, 20	),
+	_effect("lce_illum_gain"	, 5		, 0x00ff, 0	,1, 179	),
+	_effect("lce_ref_offset"	, 6		, 0x00ff, 0	,1, 1	),
+	_effect("lce_ref_offset2"	, 7		, 0x00ff, 0	,1, 14	),
+	_effect("lce_ref_gain"		, 8		, 0x00ff, 0	,1, 1	),
+	_effect("lce_ref_gain2"		, 9		, 0x00ff, 0	,1, 0	),
+	_effect("lce_block_size"	, 10		, 0x00ff, 0	,1, 102	),
+	_effect("lce_bright_th"		, 11		, 0x00ff, 0	,1, 250	),
+	_effect("lce_bin_size_ratio"	, 12		, 0x00ff, 0	,1, 45	),
+	_effect("lce_dark_th"		, 13		, 0x00ff, 0	,1, 3	),
+#endif
 
         /* Chroma saturation */
+        _effect("cs_weight"		, r(52,CS_WEIGHT_GRTH), 0xff00, 8,1, r(1,36)),
+#ifndef MDNIE_LITE
+        _effect("cs_gray_threshold"	, CS_WEIGHT_GRTH, 0x00ff, 0	,1, 4	),
 
-        _effect("cs_weight"		, CS_WEIGHT_GRTH, 0xff00, 8	, 1, 9	),
-        _effect("cs_gray_threshold"	, CS_WEIGHT_GRTH, 0x00ff, 0	, 1, 4	),
+        _effect("cs_red"		, CS_HG_RY	, 0xff00, 8	,1, 6	),
+        _effect("cs_green"		, CS_HG_GC	, 0xff00, 8	,1, 8	),
+        _effect("cs_blue"		, CS_HG_BM	, 0xff00, 8	,1, 0	),
 
-        _effect("cs_red"		, CS_HG_RY	, 0xff00, 8	, 1, 18	),
-        _effect("cs_green"		, CS_HG_GC	, 0xff00, 8	, 1, 14	),
-        _effect("cs_blue"		, CS_HG_BM	, 0xff00, 8	, 1, 16	),
+        _effect("cs_yellow"		, CS_HG_RY	, 0x00ff, 0	,1, 8	),
+        _effect("cs_cyan"		, CS_HG_GC	, 0x00ff, 0	,1, 8	),
+        _effect("cs_magenta"		, CS_HG_BM	, 0x00ff, 0	,1, 8	),
+#endif
 
-        _effect("cs_yellow"		, CS_HG_RY	, 0x00ff, 0	, 1, 19	),
-        _effect("cs_cyan"		, CS_HG_GC	, 0x00ff, 0	, 1, 10	),
-        _effect("cs_magenta"		, CS_HG_BM	, 0x00ff, 0	, 1, 16	),
-
-        /* Colour channel pass-through filters
+        /* Colour channel modifiers
          * scr_x_y:
          *	x = Channel
          *	y = Channel component modifier
          */
 
-        _effect("scr_red_red"		, SCR_RR_CR	, 0xff00, 8	, 1, 247),
-        _effect("scr_red_green"		, SCR_RG_CG	, 0xff00, 8	, 1, 17	),
-        _effect("scr_red_blue"		, SCR_RB_CB	, 0xff00, 8	, 1, 0	),
+#ifdef MDNIE_LITE
+_effect("ascr_lin_mask"		, 102		, 0x00ff, 0	,1, 0x40),
+	_effect("ascr_skin_cb"		, 103		, 0x00ff, 0	,1, 0x67),
+	_effect("ascr_skin_cr"		, 104		, 0x00ff, 0	,1, 0xa9),
 
-        _effect("scr_cyan_red"		, SCR_RR_CR	, 0x00ff, 0	, 1, 42	),
-        _effect("scr_cyan_green"	, SCR_RG_CG	, 0x00ff, 0	, 1, 240),
-        _effect("scr_cyan_blue"		, SCR_RB_CB	, 0x00ff, 0	, 1, 255),
+	_effect("ascr_dist_up"		, 105		, 0x00ff, 0	,1, 0x17),
+	_effect("ascr_dist_down"	, 106		, 0x00ff, 0	,1, 0x29),
+	_effect("ascr_dist_right"	, 107		, 0x00ff, 0	,1, 0x19),
+	_effect("ascr_dist_left"	, 108		, 0x00ff, 0	,1, 0x27),
 
-        _effect("scr_green_red"		, SCR_GR_MR	, 0xff00, 8	, 1, 64	),
-        _effect("scr_green_green"	, SCR_GG_MG	, 0xff00, 8	, 1, 245),
-        _effect("scr_green_blue"	, SCR_GB_MB	, 0xff00, 8	, 1, 0	),
+	_effect("ascr_div_up1"		, 109		, 0x00ff, 0	,1, 0x00),
+	_effect("ascr_div_up2"		, 110		, 0x00ff, 0	,1, 0x59),
+	_effect("ascr_div_up3"		, 111		, 0x00ff, 0	,1, 0x0b),
 
-        _effect("scr_magenta_red"	, SCR_GR_MR	, 0x00ff, 0	, 1, 255),
-        _effect("scr_magenta_green"	, SCR_GG_MG	, 0x00ff, 0	, 1, 20	),
-        _effect("scr_magenta_blue"	, SCR_GB_MB	, 0x00ff, 0	, 1, 255),
+	_effect("ascr_div_down1"	, 112		, 0x00ff, 0	,1, 0x00),
+	_effect("ascr_div_down2"	, 113		, 0x00ff, 0	,1, 0x31),
+	_effect("ascr_div_down3"	, 114		, 0x00ff, 0	,1, 0xf4),
 
-        _effect("scr_blue_red"		, SCR_BR_YR	, 0xff00, 8	, 1, 0	),
-        _effect("scr_blue_green"	, SCR_BG_YG	, 0xff00, 8	, 1, 0	),
-        _effect("scr_blue_blue"		, SCR_BB_YB	, 0xff00, 8	, 1, 255),
+	_effect("ascr_div_right1"	, 115		, 0x00ff, 0	,1, 0x00),
+	_effect("ascr_div_right2"	, 116		, 0x00ff, 0	,1, 0x51),
+	_effect("ascr_div_right3"	, 117		, 0x00ff, 0	,1, 0xec),
 
-        _effect("scr_yellow_red"	, SCR_BR_YR	, 0x00ff, 0	, 1, 255),
-        _effect("scr_yellow_green"	, SCR_BG_YG	, 0x00ff, 0	, 1, 241),
-        _effect("scr_yellow_blue"	, SCR_BB_YB	, 0x00ff, 0	, 1, 8	),
+	_effect("ascr_div_left1"	, 118		, 0x00ff, 0	,1, 0x00),
+	_effect("ascr_div_left2"	, 119		, 0x00ff, 0	,1, 0x34),
+	_effect("ascr_div_left3"	, 120		, 0x00ff, 0	,1, 0x83),
+#endif
 
-        _effect("scr_black_red"		, SCR_KR_WR	, 0xff00, 8	, 1, 0	),
-        _effect("scr_black_green"	, SCR_KG_WG	, 0xff00, 8	, 1, 0	),
-        _effect("scr_black_blue"	, SCR_KB_WB	, 0xff00, 8	, 1, 0	),
+        /* ASCR Skin */
 
-        _effect("scr_white_red"		, SCR_KR_WR	, 0x00ff, 0	, 1, 255),
-        _effect("scr_white_green"	, SCR_KG_WG	, 0x00ff, 0	, 1, 245),
-        _effect("scr_white_blue"	, SCR_KB_WB	, 0x00ff, 0	, 1, 246),
+        _effect("skin_red_red"		, r(121, SCR_S_RR_YR	), 0xff00, 8	,1, 255	),
+        _effect("skin_red_green"	, r(122, SCR_S_RG_YG	), 0xff00, 8	,1, 80	),
+        _effect("skin_red_blue"		, r(123, SCR_S_RB_YB	), 0xff00, 8	,1, 96	),
+
+        _effect("skin_yellow_red"	, r(124, SCR_S_RR_YR	), 0x00ff, 0	,1, 255	),
+        _effect("skin_yellow_green"	, r(125, SCR_S_RG_YG	), 0x00ff, 0	,1, 255	),
+        _effect("skin_yellow_blue"	, r(126, SCR_S_RB_YB	), 0x00ff, 0	,1, 0	),
+
+        _effect("skin_magenta_red"	, r(127, SCR_S_MR_WR	), 0xff00, 8	,1, 255	),
+        _effect("skin_magenta_green"	, r(128, SCR_S_MG_WG	), 0xff00, 8	,1, 0	),
+        _effect("skin_magenta_blue"	, r(129, SCR_S_MB_WB	), 0xff00, 8	,1, 255	),
+
+        _effect("skin_white_red"	, r(130, SCR_S_MR_WR	), 0x00ff, 0	,1, 255	),
+        _effect("skin_white_green"	, r(131, SCR_S_MG_WG	), 0x00ff, 0	,1, 255	),
+        _effect("skin_white_blue"	, r(132, SCR_S_MB_WB	), 0x00ff, 0	,1, 255	),
+
+        /* ASCR Wide */
+
+        _effect("wide_red_red"		, r(134, SCR_RR_CR	), 0xff00, 8	,1, 210	),
+        _effect("wide_red_green"	, r(136, SCR_RG_CG	), 0xff00, 8	,1, 27	),
+        _effect("wide_red_blue"		, r(138, SCR_RB_CB	), 0xff00, 8	,1, 42	),
+
+        _effect("wide_cyan_red"		, r(133, SCR_RR_CR	), 0x00ff, 0	,1, 148	),
+        _effect("wide_cyan_green"	, r(135, SCR_RG_CG	), 0x00ff, 0	,1, 240	),
+        _effect("wide_cyan_blue"	, r(137, SCR_RB_CB	), 0x00ff, 0	,1, 237	),
+
+        _effect("wide_green_red"	, r(140, SCR_GR_MR	), 0xff00, 8	,1, 138	),
+        _effect("wide_green_green"	, r(142, SCR_GG_MG	), 0xff00, 8	,1, 231	),
+        _effect("wide_green_blue"	, r(144, SCR_GB_MB	), 0xff00, 8	,1, 76	),
+
+        _effect("wide_magenta_red"	, r(139, SCR_GR_MR	), 0x00ff, 0	,1, 210	),
+        _effect("wide_magenta_green"	, r(141, SCR_GG_MG	), 0x00ff, 0	,1, 57	),
+        _effect("wide_magenta_blue"	, r(143, SCR_GB_MB	), 0x00ff, 0	,1, 222	),
+
+        _effect("wide_blue_red"		, r(146, SCR_BR_YR	), 0xff00, 8	,1, 38	),
+        _effect("wide_blue_green"	, r(148, SCR_BG_YG	), 0xff00, 8	,1, 53	),
+        _effect("wide_blue_blue"	, r(150, SCR_BB_YB	), 0xff00, 8	,1, 230	),
+
+        _effect("wide_yellow_red"	, r(145, SCR_BR_YR	), 0x00ff, 0	,1, 248	),
+        _effect("wide_yellow_green"	, r(147, SCR_BG_YG	), 0x00ff, 0	,1, 238	),
+        _effect("wide_yellow_blue"	, r(149, SCR_BB_YB	), 0x00ff, 0	,1, 89	),
+
+        _effect("wide_black_red"	, r(152, SCR_KR_WR	), 0x00ff, 0	,1, 0	),
+        _effect("wide_black_green"	, r(154, SCR_KG_WG	), 0x00ff, 0	,1, 0	),
+        _effect("wide_black_blue"	, r(156, SCR_KB_WB	), 0x00ff, 0	,1, 0	),
+
+        _effect("wide_white_red"	, r(151, SCR_KR_WR	), 0xff00, 8	,1, 255	),
+        _effect("wide_white_green"	, r(153, SCR_KG_WG	), 0xff00, 8	,1, 247	),
+        _effect("wide_white_blue"	, r(155, SCR_KB_WB	), 0xff00, 8	,1, 247	),
 
         /* Greyscale gamma curve */
 
-        _effect("cc_channel_strength"	, CC_CHSEL_STR	, 0xffff, 0	, 1, 128),
+#ifndef MDNIE_LITE
+        _effect("cc_channel_strength"	, CC_CHSEL_STR	, 0xffff, 0	,1, 128	),
 
-        _effect("cc_0"			, CC_0		, 0x00ff, 0	, 1, 0	),
-        _effect("cc_16"			, CC_1		, 0xff00, 8	, 1, 24	),
-        _effect("cc_32"			, CC_2		, 0xff00, 8	, 1, 31	),
-        _effect("cc_48"			, CC_3		, 0xff00, 8	, 1, 49	),
-        _effect("cc_64"			, CC_4		, 0xff00, 8	, 1, 61	),
-        _effect("cc_80"			, CC_5		, 0xff00, 8	, 1, 82	),
-        _effect("cc_96"			, CC_6		, 0xff00, 8	, 1, 98	),
-        _effect("cc_112"		, CC_7		, 0xff00, 8	, 1, 114),
-        _effect("cc_128"		, CC_8		, 0xff00, 8	, 1, 131),
-        _effect("cc_144"		, CC_1		, 0x00ff, 0	, 1, 145),
-        _effect("cc_160"		, CC_2		, 0x00ff, 0	, 1, 163),
-        _effect("cc_176"		, CC_3		, 0x00ff, 0	, 1, 178),
-        _effect("cc_192"		, CC_4		, 0x00ff, 0	, 1, 192),
-        _effect("cc_208"		, CC_5		, 0x00ff, 0	, 1, 208),
-        _effect("cc_224"		, CC_6		, 0x00ff, 0	, 1, 225),
-        _effect("cc_240"		, CC_7		, 0x00ff, 0	, 1, 240),
-        _effect("cc_255"		, CC_8		, 0x00ff, 0	, 1, 255),
+        _effect("cc_0"			, CC_0		, 0x00ff, 0	,1, 0	),
+        _effect("cc_16"			, CC_1		, 0xff00, 8	,1, 16	),
+        _effect("cc_32"			, CC_2		, 0xff00, 8	,1, 32	),
+        _effect("cc_48"			, CC_3		, 0xff00, 8	,1, 48	),
+        _effect("cc_64"			, CC_4		, 0xff00, 8	,1, 64	),
+        _effect("cc_80"			, CC_5		, 0xff00, 8	,1, 80	),
+        _effect("cc_96"			, CC_6		, 0xff00, 8	,1, 96	),
+        _effect("cc_112"		, CC_7		, 0xff00, 8	,1, 112	),
+        _effect("cc_128"		, CC_8		, 0xff00, 8	,1, 128	),
+        _effect("cc_144"		, CC_1		, 0x00ff, 0	,1, 144	),
+        _effect("cc_160"		, CC_2		, 0x00ff, 0	,1, 160	),
+        _effect("cc_176"		, CC_3		, 0x00ff, 0	,1, 176	),
+        _effect("cc_192"		, CC_4		, 0x00ff, 0	,1, 192	),
+        _effect("cc_208"		, CC_5		, 0x00ff, 0	,1, 208	),
+        _effect("cc_224"		, CC_6		, 0x00ff, 0	,1, 224	),
+        _effect("cc_240"		, CC_7		, 0x00ff, 0	,1, 240	),
+        _effect("cc_255"		, CC_8		, 0x00ff, 0	,1, 255	),
+#else
+_effect("cc_1b"			, 54		, 0x00ff, 0	,1, 0	),
+	_effect("cc_1a"			, 55		, 0x00ff, 0	,1, 32	),
+	_effect("cc_2b"			, 56		, 0x00ff, 0	,1, 0	),
+	_effect("cc_2a"			, 57		, 0x00ff, 0	,1, 32	),
+	_effect("cc_3b"			, 58		, 0x00ff, 0	,1, 0	),
+	_effect("cc_3a"			, 59		, 0x00ff, 0	,1, 32	),
+	_effect("cc_4b"			, 60		, 0x00ff, 0	,1, 0	),
+	_effect("cc_4a"			, 61		, 0x00ff, 0	,1, 32	),
+	_effect("cc_5b"			, 62		, 0x00ff, 0	,1, 2	),
+	_effect("cc_5a"			, 63		, 0x00ff, 0	,1, 27	),
+	_effect("cc_6b"			, 65		, 0x00ff, 0	,1, 27	),
+	_effect("cc_6a"			, 66		, 0x00ff, 0	,1, 2	),
+	_effect("cc_7b"			, 67		, 0x00ff, 0	,1, 27	),
+	_effect("cc_7a"			, 68		, 0x00ff, 0	,1, 2	),
+	_effect("cc_8b"			, 69		, 0x00ff, 0	,1, 27	),
+	_effect("cc_8a"			, 70		, 0x00ff, 0	,1, 9	),
+
+	_effect("cc_9b"			, 71		, 0x00ff, 0	,1, 166	),
+	_effect("cc_9a"			, 72		, 0x00ff, 0	,1, 9	),
+	_effect("cc_10b"		, 73		, 0x00ff, 0	,1, 166	),
+	_effect("cc_10a"		, 74		, 0x00ff, 0	,1, 6	),
+	_effect("cc_11b"		, 75		, 0x00ff, 0	,1, 166	),
+	_effect("cc_11a"		, 76		, 0x00ff, 0	,1, 0	),
+	_effect("cc_12b"		, 77		, 0x00ff, 0	,1, 166	),
+	_effect("cc_12a"		, 78		, 0x00ff, 0	,1, 0	),
+	_effect("cc_13b"		, 79		, 0x00ff, 0	,1, 32	),
+	_effect("cc_13a"		, 80		, 0x00ff, 0	,1, 0	),
+	_effect("cc_14b"		, 81		, 0x00ff, 0	,1, 32	),
+	_effect("cc_14a"		, 82		, 0x00ff, 0	,1, 0	),
+	_effect("cc_15b"		, 83		, 0x00ff, 0	,1, 32	),
+	_effect("cc_15a"		, 84		, 0x00ff, 0	,1, 0	),
+	_effect("cc_16b"		, 85		, 0x00ff, 0	,1, 32	),
+	_effect("cc_16a"		, 86		, 0x00ff, 0	,1, 0	),
+
+	_effect("cc_17b"		, 87		, 0x00ff, 0	,1, 32	),
+	_effect("cc_17a"		, 88		, 0x00ff, 0	,1, 0	),
+	_effect("cc_18b"		, 89		, 0x00ff, 0	,1, 32	),
+	_effect("cc_18a"		, 90		, 0x00ff, 0	,1, 0	),
+	_effect("cc_19b"		, 91		, 0x00ff, 0	,1, 32	),
+	_effect("cc_19a"		, 92		, 0x00ff, 0	,1, 0	),
+	_effect("cc_20b"		, 93		, 0x00ff, 0	,1, 32	),
+	_effect("cc_20a"		, 94		, 0x00ff, 0	,1, 0	),
+	_effect("cc_21b"		, 95		, 0x00ff, 0	,1, 32	),
+	_effect("cc_21a"		, 96		, 0x00ff, 0	,1, 0	),
+	_effect("cc_22b"		, 97		, 0x00ff, 0	,1, 32	),
+	_effect("cc_22a"		, 98		, 0x00ff, 0	,1, 0	),
+	_effect("cc_23b"		, 99		, 0x00ff, 0	,1, 32	),
+	_effect("cc_23a"		, 100		, 0x00ff, 0	,1, 0	),
+	_effect("cc_24b"		, 101		, 0x00ff, 0	,1, 255	),
+	_effect("cc_24a"		, 102		, 0x00ff, 0	,1, 64	),
+#endif
 };
 
 static int is_switch(unsigned int reg)
 {
     switch(reg) {
-        case EFFECT_MASTER1:
-        case EFFECT_MASTER2:
-        case EFFECT_MASTER3:
-            return true;
         default:
             return false;
     }
 }
 
-static int effect_switch_hook(struct mdnie_effect *effect, unsigned short regval)
+static int is_hook_scenario(int scenario)
+{
+    return !!(reg_hook & (1 << scenario));
+    /*
+    switch (scenario) {
+        case UI_MODE:
+        case VIDEO_NORMAL_MODE:
+        case GALLERY_MODE:
+            return false;
+        default:
+            return true;
+    }
+    */
+}
+
+static int effect_switch_hook(struct mdnie_effect *effect, mdnie_t regval)
 {
     return effect->value ? !regval : regval;
 }
@@ -260,59 +393,64 @@ static int secondary_hook(struct mdnie_effect *effect, int val)
     else
         val += effect->value;
 
-    switch (effect->reg) {
-        case SCR_KR_WR...SCR_KB_WB:
-            if (effect->shift) {
-                val += black_component_increase;
-                break;
-            }
-        case SCR_RR_CR...SCR_BB_YB:
-            val -= br_component_reduction;
-    }
-
     return val;
 }
 
-unsigned short mdnie_reg_hook(unsigned short reg, unsigned short value)
+mdnie_t mdnie_reg_hook(unsigned short reg, mdnie_t value)
 {
     struct mdnie_effect *effect = (struct mdnie_effect*)&mdnie_controls;
     int i;
     int tmp, original;
-    unsigned short regval;
+    mdnie_t regval;
+
+    printk("mdnie: hook on: 0x%2X (%3d) val: 0x%2X (%3d)\n", reg, reg, value, value);
 
     original = value;
 
-    if (unlikely((!sequence_hook && !reg_hook) || g_mdnie->negative == NEGATIVE_ON))
+    if (!is_hook_scenario(g_mdnie->scenario))
         return value;
 
     for (i = 0; i < ARRAY_SIZE(mdnie_controls); i++) {
-        if (unlikely(effect->reg == reg)) {
-            if (likely(sequence_hook)) {
+        if (effect->reg == reg) {
+#ifndef MDNIE_LITE
+            if (sequence_hook)
                 tmp = regval = effect->regval;
-            } else {
+            else
                 tmp = regval = (value & effect->mask) >> effect->shift;
-            }
+#else
+            tmp = regval = value;
+#endif
 
-            if (likely(reg_hook)) {
+            if (reg_hook) {
                 if (is_switch(reg))
                     tmp = effect_switch_hook(effect, regval);
                 else
                     tmp = secondary_hook(effect, tmp);
 
-                if(tmp > (effect->mask >> effect->shift))
+#ifndef MDNIE_LITE
+                if (tmp > (effect->mask >> effect->shift))
                     tmp = (effect->mask >> effect->shift);
+#else
+                if (tmp > (1 << (sizeof(mdnie_t) * 8)))
+				tmp = 1 << (sizeof(mdnie_t) * 8);
+#endif
 
-                if(tmp < 0)
+                if (tmp < 0)
                     tmp = 0;
 
-                regval = (unsigned short)tmp;
+                regval = (mdnie_t)tmp;
             }
 
+#ifndef MDNIE_LITE
             value &= ~effect->mask;
             value |= regval << effect->shift;
-#if 0
-            printk("mdnie: hook on: 0x%X val: 0x%X -> 0x%X effect: \t%4d : \t%s \n",
-			reg, original, value, tmp, effect->attribute.attr.name);
+#else
+            value = regval;
+#endif
+
+#if DEBUG
+            printk("mdnie: hook on: 0x%X val: 0x%2X -> 0x%2X effect: %3d -> %3d : %s \n",
+			reg, original, value, original, value, effect->attribute.attr.name);
 #endif
         }
         ++effect;
@@ -321,74 +459,19 @@ unsigned short mdnie_reg_hook(unsigned short reg, unsigned short value)
     return value;
 }
 
-unsigned short *mdnie_sequence_hook(unsigned short *seq)
+#ifndef MDNIE_LITE
+mdnie_t *mdnie_sequence_hook(mdnie_t *seq)
 {
-    if(!sequence_hook || g_mdnie->negative == NEGATIVE_ON)
+    if(!sequence_hook || !is_hook_scenario(g_mdnie->scenario))
         return seq;
 
-    return (unsigned short *)&master_sequence;
+    return (mdnie_t *)&master_sequence;
 }
+#endif
 
-void do_mdnie_refresh(struct work_struct *work)
+static inline void mdnie_refresh(void)
 {
-    mdnie_update(g_mdnie, 1);
-}
-
-void mdnie_update_brightness(int brightness, bool is_auto, bool force)
-{
-    static int prev_brightness = 255;
-    static int prev_auto = false;
-    int weight, adjusted_brightness, tmp, refresh = 0;
-
-    if (unlikely(force)) {
-        brightness = prev_brightness;
-        is_auto = prev_auto;
-    }
-
-    adjusted_brightness = brightness + (is_auto ? br_brightness_delta : 0);
-
-    if(unlikely(adjusted_brightness < 1))
-        adjusted_brightness = 1;
-
-    tmp = black_component_increase;
-    black_component_increase = (brightness > black_component_increase_point)
-                               ? 0 : black_component_increase_value;
-
-    if (tmp != black_component_increase)
-        refresh += true;
-
-    tmp = br_component_reduction;
-
-    if (adjusted_brightness > br_takeover_point) {
-        br_component_reduction = 0;
-        goto update;
-    }
-
-    weight = 1000 - ((adjusted_brightness * 1000) / br_takeover_point);
-    br_component_reduction = ((br_reduction) * weight) / 1000;
-
-    if (tmp != br_component_reduction)
-        refresh += true;
-
-    update:
-    if (refresh)
-        do_mdnie_refresh(NULL);
-
-    prev_brightness = brightness;
-    prev_auto = is_auto;
-
-    return;
-}
-
-static inline void scheduled_refresh(void)
-{
-    cancel_delayed_work_sync(&mdnie_refresh_work);
-    schedule_delayed_work_on(0, &mdnie_refresh_work, REFRESH_DELAY);
-}
-
-static inline void forced_brightness(void)
-{
-    mdnie_update_brightness(0, false, true);
+    mdnie_update(g_mdnie);
 }
 
 /**** Sysfs ****/
@@ -398,10 +481,11 @@ static ssize_t show_mdnie_property(struct device *dev,
 {
     struct mdnie_effect *effect = (struct mdnie_effect*)(attr);
 
+
     if (effect->abs)
-        return sprintf(buf, "%d", effect->regval);
+        return sprintf(buf, "%d\n", effect->regval);
     else
-        return sprintf(buf, "%d", effect->value);
+        return sprintf(buf, "%d\n", effect->value);
 };
 
 static ssize_t store_mdnie_property(struct device *dev,
@@ -411,25 +495,32 @@ static ssize_t store_mdnie_property(struct device *dev,
     struct mdnie_effect *effect = (struct mdnie_effect*)(attr);
     int val;
 
-    if(sscanf(buf, "%d", &val) != 1)
+    if (sscanf(buf, "%d", &val) != 1)
         return -EINVAL;
 
-    if(is_switch(effect->reg)) {
+    if (is_switch(effect->reg)) {
         effect->value = val;
-    } else {
-        if(val > (effect->mask >> effect->shift))
+    } else if(!effect->abs) {
+#ifndef MDNIE_LITE
+        if (val > (effect->mask >> effect->shift))
             val = (effect->mask >> effect->shift);
 
-        if(!effect->abs && val < -(effect->mask >> effect->shift))
+        if (val < -(effect->mask >> effect->shift))
             val = -(effect->mask >> effect->shift);
+#else
+        if (val > (1 << (sizeof(mdnie_t) * 8)))
+			val = 1 << (sizeof(mdnie_t) * 8);
 
-        if(effect->abs)
-            effect->regval = val;
-        else
-            effect->value = val;
+		if (val < -(1 << (sizeof(mdnie_t) * 8)))
+			val = -(1 << (sizeof(mdnie_t) * 8));
+#endif
+
+        effect->value = val;
+    } else {
+        effect->regval = val;
     }
 
-    scheduled_refresh();
+    mdnie_refresh();
 
     return count;
 };
@@ -456,43 +547,45 @@ static ssize_t store_##_name(struct device *dev,				\
 	return count;								\
 };
 
-MAIN_CONTROL(reg_hook, reg_hook, scheduled_refresh);
-MAIN_CONTROL(sequence_intercept, sequence_hook, scheduled_refresh);
-MAIN_CONTROL(br_reduction, br_reduction, forced_brightness);
-MAIN_CONTROL(br_takeover_point, br_takeover_point, forced_brightness);
-MAIN_CONTROL(br_brightness_delta, br_brightness_delta, forced_brightness);
+MAIN_CONTROL(reg_hook, reg_hook, mdnie_refresh);
+DEVICE_ATTR(reg_intercept, 0664, show_reg_hook, store_reg_hook);
 
-MAIN_CONTROL(black_increase_value, black_component_increase_value, forced_brightness);
-MAIN_CONTROL(black_increase_point, black_component_increase_point, forced_brightness);
-
-DEVICE_ATTR(hook_intercept, 0664, show_reg_hook, store_reg_hook);
+#ifndef MDNIE_LITE
+MAIN_CONTROL(sequence_intercept, sequence_hook, mdnie_refresh);
 DEVICE_ATTR(sequence_intercept, 0664, show_sequence_intercept, store_sequence_intercept);
-DEVICE_ATTR(brightness_reduction, 0664, show_br_reduction, store_br_reduction);
-DEVICE_ATTR(brightness_takeover_point, 0664, show_br_takeover_point, store_br_takeover_point);
-DEVICE_ATTR(brightness_input_delta, 0664, show_br_brightness_delta, store_br_brightness_delta);
+#endif
 
-DEVICE_ATTR(black_increase_value, 0664, show_black_increase_value, store_black_increase_value);
-DEVICE_ATTR(black_increase_point, 0664, show_black_increase_point, store_black_increase_point);
-
-void init_intercept_control(struct kobject *kobj)
+void init_mdnie_control(struct mdnie_info *mdnie)
 {
     int i, ret;
     struct kobject *subdir;
 
-    subdir = kobject_create_and_add("hook_control", kobj);
+#ifdef MDNIE_LITE
+    cmds = kzalloc(sizeof(struct mdnie_command) * MDNIE_CMD_MAX, GFP_KERNEL);
+	if (IS_ERR_OR_NULL(mdnie->dev)) {
+		pr_err("failed to create control tables\n");
+		return;
+	}
+
+	for (i = 0; i < MDNIE_CMD_MAX; i++) {
+		cmds[i].sequence = kzalloc(sizeof(mdnie_t) * sizeof(char), GFP_KERNEL);
+		if (IS_ERR_OR_NULL(mdnie->dev)) {
+			pr_err("failed to create sequences\n");
+			return;
+		}
+	}
+#endif
+
+    subdir = kobject_create_and_add("controls", &mdnie->dev->kobj);
 
     for(i = 0; i < ARRAY_SIZE(mdnie_controls); i++) {
         ret = sysfs_create_file(subdir, &mdnie_controls[i].attribute.attr);
     }
 
-    ret = sysfs_create_file(kobj, &dev_attr_hook_intercept.attr);
-    ret = sysfs_create_file(kobj, &dev_attr_sequence_intercept.attr);
-    ret = sysfs_create_file(kobj, &dev_attr_brightness_reduction.attr);
-    ret = sysfs_create_file(kobj, &dev_attr_brightness_takeover_point.attr);
-    ret = sysfs_create_file(kobj, &dev_attr_brightness_input_delta.attr);
+    ret = sysfs_create_file(&mdnie->dev->kobj, &dev_attr_reg_intercept.attr);
+#ifndef MDNIE_LITE
+    ret = sysfs_create_file(&mdnie->dev->kobj, &dev_attr_sequence_intercept.attr);
+#endif
 
-    ret = sysfs_create_file(kobj, &dev_attr_black_increase_value.attr);
-    ret = sysfs_create_file(kobj, &dev_attr_black_increase_point.attr);
-
-    INIT_DELAYED_WORK(&mdnie_refresh_work, do_mdnie_refresh);
+    g_mdnie = mdnie;
 }
