@@ -154,6 +154,10 @@ struct mdnie_info {
 	mdnie_t sequence_buffer[256];
 };
 
+
+extern void setMainTableData(int scenario, int mode , int index , int value);
+extern int getMainTableData(int scenario, int mode , int index);
+
 extern int mdnie_calibration(int *r);
 extern int mdnie_open_file(const char *path, char **fp);
 extern int mdnie_register(struct device *p, void *data, mdnie_w w, mdnie_r r, struct mdnie_tune *tune);

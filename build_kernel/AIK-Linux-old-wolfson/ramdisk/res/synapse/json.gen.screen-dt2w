@@ -111,27 +111,28 @@ cat << CTAG
 	{ SSpacer:{
 		height:2
 	}},
-    { SLiveLabel:{
-        title:"Current accelerometer rotation",
-        refresh:3000,
-        action:"settings get system accelerometer_rotation"
-    }},
-    { SButton:{
-        label:"enable auto rotation sensor",
-        action:"settings put system accelerometer_rotation 1"
-    }},
-    { SButton:{
-        label:"disable auto rotation sensor",
-        action:"settings put system accelerometer_rotation 0"
-    }},
+	{ SSeekBar:{
+		title:"mdnie index",
+		description:"min 0 - max 156",
+		max:156,
+		refresh:1000,
+		default:0,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_cs_index"
+	}},
 	{ SSpacer:{
 		height:2
 	}},
-    { SLiveLabel:{
-        title:"user rotation mode",
-        refresh:3000,
-        action:"settings get system user_rotation"
-    }},
+	{ SSeekBar:{
+		title:"mdnie value",
+		description:"min 0 - max 255",
+		max:255,
+		refresh:500,
+		default:0,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_cs"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
     { SButton:{
         label:"0 Protrait",
         action:"settings put system user_rotation 0"

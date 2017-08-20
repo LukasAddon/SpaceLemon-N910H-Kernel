@@ -18,11 +18,179 @@
 #include <linux/pm_runtime.h>
 
 #include "mdnie.h"
+extern void setMainTableData(int scenario, int mode , int index , int value);
+extern int getMainTableData(int scenario, int mode , int index);
+
 
 #define MDNIE_SYSFS_PREFIX		"/sdcard/mdnie/"
 #define PANEL_COORDINATE_PATH	"/sys/class/lcd/panel/color_coordinate"
 
 int     scenario_lock = 0;
+int mdnie_cs = 0;
+int mdnie_cs_index = 0;
+
+int mdnie_saturation [157] = {
+        0xEC,
+        0x98, //lce_on gain 0 00 0000
+        0x24, //lce_color_gain 00 0000
+        0x10, //lce_scene_change_on scene_trans 0 0000
+        0x14, //lce_min_diff
+        0xb3, //lce_illum_gain
+        0x01, //lce_ref_offset 9
+        0x0e,
+        0x01, //lce_ref_gain 9
+        0x00,
+        0x66, //lce_block_size h v 000 000
+        0xfa, //lce_bright_th
+        0x2d, //lce_bin_size_ratio
+        0x03, //lce_dark_th 000
+        0x96, //lce_min_ref_offset
+        0x07, //nr fa de cs gamma 0 0000
+        0xff, //nr_mask_th
+        0x00, //de_gain 10
+        0xc0,                 //[18]
+        0x01, //de_maxplus 11   [19]
+        0x00,//                 [20]
+        0x01, //de_maxminus 11  [21]
+        0x00,
+        0x14, //fa_edge_th
+        0x00, //fa_step_p 13
+        0x0a,
+        0x00, //fa_step_n 13
+        0x32,
+        0x01, //fa_max_de_gain 13
+        0xf4,
+        0x0b, //fa_pcl_ppi 14
+        0x8a,
+        0x6e, //fa_skin_cr
+        0x99, //fa_skin_cb
+        0x1b, //fa_dist_left
+        0x17, //fa_dist_right
+        0x14, //fa_dist_down
+        0x1e, //fa_dist_up
+        0x02, //fa_div_dist_left
+        0x5f,
+        0x02, //fa_div_dist_right
+        0xc8,
+        0x03, //fa_div_dist_down
+        0x33,
+        0x02, //fa_div_dist_up
+        0x22,
+        0x10, //fa_px_min_weight
+        0x10, //fa_fr_min_weight
+        0x07, //fa_skin_zone_w
+        0x07, //fa_skin_zone_h
+        0x20, //fa_os_cnt_10_co
+        0x2d, //fa_os_cnt_20_co
+        0x01, //cs_gain 10
+        0x20,
+        0x00, // curve_1_b
+        0x14, // curve_1_a
+        0x00, // curve_2_b
+        0x14, // curve_2_a
+        0x00, // curve_3_b
+        0x14, // curve_3_a
+        0x00, // curve_4_b
+        0x14, // curve_4_a
+        0x03, // curve_5_b
+        0x9a, // curve_5_a
+        0x03, // curve_6_b
+        0x9a, // curve_6_a
+        0x03, // curve_7_b
+        0x9a, // curve_7_a
+        0x03, // curve_8_b
+        0x9a, // curve_8_a
+        0x07, // curve_9_b
+        0x9e, // curve_9_a
+        0x07, // curve10_b
+        0x9e, // curve10_a
+        0x07, // curve11_b
+        0x9e, // curve11_a
+        0x07, // curve12_b
+        0x9e, // curve12_a
+        0x0a, // curve13_b
+        0xa0, // curve13_a
+        0x0a, // curve14_b
+        0xa0, // curve14_a
+        0x0a, // curve15_b
+        0xa0, // curve15_a
+        0x0a, // curve16_b
+        0xa0, // curve16_a
+        0x16, // curve17_b
+        0xa6, // curve17_a
+        0x16, // curve18_b
+        0xa6, // curve18_a
+        0x16, // curve19_b
+        0xa6, // curve19_a
+        0x16, // curve20_b
+        0xa6, // curve20_a
+        0x05, // curve21_b
+        0x21, // curve21_a
+        0x0b, // curve22_b
+        0x20, // curve22_a
+        0x87, // curve23_b
+        0x0f, // curve23_a
+        0x00, // curve24_b
+        0xFF, // curve24_a
+        0x30, //linear_on ascr_skin_on strength 0 0 00000
+        0x67, //ascr_skin_cb
+        0xa9, //ascr_skin_cr
+        0x37, //ascr_dist_up
+        0x29, //ascr_dist_down
+        0x19, //ascr_dist_right
+        0x47, //ascr_dist_left
+        0x00, //ascr_div_up 20
+        0x25,
+        0x3d,
+        0x00, //ascr_div_down
+        0x31,
+        0xf4,
+        0x00, //ascr_div_right
+        0x51,
+        0xec,
+        0x00, //ascr_div_left
+        0x1c,
+        0xd8,
+        0xff, //ascr_skin_Rr
+        0x62, //ascr_skin_Rg
+        0x6c, //ascr_skin_Rb
+        0xff, //ascr_skin_Yr
+        0xff, //ascr_skin_Yg
+        0x00, //ascr_skin_Yb
+        0xff, //ascr_skin_Mr
+        0x00, //ascr_skin_Mg
+        0xff, //ascr_skin_Mb
+        0xff, //ascr_skin_Wr
+        0xf4, //ascr_skin_Wg
+        0xff, //ascr_skin_Wb
+        0x00, //ascr_Cr
+        0xff, //ascr_Rr
+        0xff, //ascr_Cg
+        0x00, //ascr_Rg
+        0xff, //ascr_Cb
+        0x00, //ascr_Rb
+        0xff, //ascr_Mr
+        0x00, //ascr_Gr
+        0x00, //ascr_Mg
+        0xff, //ascr_Gg
+        0xff, //ascr_Mb
+        0x00, //ascr_Gb
+        0xff, //ascr_Yr
+        0x00, //ascr_Br
+        0xff, //ascr_Yg
+        0x00, //ascr_Bg
+        0x00, //ascr_Yb
+        0xff, //ascr_Bb
+        0xff, //ascr_Wr
+        0x00, //ascr_Kr
+        0xff, //ascr_Wg
+        0x00, //ascr_Kg
+        0xff, //ascr_Wb
+        0x00, //ascr_Kb
+        /* end */
+};
+int hook = 0;
+
 #define IS_DMB(idx)			(idx == DMB_NORMAL_MODE)
 #define IS_SCENARIO(idx)		((idx < SCENARIO_MAX) && !((idx > VIDEO_NORMAL_MODE) && (idx < CAMERA_MODE)))
 #define IS_ACCESSIBILITY(idx)		(idx && (idx < ACCESSIBILITY_MAX))
@@ -128,8 +296,24 @@ static void mdnie_update(struct mdnie_info *mdnie)
 		return;
 	}
 
+    if (hook) {
+        mdnie->mode = DYNAMIC;
+        mdnie->scenario = VT_MODE;
+        setMainTableData(mdnie->scenario ,mdnie->mode,  15 , mdnie_saturation[15]);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  52 , mdnie_saturation[52]);
+		setMainTableData(mdnie->scenario ,mdnie->mode,  18 , mdnie_saturation[18]);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  19 , 255);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  20 , 255);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  21 , 255);
+    } else {
+        if (mdnie->scenario == VT_MODE && mdnie->mode == DYNAMIC) {
+
+        }
+    }
+
 	table = mdnie_find_table(mdnie);
 	if (!IS_ERR_OR_NULL(table) && !IS_ERR_OR_NULL(table->name)) {
+
 		mdnie_update_sequence(mdnie, table);
 		dev_info(mdnie->dev, "%s\n", table->name);
 
@@ -658,6 +842,161 @@ static ssize_t scenario_lock_store(struct device *dev,
 
 	return count;
 }
+//////////////////////////////////////////////////////////
+static ssize_t mdnie_saturation_show(struct device *dev,
+                             struct device_attribute *attr, char *buf)
+{
+    int ret;
+    int adress;
+    int value;
+    size_t count = 0;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+//    ret = sscanf(buf, "%d"
+//            , &adress);
+    //count += sprintf(buf, "%u\n",getMainTableData(mdnie->scenario ,mdnie->mode, mdnie_cs_index));
+    count += sprintf(buf, "%d\n",mdnie_saturation[52]);
+    return count;
+}
+
+static ssize_t mdnie_saturation_store(struct device *dev,
+                              struct device_attribute *attr, const char *buf, size_t count)
+{
+    int ret;
+    int adress;
+    int value;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+    ret = sscanf(buf, "%d",
+             &value);
+    mdnie_cs = value;
+    mdnie_saturation[52] = value;
+    //setMainTableData(mdnie->scenario ,mdnie->mode,  adress , value);
+    mdnie_update(mdnie);
+    return count;
+}
+//////////////////////////////////////////////////////////
+static ssize_t mdnie_sharp_show(struct device *dev,
+                                     struct device_attribute *attr, char *buf)
+{
+    int ret;
+    int adress;
+    int value;
+    size_t count = 0;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+//    ret = sscanf(buf, "%d"
+//            , &adress);
+    //count += sprintf(buf, "%u\n",getMainTableData(mdnie->scenario ,mdnie->mode, mdnie_cs_index));
+    count += sprintf(buf, "%d\n",mdnie_saturation[18]);
+    return count;
+}
+
+static ssize_t mdnie_sharp_store(struct device *dev,
+                                      struct device_attribute *attr, const char *buf, size_t count)
+{
+    int ret;
+    int adress;
+    int value;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+    ret = sscanf(buf, "%d",
+                 &value);
+    mdnie_cs = value;
+    mdnie_saturation[18] = value;
+    //setMainTableData(mdnie->scenario ,mdnie->mode,  adress , value);
+    mdnie_update(mdnie);
+    return count;
+}
+//////////////////////////////////////////////////////
+static ssize_t mdnie_cs_show(struct device *dev,
+                                  struct device_attribute *attr, char *buf)
+{
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+    size_t count = 0;
+
+    count += sprintf(buf, "%u\n",getMainTableData(mdnie->scenario ,mdnie->mode, mdnie_cs_index));
+
+    return count;
+}
+
+static ssize_t mdnie_cs_store(struct device *dev,
+                                   struct device_attribute *attr, const char *buf, size_t count)
+{
+    int ret;
+    int adress;
+    int value;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+
+    ret = sscanf(buf, "%d"
+            , &value);
+
+    mdnie_cs = value;
+    setMainTableData(mdnie->scenario ,mdnie->mode,  mdnie_cs_index , mdnie_cs);
+    mdnie_update(mdnie);
+
+    return count;
+}
+//////////////////////////////////////////////////////////////////////////
+static ssize_t hook_show(struct device *dev,
+                             struct device_attribute *attr, char *buf)
+{
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+    size_t count = 0;
+
+    count += sprintf(buf, "%d\n",hook);
+
+    return count;
+}
+
+static ssize_t hook_store(struct device *dev,
+                              struct device_attribute *attr, const char *buf, size_t count)
+{
+    int ret;
+    int adress;
+    int value;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+    ret = sscanf(buf, "%d"
+            , &value);
+    hook = value;
+    if (hook == 0) {
+        setMainTableData(mdnie->scenario ,mdnie->mode,  52 , 1);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  15 , 7);
+
+        setMainTableData(mdnie->scenario ,mdnie->mode,  18 , 192);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  19 , 1);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  20 , 0);
+        setMainTableData(mdnie->scenario ,mdnie->mode,  21 , 1);
+    }
+    mdnie_update(mdnie);
+    return count;
+}
+//////////////////////////////////////////////////////////////////////////
+static ssize_t mdnie_cs_index_show(struct device *dev,
+                             struct device_attribute *attr, char *buf)
+{
+    size_t count = 0;
+
+    count += sprintf(buf, "%u\n",mdnie_cs_index);
+
+    return count;
+}
+
+static ssize_t mdnie_cs_index_store(struct device *dev,
+                              struct device_attribute *attr, const char *buf, size_t count)
+{
+    int ret;
+    int adress;
+    int value;
+    struct mdnie_info *mdnie = dev_get_drvdata(dev);
+
+    ret = sscanf(buf, "%d"
+            , &value);
+
+    mdnie_cs_index = value;
+
+    mdnie_update(mdnie);
+
+    return count;
+}
+
+
 
 static struct device_attribute mdnie_attributes[] = {
 	__ATTR(mode, 0664, mode_show, mode_store),
@@ -670,6 +1009,11 @@ static struct device_attribute mdnie_attributes[] = {
 	__ATTR(mdnie, 0444, mdnie_show, NULL),
 	__ATTR(sensorRGB, 0664, sensorRGB_show, sensorRGB_store),
 	__ATTR(scenario_lock, 0664, scenario_lock_show, scenario_lock_store),
+    __ATTR(mdnie_cs_index, 0664, mdnie_cs_index_show, mdnie_cs_index_store),
+    __ATTR(mdnie_cs, 0664, mdnie_cs_show, mdnie_cs_store),
+    __ATTR(hook, 0664, hook_show, hook_store),
+	__ATTR(mdnie_saturation, 0664, mdnie_saturation_show, mdnie_saturation_store),
+    __ATTR(mdnie_sharp, 0664, mdnie_sharp_show, mdnie_sharp_store),
 #ifdef CONFIG_LCD_HMT
 	__ATTR(hmt_color_temperature, 0664, hmtColorTemp_show, hmtColorTemp_store),
 #endif
