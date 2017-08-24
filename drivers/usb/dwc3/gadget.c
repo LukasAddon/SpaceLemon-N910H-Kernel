@@ -1547,14 +1547,14 @@ static int dwc3_udc_init(struct dwc3 *dwc)
 	ret = __dwc3_gadget_ep_enable(dep, &dwc3_gadget_ep0_desc, NULL, false);
 	if (ret) {
 		dev_err(dwc->dev, "failed to enable %s\n", dep->name);
-		goto err0;
+		goto err2;
 	}
 
 	dep = dwc->eps[1];
 	ret = __dwc3_gadget_ep_enable(dep, &dwc3_gadget_ep0_desc, NULL, false);
 	if (ret) {
 		dev_err(dwc->dev, "failed to enable %s\n", dep->name);
-		goto err1;
+		goto err3;
 	}
 
 	/* begin to receive SETUP packets */
@@ -1563,10 +1563,12 @@ static int dwc3_udc_init(struct dwc3 *dwc)
 
 	return 0;
 
-err1:
+err3:
 	__dwc3_gadget_ep_disable(dwc->eps[0]);
 
-err0:
+err2:
+	dwc->gadget_driver = NULL;
+
 	return ret;
 }
 
@@ -3128,4 +3130,3 @@ int dwc3_get_ss_host_available(struct usb_gadget *gadget)
 }
 EXPORT_SYMBOL_GPL(dwc3_get_ss_host_available);
 #endif
-
