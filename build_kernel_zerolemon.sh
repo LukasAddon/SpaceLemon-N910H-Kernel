@@ -25,6 +25,7 @@ make exynos5433-tre_eur_open_14.dtb
 make exynos5433-tre_eur_open_16.dtb
 make ARCH=arm -j4
 
+
 GETVER=`grep 'SpaceLemon-Battery-Extended-v.*' arch/arm/configs/trelte_00_defconfig | sed 's/.*-.//g' | sed 's/".*//g'`
 ###################################### DT.IMG GENERATION #####################################
 echo -n "Build dt.img......................................."
@@ -56,4 +57,17 @@ mkdir system
 mkdir data
 
 zip -r N910C-H_SpaceLemon_v${GETVER}_zerolemon.zip ./
+
+cd ../../
+
+rm -f build_kernel/out-no-root/*.zip
+
+cp -f build_kernel/AIK-Linux/image-new.img build_kernel/out-no-root/boot.img
+
+cd build_kernel/out-no-root/
+
+mkdir system
+mkdir data
+
+zip -r SpaceLemon_v${GETVER}_zerolemon_no_root.zip ./
 
