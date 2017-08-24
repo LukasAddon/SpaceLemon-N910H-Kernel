@@ -18,7 +18,7 @@ import /init.rilcommon.rc
 on early-init
     # Ensure some kernel boot defaults are set
     write /sys/devices/14ac0000.mali/max_clock 700
-    write /sys/devices/14ac0000.mali/min_clock 100
+    write /sys/devices/14ac0000.mali/min_clock 266
 
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
