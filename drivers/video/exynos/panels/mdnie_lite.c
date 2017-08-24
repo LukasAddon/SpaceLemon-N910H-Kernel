@@ -297,7 +297,9 @@ static void mdnie_update(struct mdnie_info *mdnie)
 	}
 
     if (hook) {
-        mdnie->mode = DYNAMIC;
+        if (mdnie->mode == READING) {
+            mdnie->mode = DYNAMIC;
+        }
         mdnie->scenario = VT_MODE;
         setMainTableData(mdnie->scenario ,mdnie->mode,  15 , mdnie_saturation[15]);
         setMainTableData(mdnie->scenario ,mdnie->mode,  52 , mdnie_saturation[52]);
