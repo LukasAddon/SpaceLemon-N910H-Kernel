@@ -10,6 +10,7 @@
 
 		 - Linaro 5.2
 
+    - install CCACHE to cache files when compiling
 		
 
 	- edit MakeFile
@@ -23,19 +24,27 @@
     
           N910H/C
 	  
-                build_kernel_standart.sh  - standart battery with root
+                build_kernel_standart.sh  - standart battery
 		
-                build_kernel_standart_no_root.sh - standart battery
-		
-                build_kernel_zerolemon.sh  - zerolemon battery with root
-		
-                build_kernel_zerolemon_no_root.sh - zerolemon battery
+                build_kernel_zerolemon.sh  - zerolemon battery
 		
           N910S/K/L
 	  
                 build_kernel_standart_N910S_K_L.sh
 		
                 build_kernel_zerolemon_N910S_K_L.sh
+
+          N915S/K/L
+
+                build_kernel_standart_N915S_K_L.sh
+
+                build_kernel_zerolemon_N915S_K_L.sh
+
+          N915U
+
+                build_kernel_standart_N910U.sh
+
+                build_kernel_zerolemon_N910U.sh
 
 2. Output files
 
