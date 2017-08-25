@@ -24,6 +24,7 @@
 #include <linux/slab.h>
 #include <linux/list.h>
 #include <linux/cpumask.h>
+#include <linux/interrupt.h>
 #include <linux/sec_argos.h>
 
 #define ARGOS_NAME "argos"
