@@ -41,8 +41,8 @@
 #include <linux/of_gpio.h>
 
 #define FMT_WAKE_TIME   (HZ/2)
-#define RFS_WAKE_TIME   (HZ*3)
-#define RAW_WAKE_TIME   (HZ*6)
+#define RFS_WAKE_TIME   (HZ)
+#define RAW_WAKE_TIME   (HZ*2)
 
 static struct modem_shared *create_modem_shared_data(void)
 {
