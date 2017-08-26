@@ -130,6 +130,7 @@ void unix_inflight(struct user_struct *user, struct file *fp)
 
 	if (s) {
 		struct unix_sock *u = unix_sk(s);
+
 		if (atomic_long_inc_return(&u->inflight) == 1) {
 			BUG_ON(!list_empty(&u->link));
 			list_add_tail(&u->link, &gc_inflight_list);
@@ -137,9 +138,8 @@ void unix_inflight(struct user_struct *user, struct file *fp)
 			BUG_ON(list_empty(&u->link));
 		}
 		unix_tot_inflight++;
-		user->unix_inflight++;
 	}
-	fp->f_cred->user->unix_inflight++;
+	user->unix_inflight++;
 	spin_unlock(&unix_gc_lock);
 }
 
@@ -151,18 +151,18 @@ void unix_notinflight(struct user_struct *user, struct file *fp)
 
 	if (s) {
 		struct unix_sock *u = unix_sk(s);
+
 		BUG_ON(list_empty(&u->link));
 		if (atomic_long_dec_and_test(&u->inflight))
 			list_del_init(&u->link);
 		unix_tot_inflight--;
-		user->unix_inflight--;
 	}
-	fp->f_cred->user->unix_inflight--;
+	user->unix_inflight--;
 	spin_unlock(&unix_gc_lock);
 }
 
 static void scan_inflight(struct sock *x, void (*func)(struct unix_sock *),
-			  struct sk_buff_head *hitlist)
+						  struct sk_buff_head *hitlist)
 {
 	struct sk_buff *skb;
 	struct sk_buff *next;
@@ -209,7 +209,7 @@ static void scan_inflight(struct sock *x, void (*func)(struct unix_sock *),
 }
 
 static void scan_children(struct sock *x, void (*func)(struct unix_sock *),
-			  struct sk_buff_head *hitlist)
+						  struct sk_buff_head *hitlist)
 {
 	if (x->sk_state != TCP_LISTEN)
 		scan_inflight(x, func, hitlist);
@@ -333,7 +333,7 @@ void unix_gc(void)
 	 * the candidates.
 	 */
 	list_for_each_entry(u, &gc_candidates, link)
-		scan_children(&u->sk, dec_inflight, NULL);
+	scan_children(&u->sk, dec_inflight, NULL);
 
 	/*
 	 * Restore the references for children of all candidates,
@@ -389,6 +389,6 @@ void unix_gc(void)
 	gc_in_progress = false;
 	wake_up(&unix_gc_wait);
 
- out:
+	out:
 	spin_unlock(&unix_gc_lock);
 }
