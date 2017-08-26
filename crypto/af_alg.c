@@ -247,10 +247,8 @@ int af_alg_accept(struct sock *sk, struct socket *newsock)
 	security_sk_clone(sk, sk2);
 
 	err = type->accept(ask->private, sk2);
-	if (err) {
-		sk_free(sk2);
+	if (err)
 		goto unlock;
-	}
 
 	sk2->sk_family = PF_ALG;
 
@@ -448,6 +446,9 @@ EXPORT_SYMBOL_GPL(af_alg_wait_for_completion);
 void af_alg_complete(struct crypto_async_request *req, int err)
 {
 	struct af_alg_completion *completion = req->data;
+
+	if (err == -EINPROGRESS)
+		return;
 
 	completion->err = err;
 	complete(&completion->completion);

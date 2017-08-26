@@ -81,4 +81,6 @@ extern void mmc_packed_clean(struct mmc_queue *);
 
 extern void mmc_wait_cmdq_empty(struct mmc_host *);
 
+extern int mmc_access_rpmb(struct mmc_queue *);
+
 #endif

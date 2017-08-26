@@ -742,6 +742,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
 		goto error2;
 	}
 
+
 	/* the key is probably readable - now try to read it */
 can_read_key:
 	ret = -EOPNOTSUPP;
