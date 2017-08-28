@@ -56,7 +56,7 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N910C-H_SpaceLemon_v${GETVER}_zerolemon.zip ./
+zip -r N910C-H-SpaceLemon-v${GETVER}-zerolemon.zip ./
 
 cd ../../
 
@@ -69,5 +69,5 @@ cd build_kernel/out-no-root/
 mkdir system
 mkdir data
 
-zip -r SpaceLemon_v${GETVER}_zerolemon_no_root.zip ./
+zip -r N910C-H-SpaceLemon-v${GETVER}-zerolemon-no-root.zip ./
 

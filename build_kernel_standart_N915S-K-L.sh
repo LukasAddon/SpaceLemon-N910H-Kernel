@@ -53,5 +53,17 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N915S-K-L_SpaceLemon_v${GETVER}_standart_battery.zip ./
+zip -r N915S-K-L-SpaceLemon-v${GETVER}-standart.zip ./
 
+cd ../../
+
+rm -f build_kernel/out-no-root/*.zip
+
+cp -f build_kernel/AiK-N915S/image-new.img build_kernel/out/boot.img
+
+cd build_kernel/out-no-root/
+
+mkdir system
+mkdir data
+
+zip -r N915S-K-L-SpaceLemon-v${GETVER}-standart-no-root.zip ./
