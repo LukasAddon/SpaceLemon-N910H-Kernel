@@ -10,8 +10,8 @@ BK=build_kernel
 
 cp ./drivers/battery/max77843_fuelgauge_ZL.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
-#make clean
-#rm -rf  include/config/*
+make clean
+rm -rf  include/config/*
 echo "make config"
 make exynos5433-tbelteskt_defconfig
 echo "build kernel"
