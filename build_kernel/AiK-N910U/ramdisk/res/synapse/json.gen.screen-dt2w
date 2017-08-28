@@ -108,6 +108,28 @@ cat << CTAG
 		   '5' :'READING',
 		}
 	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SSeekBar:{
+		title:"mdnie index (only for testers)",
+		description:"min 0 - max 156",
+		max:156,
+		refresh:1000,
+		default:0,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_cs_index"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SSeekBar:{
+		title:"mdnie value (only for testers)",
+		description:"min 0 - max 255",
+		max:255,
+		refresh:500,
+		default:0,
+		action:"generic /sys/class/mdnie/mdnie/mdnie_cs"
+	}},
     ]
 }
 CTAG

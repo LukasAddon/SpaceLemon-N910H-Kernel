@@ -10,8 +10,8 @@ BK=build_kernel
 
 cp ./drivers/battery/max77843_fuelgauge_ZL.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
-make clean
-rm -rf  include/config/*
+#make clean
+#rm -rf  include/config/*
 echo "make config"
 make exynos5433-tbelteskt_defconfig
 echo "build kernel"
@@ -53,5 +53,17 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N915S-K-L_SpaceLemon_v${GETVER}_Zerolemon.zip ./
+zip -r N915S-K-L-SpaceLemon-v${GETVER}-Zerolemon.zip ./
 
+cd ../../
+
+rm -f build_kernel/out-no-root/*.zip
+
+cp -f build_kernel/AiK-N915S/image-new.img build_kernel/out/boot.img
+
+cd build_kernel/out-no-root/
+
+mkdir system
+mkdir data
+
+zip -r N915S-K-L-SpaceLemon-v${GETVER}-Zerolemon-no-root.zip ./

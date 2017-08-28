@@ -29,7 +29,7 @@ cat << CTAG
 	}},
 	{ SDescription:{
 		description:""
-	}},	
+	}},
 	{ SCheckBox:{
 		label:"Double Tap To Wake Phone",
 		description:"Enable/Disable DT2W. Default is Disabled.",
@@ -67,10 +67,10 @@ cat << CTAG
 		 '1' : 'Video',
 		  '4' :'Camera',
 		   '5': 'Navigation',
-		    '6': 'Gallery', 
-		    '7' :'VT', 
-		    '8': 'Browser', 
-		    '9': 'E-book', 
+		    '6': 'Gallery',
+		    '7' :'VT',
+		    '8': 'Browser',
+		    '9': 'E-book',
 		    '10': 'E-Mail',
 		    '11': 'HMT_8_MODE',
 		    '12': 'HMT_16_MODE',
@@ -79,7 +79,7 @@ cat << CTAG
 	}},
 	{ SSpacer:{
 		height:2
-	}},	
+	}},
 	{ SOptionList:{
 		title:"accessibility",
 		description:"Color mode of screen",
@@ -108,25 +108,6 @@ cat << CTAG
 		   '5' :'READING',
 		}
 	}},
-	{ SSpacer:{
-		height:2
-	}},
-    { SButton:{
-        label:"0 Protrait",
-        action:"settings put system user_rotation 0"
-    }},
-    { SButton:{
-        label:"1 Landscape",
-        action:"settings put system user_rotation 1"
-    }},
-    { SButton:{
-        label:"2 Protrait Reversed",
-        action:"settings put system user_rotation 2"
-    }},
-    { SButton:{
-        label:"3 Landscape Reversed",
-        action:"settings put system user_rotation 3"
-    }},
     ]
 }
 CTAG

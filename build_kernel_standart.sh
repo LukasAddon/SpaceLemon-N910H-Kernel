@@ -55,7 +55,7 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N910C-H_SpaceLemon_v${GETVER}_standart.zip ./
+zip -r N910C-H-SpaceLemon-v${GETVER}-standart.zip ./
 
 cd ../../
 
@@ -68,5 +68,5 @@ cd build_kernel/out-no-root/
 mkdir system
 mkdir data
 
-zip -r N910C-H_SpaceLemon_v${GETVER}_standart_no_root.zip ./
+zip -r N910C-H-SpaceLemon-v${GETVER}-standart-no-root.zip ./
 
