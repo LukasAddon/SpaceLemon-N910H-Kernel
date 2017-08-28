@@ -210,6 +210,51 @@ struct lcd_info {
 static int s6e3hf2_hmt_update(struct lcd_info *lcd, u8 forced);
 #endif
 
+//////////////////////  edit colors online
+void setMainTableData(int scenario, int mode , int index , int value) {
+	if (scenario == VT_MODE && mode == STANDARD) {
+		STANDARD_VT_1[index] = value;
+	}
+	if (scenario == VT_MODE && mode == DYNAMIC) {
+		DYNAMIC_VT_1[index] = value;
+	}
+	if (scenario == VT_MODE && mode == READING ) {
+		AUTO_EBOOK_1[index] = value;
+	}
+	if (scenario == VT_MODE && mode == NATURAL) {
+		NATURAL_VT_1[index] = value;
+	}
+	if (scenario == VT_MODE && mode == MOVIE) {
+		MOVIE_VT_1[index] = value;
+	}
+	if (scenario == VT_MODE && mode == AUTO) {
+		AUTO_VT_1[index] = value;
+	}
+}
+
+int getMainTableData(int scenario, int mode , int index) {
+	if (scenario == VT_MODE && mode == STANDARD) {
+		return STANDARD_VT_1[index];
+	}
+	if (scenario == VT_MODE && mode == DYNAMIC) {
+		return DYNAMIC_VT_1[index];
+	}
+	if (scenario == VT_MODE && mode == READING ) {
+		return AUTO_EBOOK_1[index] ;
+	}
+	if (scenario == VT_MODE && mode == NATURAL) {
+		return  NATURAL_VT_1[index] ;
+	}
+	if (scenario == VT_MODE && mode == MOVIE) {
+		return MOVIE_VT_1[index] ;
+	}
+	if (scenario == VT_MODE && mode == AUTO) {
+		return AUTO_VT_1[index] ;
+	}
+	return 0 ;
+}
+
+
 #if defined(CONFIG_ESD_FG)
 static void esd_fg_enable(struct lcd_info *lcd, int enable)
 {
