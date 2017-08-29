@@ -7,6 +7,8 @@
 
 DTS=arch/arm/boot/dts
 BK=build_kernel
+sed -i 's/\-Standart\-/\-Extended\-/g' arch/arm/configs/trlte_00_defconfig
+
 
 cp ./drivers/battery/max77843_fuelgauge_ZL.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
@@ -55,7 +57,7 @@ cd ../../
 
 rm -f build_kernel/out-no-root/*.zip
 
-cp -f build_kernel/AiK-N910U/image-new.img build_kernel/out/boot.img
+cp -f build_kernel/AiK-N910U/image-new.img build_kernel/out-no-root/boot.img
 
 cd build_kernel/out-no-root/
 
@@ -63,3 +65,7 @@ mkdir system
 mkdir data
 
 zip -r N910U-SpaceLemon-v${GETVER}-Zerolemon-no-root.zip ./
+
+cd ../../
+mv -f build_kernel/out/*.zip build_kernel/release/
+mv -f build_kernel/out-no-root/*.zip build_kernel/release/
