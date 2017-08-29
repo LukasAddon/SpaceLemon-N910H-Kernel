@@ -1,0 +1,126 @@
+#!/sbin/busybox sh
+
+cd /sbin
+
+for i in $(./busybox --list)
+do
+	./busybox ln -s busybox $i
+done
+
+cd /
+
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+
+rootSystem () {
+	if [ ! -f /system/xbin/daemonsu ]; then
+		mv /res/su/su /system/xbin/su
+		mv /res/su/daemonsu /system/xbin/daemonsu
+		chown 0.0 /system/xbin/su
+		chown 0.0 /system/xbin/daemonsu
+		chmod 06755 /system/xbin/su
+		chmod 06755 /system/xbin/daemonsu
+		ln -s /system/xbin/su /system/bin/su
+	fi
+
+	if [ ! -f /system/app/Superuser.apk ]; then
+		mv /res/su/Superuser.apk /system/app/Superuser.apk
+		chown 0.0 /system/app/Superuser.apk
+		chmod 0644 /system/app/Superuser.apk
+	fi
+}
+
+copySynapse() {
+	cp /res/synapse/Synapse.apk /system/app/Synapse.apk
+	chown 0.0 /system/app/Synapse.apk
+	chmod 644 /system/app/Synapse.apk
+}
+
+prepareKnox () {
+	BP="/system/build.prop"
+
+	if grep -q ro.config.tima=1 $BP; then
+		sed -i "s/ro.config.tima=1/ro.config.tima=0/g" $BP
+	fi
+
+	if grep -q ro.build.selinux=1 $BP; then
+		sed -i "s/ro.build.selinux=1/ro.build.selinux=0/g" $BP
+	fi
+
+	if grep -q ro.config.knox=1 $BP; then
+		sed -i "s/ro.config.knox=1/ro.config.knox=0/g" $BP
+	fi
+
+	APKS="KNOXAgent.apk KNOXAgent.odex KnoxAttestationAgent.apk KnoxAttestationAgent.odex KNOXStore.apk KNOXStore.odex KNOXStub.apk ContainerAgent.apk ContainerAgent.odex KLMSAgent.apk KLMSAgent.odex ContainerEventsRelayManager.apk ContainerEventsRelayManager.odex"
+
+	for APK in $APKS; do
+		if [ -f /system/app/$APK ]; then
+			rm /system/app/$APK
+		fi
+	done
+}
+
+loadRamdisk () {
+	rootSystem
+
+	if [[ ! -f /data/nosynapse ]]; then
+		if [[  ! -f /system/app/Synapse.apk ]]; then
+			copySynapse
+		else
+			R5=$(md5sum < /res/synapse/Synapse.apk | tr -d ' -')
+			S5=$(md5sum < /system/app/Synapse.apk | tr -d ' -')
+			if [ $R5 != $S5 ]; then
+				copySynapse
+			fi
+		fi
+	fi
+
+	umount -f /system
+	umount -f /data
+
+	rm /init
+	mv -f /res/ramdisks/$1/* /
+
+	exec /init
+	exit
+}
+
+
+mkdir /dev
+mkdir /dev/block
+mknod /dev/block/mmcblk0p20 b 259 12
+mknod /dev/block/mmcblk0p21 b 259 13
+mount -t ext4 /dev/block/mmcblk0p20 /system
+mount -t ext4 /dev/block/mmcblk0p21 /data
+
+if grep -q 1 /sys/class/power_supply/battery/batt_lp_charging ; then
+	loadRamdisk sec43
+fi
+
+
+if [ -f /system/framework/twframework.jar ]; then
+	if grep -q ro.build.version.release=4.3 /system/build.prop; then
+		echo "0 0" > /proc/sys/kernel/runtime_dependency
+		prepareKnox
+		loadRamdisk sec43
+	fi
+
+	if grep -q ro.build.version.release=4.4.2 /system/build.prop; then
+		echo "0 0" > /proc/sys/kernel/runtime_dependency
+		prepareKnox
+		insmod /lib/modules/dhd.ko
+		loadRamdisk sec442
+	fi
+
+	loadRamdisk sec43
+else
+	if grep -q ro.build.version.release=4.4 /system/build.prop; then
+		echo "2 0" > /proc/sys/kernel/runtime_dependency
+		insmod /lib/modules/dhd.ko
+		loadRamdisk aosp44
+	fi
+
+	echo "2 0" > /proc/sys/kernel/runtime_dependency
+	insmod /lib/modules/dhd.ko
+	loadRamdisk aosp44
+fi

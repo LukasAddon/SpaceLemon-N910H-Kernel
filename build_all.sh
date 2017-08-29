@@ -25,8 +25,8 @@ mkdir build_kernel/release
 ./clear_script.sh
 ./build_kernel_standart_N910U.sh
 ./clear_script.sh
-./build_kernel_standart_N910S_K_L.sh
-
+./build_kernel_standart_N915S-K-L.sh
 
 #clear
 ./clear_script.sh
+make clean
