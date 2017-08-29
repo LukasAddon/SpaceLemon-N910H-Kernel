@@ -7,14 +7,15 @@
 
 DTS=arch/arm/boot/dts
 BK=build_kernel
+sed -i 's/\-Extended\-/\-Standart\-/g' arch/arm/configs/trelte_oldWolfson_00_defconfig
 
 # rename old wolfson to current sound mod
 cp ./sound/soc/codecs/arizona-control_old.c ./sound/soc/codecs/arizona-control.c
 # rename zerolemon  to current battery mod
 cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
-#make clean
-#rm -rf  include/config/*
+make clean
+rm -rf  include/config/*
 echo "make config"
 make trelte_oldWolfson_00_defconfig
 echo "build kernel"
@@ -47,7 +48,7 @@ echo "$sizT Kb"
 cp -f arch/arm/boot/zImage build_kernel/AIK-Linux-new-wolfson/split_img/boot.img-zImage
 cp -f ./dt.img build_kernel/AIK-Linux-new-wolfson/split_img/boot.img-dtb
 
-build_kernel/AIK-Linux-old-wolfson/repackimg.sh
+build_kernel/AIK-Linux-new-wolfson/repackimg.sh
 
 rm -f build_kernel/out/*.zip
 

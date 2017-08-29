@@ -7,6 +7,7 @@
 
 DTS=arch/arm/boot/dts
 BK=build_kernel
+sed -i 's/\-Standart\-/\-Extended\-/g' arch/arm/configs/trelte_oldWolfson_00_defconfig
 
 # rename old wolfson to current sound mod
 cp ./sound/soc/codecs/arizona-control_old.c ./sound/soc/codecs/arizona-control.c
@@ -58,5 +59,22 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N910C-H_SpaceLemon_v${GETVER}_zerolemon_old_wolfson.zip ./
+zip -r N910C-H_SpaceLemon-v${GETVER}-zerolemon-old-wolfson.zip ./
+
+cd ../../
+
+rm -f build_kernel/out-no-root/*.zip
+
+cp -f build_kernel/AIK-Linux-old-wolfson/image-new.img build_kernel/out-no-root/boot.img
+
+cd build_kernel/out-no-root/
+
+mkdir system
+mkdir data
+
+zip -r N910C-H-SpaceLemon-v${GETVER}-zerolemon-old-wolfson-no-root.zip ./
+
+cd ../../
+mv -f build_kernel/out/*.zip build_kernel/release/
+mv -f build_kernel/out-no-root/*.zip build_kernel/release/
 
