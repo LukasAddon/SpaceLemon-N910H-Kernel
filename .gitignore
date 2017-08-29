@@ -1,3 +1,13 @@
 /include/config/
 /arch/arm/include/generated/
 /include/generated/autoconf.h
+/.config
+/.config.old
+/.idea/SpaceLemon.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/preferred-vcs.xml
+/.idea/vcs.xml
+/cmake-build-debug/CMakeFiles/clion-log.txt
+/build_kernel/release/
+/include/generated/
