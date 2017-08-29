@@ -60,3 +60,20 @@ mkdir data
 
 zip -r N910C-H-SpaceLemon_v${GETVER}_standart_old_wolfson.zip ./
 
+cd ../../
+
+rm -f build_kernel/out-no-root/*.zip
+
+cp -f build_kernel/AIK-Linux-old-wolfson/image-new.img build_kernel/out-no-root/boot.img
+
+cd build_kernel/out-no-root/
+
+mkdir system
+mkdir data
+
+zip -r N910C-H-SpaceLemon-v${GETVER}-standart-old-wolfson-no-root.zip ./
+
+cd ../../
+mv -f build_kernel/out/*.zip build_kernel/release/
+mv -f build_kernel/out-no-root/*.zip build_kernel/release/
+
