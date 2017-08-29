@@ -7,6 +7,7 @@
 
 DTS=arch/arm/boot/dts
 BK=build_kernel
+sed -i 's/\-Extended\-/\-Standart\-/g' arch/arm/configs/trelte_00_defconfig
 
 cp ./drivers/battery/max77843_fuelgauge_ST.c ./drivers/battery/max77843_fuelgauge.c
 echo "Clear Folder"
@@ -70,3 +71,6 @@ mkdir data
 
 zip -r N910C-H-SpaceLemon-v${GETVER}-standart-no-root.zip ./
 
+cd ../../
+mv -f build_kernel/out/*.zip build_kernel/release/
+mv -f build_kernel/out-no-root/*.zip build_kernel/release/
