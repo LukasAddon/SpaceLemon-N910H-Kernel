@@ -163,7 +163,7 @@ static LIST_HEAD(drvdata_list);
 #define HSI2C_POLLING 0
 #define HSI2C_INTERRUPT 1
 
-#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(100))
+#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(1000))
 
 #define EXYNOS5_FIFO_SIZE		16
 
@@ -807,8 +807,7 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c, struct i2c_msg *msgs, i
 static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 			struct i2c_msg *msgs, int num)
 {
-	//struct exynos5_i2c *i2c = (struct exynos5_i2c *)adap->algo_data;
-	struct exynos5_i2c *i2c = adap->algo_data;
+	struct exynos5_i2c *i2c = (struct exynos5_i2c *)adap->algo_data;
 	struct i2c_msg *msgs_ptr = msgs;
 	int retry, i = 0;
 	int ret = 0;
@@ -825,7 +824,7 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 		exynos5_i2c_reset(i2c);
 	}
 	// LukasAddon disable retries , only 
-	//for (retry = 0; retry < adap->retries; retry++) {
+	for (retry = 0; retry < adap->retries; retry++) {
 		for (i = 0; i < num; i++) {
 			stop = (i == num - 1);
 
@@ -843,13 +842,13 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 				goto out;
 			}
 		}
-		//if ((i == num) && (ret != -EAGAIN))
-		//	break;
+		if ((i == num) && (ret != -EAGAIN))
+			break;
 
-		//dev_err(i2c->dev, "retrying transfer (%d)\n", retry);
+		dev_dbg(i2c->dev, "retrying transfer (%d)\n", retry);
 
-		//udelay(100);
-	//}
+		udelay(100);
+	}
 	if (i == num) {
 		ret = num;
 	} else {
@@ -860,8 +859,6 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 
  out:
 	clk_disable_unprepare(i2c->clk);
-	//pm_runtime_mark_last_busy(i2c->dev);
-	//pm_runtime_put_autosuspend(i2c->dev);	
 	return ret;
 }
 
@@ -1031,13 +1028,13 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
 	of_i2c_register_devices(&i2c->adap);
 	platform_set_drvdata(pdev, i2c);
 
-	//clk_disable_unprepare(i2c->clk);
+	clk_disable_unprepare(i2c->clk);
 
 #ifdef CONFIG_EXYNOS_HSI2C_RESET_DURING_DSTOP
 	list_add_tail(&i2c->node, &drvdata_list);
 #endif
 
-	//return 0;
+	return 0;
 
  err_clk:
 	clk_disable_unprepare(i2c->clk);
