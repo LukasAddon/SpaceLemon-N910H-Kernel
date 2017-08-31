@@ -59,7 +59,7 @@ cd build_kernel/out/
 mkdir system
 mkdir data
 
-zip -r N910C-H_SpaceLemon-v${GETVER}-zerolemon-old-wolfson.zip ./
+zip -r N910C-H-SpaceLemon-v${GETVER}-zerolemon-old-wolfson.zip ./
 
 cd ../../
 
