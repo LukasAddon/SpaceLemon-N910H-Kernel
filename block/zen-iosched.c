@@ -3,7 +3,8 @@
  * Primarily based on Noop, deadline, and SIO IO schedulers.
  *
  * Copyright (C) 2012 Brandon Berhent <bbedward@gmail.com>
- *
+ *           (C) 2014 LoungeKatt <twistedumbrella@gmail.com>
+ *				 2015 Fixes to stop crashing on 3.10 by Matthew Alex <matthewalex@outlook.com>
  * FCFS, dispatches are back-inserted, deadlines ensure fairness.
  * Should work best with devices where there is no travel delay.
  */
@@ -16,16 +17,16 @@
 
 enum zen_data_dir { ASYNC, SYNC };
 
-static const int sync_expire  = 1000;    /* max time before a sync is submitted. */
-static const int async_expire = 5000;    /* ditto for async, these limits are SOFT! */
-static const int fifo_batch = 1;
+static const int sync_expire  = HZ / 2;    /* max time before a sync is submitted. */
+static const int async_expire = 5 * HZ;    /* ditto for async, these limits are SOFT! */
+static const int fifo_batch = 16;
 
 struct zen_data {
 	/* Runtime Data */
 	/* Requests are only present on fifo_list */
 	struct list_head fifo_list[2];
 
-	unsigned int batching;		/* number of sequential requests made */
+	unsigned int batching;          /* number of sequential requests made */
 
 	/* tunables */
 	int fifo_expire[2];
@@ -40,17 +41,17 @@ zen_get_data(struct request_queue *q) {
 static void zen_dispatch(struct zen_data *, struct request *);
 
 static void
-zen_merged_requests(struct request_queue *q, struct request *req,
-                    struct request *next)
+zen_merged_requests(struct request_queue *q, struct request *rq,
+					struct request *next)
 {
 	/*
 	 * if next expires before rq, assign its expire time to arq
 	 * and move into next position (next will be deleted) in fifo
 	 */
-	if (!list_empty(&req->queuelist) && !list_empty(&next->queuelist)) {
-		if (time_before(rq_fifo_time(next), rq_fifo_time(req))) {
-			list_move(&req->queuelist, &next->queuelist);
-			rq_set_fifo_time(req, rq_fifo_time(next));
+	if (!list_empty(&rq->queuelist) && !list_empty(&next->queuelist)) {
+		if (time_before(rq_fifo_time(next), rq_fifo_time(rq))) {
+			list_move(&rq->queuelist, &next->queuelist);
+			rq_set_fifo_time(rq, rq_fifo_time(next));
 		}
 	}
 
@@ -61,11 +62,11 @@ zen_merged_requests(struct request_queue *q, struct request *req,
 static void zen_add_request(struct request_queue *q, struct request *rq)
 {
 	struct zen_data *zdata = zen_get_data(q);
-	const int sync = rq_is_sync(rq);
+	const int dir = rq_data_dir(rq);
 
-	if (zdata->fifo_expire[sync]) {
-		rq_set_fifo_time(rq, jiffies + zdata->fifo_expire[sync]);
-		list_add_tail(&rq->queuelist, &zdata->fifo_list[sync]);
+	if (zdata->fifo_expire[dir]) {
+		rq_set_fifo_time(rq, jiffies + zdata->fifo_expire[dir]);
+		list_add_tail(&rq->queuelist, &zdata->fifo_list[dir]);
 	}
 }
 
@@ -85,16 +86,16 @@ static void zen_dispatch(struct zen_data *zdata, struct request *rq)
 static struct request *
 zen_expired_request(struct zen_data *zdata, int ddir)
 {
-        struct request *rq;
+	struct request *rq;
 
-        if (list_empty(&zdata->fifo_list[ddir]))
-                return NULL;
+	if (list_empty(&zdata->fifo_list[ddir]))
+		return NULL;
 
-        rq = rq_entry_fifo(zdata->fifo_list[ddir].next);
-        if (time_after(jiffies, rq_fifo_time(rq)))
-                return rq;
+	rq = rq_entry_fifo(zdata->fifo_list[ddir].next);
+	if (time_after(jiffies, rq_fifo_time(rq)))
+		return rq;
 
-        return NULL;
+	return NULL;
 }
 
 /*
@@ -104,34 +105,34 @@ zen_expired_request(struct zen_data *zdata, int ddir)
 static struct request *
 zen_check_fifo(struct zen_data *zdata)
 {
-        struct request *rq_sync = zen_expired_request(zdata, SYNC);
-        struct request *rq_async = zen_expired_request(zdata, ASYNC);
+	struct request *rq_sync = zen_expired_request(zdata, SYNC);
+	struct request *rq_async = zen_expired_request(zdata, ASYNC);
 
-        if (rq_async && rq_sync) {
-        	if (time_after(rq_fifo_time(rq_async), rq_fifo_time(rq_sync)))
-                	return rq_sync;
-        } else if (rq_sync) {
-                return rq_sync;
+	if (rq_async && rq_sync) {
+		if (time_after(rq_fifo_time(rq_async), rq_fifo_time(rq_sync)))
+			return rq_sync;
+	} else if (rq_sync) {
+		return rq_sync;
 	} else if (rq_async) {
 		return rq_async;
 	}
 
-        return 0;
+	return 0;
 }
 
 static struct request *
 zen_choose_request(struct zen_data *zdata)
 {
-        /*
-         * Retrieve request from available fifo list.
-         * Synchronous requests have priority over asynchronous.
-         */
-        if (!list_empty(&zdata->fifo_list[SYNC]))
-                return rq_entry_fifo(zdata->fifo_list[SYNC].next);
-        if (!list_empty(&zdata->fifo_list[ASYNC]))
-                return rq_entry_fifo(zdata->fifo_list[ASYNC].next);
+	/*
+     * Retrieve request from available fifo list.
+     * Synchronous requests have priority over asynchronous.
+     */
+	if (!list_empty(&zdata->fifo_list[SYNC]))
+		return rq_entry_fifo(zdata->fifo_list[SYNC].next);
+	if (!list_empty(&zdata->fifo_list[ASYNC]))
+		return rq_entry_fifo(zdata->fifo_list[ASYNC].next);
 
-        return NULL;
+	return NULL;
 }
 
 static int zen_dispatch_requests(struct request_queue *q, int force)
@@ -172,15 +173,16 @@ static int zen_init_queue(struct request_queue *q, struct elevator_type *e)
 	}
 	eq->elevator_data = zdata;
 
+
+	spin_lock_irq(q->queue_lock);
+	q->elevator = eq;
+	spin_unlock_irq(q->queue_lock);
+
 	INIT_LIST_HEAD(&zdata->fifo_list[SYNC]);
 	INIT_LIST_HEAD(&zdata->fifo_list[ASYNC]);
 	zdata->fifo_expire[SYNC] = sync_expire;
 	zdata->fifo_expire[ASYNC] = async_expire;
 	zdata->fifo_batch = fifo_batch;
-
-	spin_lock_irq(q->queue_lock);
-	q->elevator = eq;
-	spin_unlock_irq(q->queue_lock);
 	return 0;
 }
 
@@ -247,25 +249,25 @@ STORE_FUNCTION(zen_fifo_batch_store, &zdata->fifo_batch, 0, INT_MAX, 0);
                                       zen_##name##_store)
 
 static struct elv_fs_entry zen_attrs[] = {
-        DD_ATTR(sync_expire),
-        DD_ATTR(async_expire),
-        DD_ATTR(fifo_batch),
-        __ATTR_NULL
+		DD_ATTR(sync_expire),
+		DD_ATTR(async_expire),
+		DD_ATTR(fifo_batch),
+		__ATTR_NULL
 };
 
 static struct elevator_type iosched_zen = {
-	.ops = {
-		.elevator_merge_req_fn		= zen_merged_requests,
-		.elevator_dispatch_fn		= zen_dispatch_requests,
-		.elevator_add_req_fn		= zen_add_request,
-		.elevator_former_req_fn         = elv_rb_former_request,
-		.elevator_latter_req_fn         = elv_rb_latter_request,
-		.elevator_init_fn		= zen_init_queue,
-		.elevator_exit_fn		= zen_exit_queue,
-	},
-	.elevator_attrs = zen_attrs,
-	.elevator_name = "zen",
-	.elevator_owner = THIS_MODULE,
+		.ops = {
+				.elevator_merge_req_fn		= zen_merged_requests,
+				.elevator_dispatch_fn		= zen_dispatch_requests,
+				.elevator_add_req_fn		= zen_add_request,
+				.elevator_former_req_fn         = elv_rb_former_request,
+				.elevator_latter_req_fn         = elv_rb_latter_request,
+				.elevator_init_fn		= zen_init_queue,
+				.elevator_exit_fn		= zen_exit_queue,
+		},
+		.elevator_attrs = zen_attrs,
+		.elevator_name = "zen",
+		.elevator_owner = THIS_MODULE,
 };
 
 static int __init zen_init(void)
