@@ -274,7 +274,7 @@ static int pm_callback_change_dvfs_level(struct kbase_device *kbdev)
 				cal_get_table_ver(), gpu_get_cur_clock(platform), platform->gpu_dvfs_start_clock,
 				gpu_get_cur_voltage(platform), platform->voltage_margin, platform->cur_voltage);
 #endif /* !MALI_SEC_LEGACY_SUPPORT */
-	gpu_set_target_clk_vol(platform->gpu_dvfs_start_clock, false);
+	gpu_set_target_clk_vol(platform->gpu_min_clock, false);
 	gpu_dvfs_reset_env_data(kbdev);
 #endif
 	return 0;
@@ -293,7 +293,7 @@ static int pm_callback_runtime_on(struct kbase_device *kbdev)
 	gpu_dvfs_start_env_data_gathering(kbdev);
 #ifdef CONFIG_MALI_DVFS
 	if (platform->dvfs_status && platform->wakeup_lock)
-		gpu_set_target_clk_vol(platform->gpu_dvfs_start_clock, false);
+		gpu_set_target_clk_vol(platform->gpu_min_clock, false);
 	else
 #endif /* CONFIG_MALI_DVFS */
 		gpu_set_target_clk_vol(platform->cur_clock, false);

@@ -24,6 +24,7 @@
 #include <mach/asv-exynos.h>
 #include <mach/asv-exynos5_cal.h>
 #include <mach/pm_domains.h>
+
 #if defined(CONFIG_EXYNOS5433_BTS)
 #include <mach/bts.h>
 #endif /* CONFIG_EXYNOS5433_BTS */
@@ -44,94 +45,94 @@ extern struct kbase_device *pkbdev;
 
 /*  clk,vol,abb,min,max,down stay,time_in_state,pm_qos mem,pm_qos int,pm_qos cpu_kfc_min,pm_qos cpu_egl_max */
 static gpu_dvfs_info gpu_dvfs_table_default[] = {
-    {800, 1150000, 0, 98, 100, 1, 0, 825000, 400000, 1300000, 1300000},
-    {730, 1150000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1300000},
-    {700, 1150000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1300000},
-    {667, 1150000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1300000},
-    {600, 1150000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1300000},
-    {550, 1125000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1800000},
-    {500, 1075000, 0, 98,  99, 1, 0, 825000, 400000, 1300000, 1800000},
-    {420, 1025000, 0, 80,  99, 1, 0, 667000, 200000,  900000, 1800000},
-    {350, 1025000, 0, 80,  90, 1, 0, 543000, 160000,       0, CPU_MAX},
-    {266, 1000000, 0, 80,  90, 3, 0, 413000, 133000,       0, CPU_MAX},
-    {160, 1000000, 0, 0,  80, 1, 0, 272000, 133000,       0, CPU_MAX},
-//    {100, 1000000, 0, 0,   65, 1, 0, 222000, 133000,       0, CPU_MAX},
+        {800, 1150000, 0, 98, 100, 1, 0, 825000, 400000, 1300000, 1300000},
+        {730, 1150000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1300000},
+        {700, 1150000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1300000},
+        {667, 1150000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1300000},
+        {600, 1150000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1300000},
+        {550, 1125000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1800000},
+        {500, 1075000, 0, 98, 99,  1, 0, 825000, 400000, 1300000, 1800000},
+        {420, 1025000, 0, 80, 99,  1, 0, 667000, 200000, 900000,  1800000},
+        {350, 1025000, 0, 80, 90,  1, 0, 543000, 160000, 0, CPU_MAX},
+        {266, 1000000, 0, 80, 90,  3, 0, 413000, 133000, 0, CPU_MAX},
+        {160, 1000000, 0, 0,  80,  1, 0, 272000, 133000, 0, CPU_MAX},
+        {100, 1000000, 0, 0,  65,  1, 0, 272000, 133000, 0, CPU_MAX},
 };
 
 static int mif_min_table[] = {
-    78000, 109000, 136000,
-    167000, 222000, 272000,
-    413000, 543000, 667000,
-    825000,
+        78000, 109000, 136000,
+        167000, 222000, 272000,
+        413000, 543000, 667000,
+        825000,
 };
 
 static int available_max_clock[] = {GPU_L2, GPU_L2, GPU_L0, GPU_L0, GPU_L0};
 
 static gpu_attribute gpu_config_attributes[] = {
-    {GPU_MAX_CLOCK, 800},
-    {GPU_MAX_CLOCK_LIMIT, 800},
-    {GPU_MIN_CLOCK, 160},
-    {GPU_MIN_CLOCK_LIMIT, 160},
-    {GPU_DVFS_START_CLOCK, 266},
-    {GPU_DVFS_BL_CONFIG_CLOCK, 266},
-    {GPU_GOVERNOR_TYPE, G3D_DVFS_GOVERNOR_INTERACTIVE},
-    {GPU_GOVERNOR_START_CLOCK_DEFAULT, 266},
-    {GPU_GOVERNOR_START_CLOCK_INTERACTIVE, 266},
-    {GPU_GOVERNOR_START_CLOCK_STATIC, 266},
-    {GPU_GOVERNOR_START_CLOCK_BOOSTER, 266},
-    {GPU_GOVERNOR_TABLE_DEFAULT, (uintptr_t) & gpu_dvfs_table_default},
-    {GPU_GOVERNOR_TABLE_INTERACTIVE, (uintptr_t) & gpu_dvfs_table_default},
-    {GPU_GOVERNOR_TABLE_STATIC, (uintptr_t) & gpu_dvfs_table_default},
-    {GPU_GOVERNOR_TABLE_BOOSTER, (uintptr_t) & gpu_dvfs_table_default},
-    {GPU_GOVERNOR_TABLE_SIZE_DEFAULT, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
-    {GPU_GOVERNOR_TABLE_SIZE_INTERACTIVE, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
-    {GPU_GOVERNOR_TABLE_SIZE_STATIC, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
-    {GPU_GOVERNOR_TABLE_SIZE_BOOSTER, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
-    {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_CLOCK, 420},
-    {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_LOAD, 95},
-    {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_DELAY, 0},
-    {GPU_DEFAULT_VOLTAGE, 937500},
-    {GPU_COLD_MINIMUM_VOL, 0},
-    {GPU_VOLTAGE_OFFSET_MARGIN, 37500},
-    {GPU_TMU_CONTROL, 1},
-    {GPU_TEMP_THROTTLING1, 667},
-    {GPU_TEMP_THROTTLING2, 600},
-    {GPU_TEMP_THROTTLING3, 550},
-    {GPU_TEMP_THROTTLING4, 350},
-    {GPU_TEMP_TRIPPING, 160},
-    {GPU_BOOST_MIN_LOCK, 0},
-    {GPU_BOOST_EGL_MIN_LOCK, 1300000},
-    {GPU_POWER_COEFF, 46}, /* all core on param */
-    {GPU_DVFS_TIME_INTERVAL, 5},
-    {GPU_DEFAULT_WAKEUP_LOCK, 1},
-    {GPU_BUS_DEVFREQ, 1},
-    {GPU_DYNAMIC_ABB, 1},
-    {GPU_EARLY_CLK_GATING, 0},
-    {GPU_DVS, 1},
-    {GPU_PERF_GATHERING, 0},
+        {GPU_MAX_CLOCK, 800},
+        {GPU_MAX_CLOCK_LIMIT, 800},
+        {GPU_MIN_CLOCK, 100},
+        {GPU_MIN_CLOCK_LIMIT, 100},
+        {GPU_DVFS_START_CLOCK, 266},
+        {GPU_DVFS_BL_CONFIG_CLOCK, 266},
+        {GPU_GOVERNOR_TYPE, G3D_DVFS_GOVERNOR_INTERACTIVE},
+        {GPU_GOVERNOR_START_CLOCK_DEFAULT, 266},
+        {GPU_GOVERNOR_START_CLOCK_INTERACTIVE, 266},
+        {GPU_GOVERNOR_START_CLOCK_STATIC, 266},
+        {GPU_GOVERNOR_START_CLOCK_BOOSTER, 266},
+        {GPU_GOVERNOR_TABLE_DEFAULT, (uintptr_t) & gpu_dvfs_table_default},
+        {GPU_GOVERNOR_TABLE_INTERACTIVE, (uintptr_t) & gpu_dvfs_table_default},
+        {GPU_GOVERNOR_TABLE_STATIC, (uintptr_t) & gpu_dvfs_table_default},
+        {GPU_GOVERNOR_TABLE_BOOSTER, (uintptr_t) & gpu_dvfs_table_default},
+        {GPU_GOVERNOR_TABLE_SIZE_DEFAULT, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
+        {GPU_GOVERNOR_TABLE_SIZE_INTERACTIVE, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
+        {GPU_GOVERNOR_TABLE_SIZE_STATIC, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
+        {GPU_GOVERNOR_TABLE_SIZE_BOOSTER, GPU_DVFS_TABLE_LIST_SIZE(gpu_dvfs_table_default)},
+        {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_CLOCK, 420},
+        {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_LOAD, 95},
+        {GPU_GOVERNOR_INTERACTIVE_HIGHSPEED_DELAY, 0},
+        {GPU_DEFAULT_VOLTAGE, 937500},
+        {GPU_COLD_MINIMUM_VOL, 0},
+        {GPU_VOLTAGE_OFFSET_MARGIN, 37500},
+        {GPU_TMU_CONTROL, 1},
+        {GPU_TEMP_THROTTLING1, 667},
+        {GPU_TEMP_THROTTLING2, 600},
+        {GPU_TEMP_THROTTLING3, 550},
+        {GPU_TEMP_THROTTLING4, 350},
+        {GPU_TEMP_TRIPPING, 160},
+        {GPU_BOOST_MIN_LOCK, 0},
+        {GPU_BOOST_EGL_MIN_LOCK, 1300000},
+        {GPU_POWER_COEFF, 46}, /* all core on param */
+        {GPU_DVFS_TIME_INTERVAL, 5},
+        {GPU_DEFAULT_WAKEUP_LOCK, 1},
+        {GPU_BUS_DEVFREQ, 1},
+        {GPU_DYNAMIC_ABB, 1},
+        {GPU_EARLY_CLK_GATING, 0},
+        {GPU_DVS, 1},
+        {GPU_PERF_GATHERING, 0},
 #ifdef MALI_SEC_HWCNT
-    {GPU_HWCNT_GATHERING, 1},
-    {GPU_HWCNT_POLLING_TIME, 90},
-    {GPU_HWCNT_UP_STEP, 3},
-    {GPU_HWCNT_DOWN_STEP, 2},
-    {GPU_HWCNT_GPR, 1},
-    {GPU_HWCNT_DUMP_PERIOD, 50}, /* ms */
-    {GPU_HWCNT_CHOOSE_JM, 0},
-    {GPU_HWCNT_CHOOSE_SHADER, 0x560},
-    {GPU_HWCNT_CHOOSE_TILER, 0},
-    {GPU_HWCNT_CHOOSE_L3_CACHE, 0},
-    {GPU_HWCNT_CHOOSE_MMU_L2, 0},
+{GPU_HWCNT_GATHERING, 1},
+{GPU_HWCNT_POLLING_TIME, 90},
+{GPU_HWCNT_UP_STEP, 3},
+{GPU_HWCNT_DOWN_STEP, 2},
+{GPU_HWCNT_GPR, 1},
+{GPU_HWCNT_DUMP_PERIOD, 50}, /* ms */
+{GPU_HWCNT_CHOOSE_JM, 0},
+{GPU_HWCNT_CHOOSE_SHADER, 0x560},
+{GPU_HWCNT_CHOOSE_TILER, 0},
+{GPU_HWCNT_CHOOSE_L3_CACHE, 0},
+{GPU_HWCNT_CHOOSE_MMU_L2, 0},
 #endif
-    {GPU_RUNTIME_PM_DELAY_TIME, 50},
-    {GPU_DVFS_POLLING_TIME, 100},
-    {GPU_PMQOS_INT_DISABLE, 0},
-    {GPU_PMQOS_MIF_MAX_CLOCK, 0},
-    {GPU_PMQOS_MIF_MAX_CLOCK_BASE, 0},
-    {GPU_CL_DVFS_START_BASE, 0},
-    {GPU_DEBUG_LEVEL, DVFS_WARNING},
-    {GPU_TRACE_LEVEL, TRACE_ALL},
+        {GPU_RUNTIME_PM_DELAY_TIME, 50},
+        {GPU_DVFS_POLLING_TIME, 100},
+        {GPU_PMQOS_INT_DISABLE, 0},
+        {GPU_PMQOS_MIF_MAX_CLOCK, 0},
+        {GPU_PMQOS_MIF_MAX_CLOCK_BASE, 0},
+        {GPU_CL_DVFS_START_BASE, 0},
+        {GPU_DEBUG_LEVEL, DVFS_WARNING},
+        {GPU_TRACE_LEVEL, TRACE_ALL},
 #ifdef CONFIG_MALI_DVFS_USER
-    {GPU_UDVFS_ENABLE, 0},
+        {GPU_UDVFS_ENABLE, 0},
 #endif
 };
 
@@ -248,7 +249,7 @@ static int gpu_clock_on(struct exynos_context *platform) {
 
     platform->clk_g3d_status = 1;
 
-err_return:
+    err_return:
 #ifdef CONFIG_MALI_RT_PM
     if (platform->exynos_pm_domain)
         mutex_unlock(&platform->exynos_pm_domain->access_lock);
@@ -285,7 +286,7 @@ static int gpu_clock_off(struct exynos_context *platform) {
 
     platform->clk_g3d_status = 0;
 
-err_return:
+    err_return:
 #ifdef CONFIG_MALI_RT_PM
     if (platform->exynos_pm_domain)
         mutex_unlock(&platform->exynos_pm_domain->access_lock);
@@ -324,7 +325,8 @@ int gpu_register_dump(void) {
         GPU_LOG(DVFS_DEBUG, LSI_REGISTER_DUMP, 0x14AA0700, __raw_readl(EXYNOS5430_DIV_STAT_G3D),
                 "REG_DUMP: EXYNOS5430_DIV_STAT_G3D %x\n", __raw_readl(EXYNOS5430_DIV_STAT_G3D));
         GPU_LOG(DVFS_DEBUG, LSI_REGISTER_DUMP, 0x14AA0704, __raw_readl(EXYNOS5430_DIV_STAT_G3D_PLL_FREQ_DET),
-                "REG_DUMP: EXYNOS5430_DIV_STAT_G3D_PLL_FREQ_DET %x\n", __raw_readl(EXYNOS5430_DIV_STAT_G3D_PLL_FREQ_DET));
+                "REG_DUMP: EXYNOS5430_DIV_STAT_G3D_PLL_FREQ_DET %x\n",
+                __raw_readl(EXYNOS5430_DIV_STAT_G3D_PLL_FREQ_DET));
 
         /* G3D ENABLE */
         GPU_LOG(DVFS_DEBUG, LSI_REGISTER_DUMP, 0x14AA0800, __raw_readl(EXYNOS5430_ENABLE_ACLK_G3D),
@@ -363,7 +365,8 @@ static int gpu_set_clock(struct exynos_context *platform, int clk) {
 
     if (!gpu_is_clock_on()) {
         ret = -1;
-        GPU_LOG(DVFS_INFO, DUMMY, 0u, 0u, "%s: can't set clock in the clock-off state! %d\n", __func__, __raw_readl(EXYNOS5430_ENABLE_ACLK_G3D));
+        GPU_LOG(DVFS_INFO, DUMMY, 0u, 0u, "%s: can't set clock in the clock-off state! %d\n", __func__,
+                __raw_readl(EXYNOS5430_ENABLE_ACLK_G3D));
         goto err;
     }
 
@@ -380,7 +383,7 @@ static int gpu_set_clock(struct exynos_context *platform, int clk) {
 
         if (g3d_rate_prev != GPU_OSC_CLK)
             sec_debug_aux_log(SEC_DEBUG_AUXLOG_CPU_BUS_CLOCK_CHANGE,
-                "[GPU] %7d <= %7d", g3d_rate / 1000, g3d_rate_prev / 1000);
+                              "[GPU] %7d <= %7d", g3d_rate / 1000, g3d_rate_prev / 1000);
 
         /*change g3d pll*/
         ret = clk_set_rate(fout_g3d_pll, g3d_rate);
@@ -401,11 +404,12 @@ static int gpu_set_clock(struct exynos_context *platform, int clk) {
 
     if (platform->cur_clock != clk_get_rate(fout_g3d_pll) / MHZ)
         GPU_LOG(DVFS_ERROR, DUMMY, 0u, 0u, "clock value is wrong (aclk_g3d: %d, fout_g3d_pll: %d)\n",
-            platform->cur_clock, (int) clk_get_rate(fout_g3d_pll) / MHZ);
+                platform->cur_clock, (int) clk_get_rate(fout_g3d_pll) / MHZ);
 
     if (g3d_rate != g3d_rate_prev)
-        GPU_LOG(DVFS_DEBUG, LSI_CLOCK_VALUE, g3d_rate / MHZ, platform->cur_clock, "clock set: %d, clock get: %d\n", (int) g3d_rate / MHZ, platform->cur_clock);
-err:
+        GPU_LOG(DVFS_DEBUG, LSI_CLOCK_VALUE, g3d_rate / MHZ, platform->cur_clock, "clock set: %d, clock get: %d\n",
+                (int) g3d_rate / MHZ, platform->cur_clock);
+    err:
 #ifdef CONFIG_MALI_RT_PM
     if (platform->exynos_pm_domain)
         mutex_unlock(&platform->exynos_pm_domain->access_lock);
@@ -442,7 +446,7 @@ static int gpu_set_clock_to_osc(struct exynos_context *platform) {
 
     GPU_LOG(DVFS_DEBUG, LSI_CLOCK_VALUE, platform->cur_clock, gpu_get_cur_clock(platform),
             "clock set to soc: %d (%d)\n", gpu_get_cur_clock(platform), platform->cur_clock);
-err:
+    err:
 #ifdef CONFIG_MALI_RT_PM
     if (platform->exynos_pm_domain)
         mutex_unlock(&platform->exynos_pm_domain->access_lock);
@@ -572,7 +576,8 @@ static int gpu_set_voltage(struct exynos_context *platform, int vol) {
 
     platform->cur_voltage = gpu_get_cur_voltage(platform);
 
-    GPU_LOG(DVFS_DEBUG, LSI_VOL_VALUE, vol, platform->cur_voltage, "voltage set: %d, voltage get:%d\n", vol, platform->cur_voltage);
+    GPU_LOG(DVFS_DEBUG, LSI_VOL_VALUE, vol, platform->cur_voltage, "voltage set: %d, voltage get:%d\n", vol,
+            platform->cur_voltage);
 
     return 0;
 }
@@ -598,16 +603,16 @@ static int gpu_set_voltage_post(struct exynos_context *platform, bool is_up) {
 }
 
 static struct gpu_control_ops ctr_ops = {
-    .is_power_on = gpu_is_power_on,
-    .set_voltage = gpu_set_voltage,
-    .set_voltage_pre = gpu_set_voltage_pre,
-    .set_voltage_post = gpu_set_voltage_post,
-    .set_clock_to_osc = gpu_set_clock_to_osc,
-    .set_clock = gpu_set_clock,
-    .set_clock_pre = gpu_set_clock_pre,
-    .set_clock_post = gpu_set_clock_post,
-    .enable_clock = gpu_clock_on,
-    .disable_clock = gpu_clock_off,
+        .is_power_on = gpu_is_power_on,
+        .set_voltage = gpu_set_voltage,
+        .set_voltage_pre = gpu_set_voltage_pre,
+        .set_voltage_post = gpu_set_voltage_post,
+        .set_clock_to_osc = gpu_set_clock_to_osc,
+        .set_clock = gpu_set_clock,
+        .set_clock_pre = gpu_set_clock_pre,
+        .set_clock_post = gpu_set_clock_post,
+        .enable_clock = gpu_clock_on,
+        .disable_clock = gpu_clock_off,
 };
 
 struct gpu_control_ops *gpu_get_control_ops(void) {

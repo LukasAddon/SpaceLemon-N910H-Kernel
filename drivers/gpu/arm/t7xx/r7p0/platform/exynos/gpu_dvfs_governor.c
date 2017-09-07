@@ -315,7 +315,7 @@ int gpu_dvfs_governor_setting(struct exynos_context *platform, int governor_type
 #else /* CONFIG_MALI_DVFS */
 	platform->table = (gpu_dvfs_info *)gpu_get_attrib_data(platform->attrib, GPU_GOVERNOR_TABLE_DEFAULT);
 	platform->table_size = (u32)gpu_get_attrib_data(platform->attrib, GPU_GOVERNOR_TABLE_SIZE_DEFAULT);
-	platform->step = gpu_dvfs_get_level(platform->gpu_dvfs_start_clock);
+	platform->step = gpu_dvfs_get_level(platform->gpu_min_clock);
 #endif /* CONFIG_MALI_DVFS */
 	platform->cur_clock = platform->table[platform->step].clock;
 

@@ -43,11 +43,11 @@
  */
 static struct cpufreq_driver *cpufreq_driver;
 static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
-static int last_min = -1;
-static int last_max = -1;
 #ifdef CONFIG_HOTPLUG_CPU
 /* This one keeps track of the previously set governor of a removed CPU */
 static DEFINE_PER_CPU(char[CPUFREQ_NAME_LEN], cpufreq_cpu_governor);
+static int last_min = -1;
+static int last_max = -1;
 #endif
 static DEFINE_RWLOCK(cpufreq_driver_lock);
 static DEFINE_MUTEX(cpufreq_governor_lock);
@@ -959,11 +959,6 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 	if (last_max > -1)
 		policy->max = last_max;
 
-	if (last_min > -1)
-		policy->min = last_min;
-	
-	if (last_max > -1)
-		policy->max = last_max;
 	policy->user_policy.min = policy->min;
 	policy->user_policy.max = policy->max;
 
@@ -1109,9 +1104,10 @@ static int __cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif
 	if (cpus == 1) {
 		if (cpufreq_driver->target)
 			__cpufreq_governor(data, CPUFREQ_GOV_POLICY_EXIT);
+
+		lock_policy_rwsem_read(cpu);
         last_min = data->min;
 		last_max = data->max;
-		lock_policy_rwsem_read(cpu);
 		kobj = &data->kobj;
 		cmp = &data->kobj_unregister;
 		unlock_policy_rwsem_read(cpu);
