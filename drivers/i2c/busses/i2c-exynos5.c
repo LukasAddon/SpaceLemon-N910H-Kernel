@@ -163,7 +163,7 @@ static LIST_HEAD(drvdata_list);
 #define HSI2C_POLLING 0
 #define HSI2C_INTERRUPT 1
 
-#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(1000))
+#define EXYNOS5_I2C_TIMEOUT (msecs_to_jiffies(100))
 
 #define EXYNOS5_FIFO_SIZE		16
 
@@ -823,32 +823,31 @@ static int exynos5_i2c_xfer(struct i2c_adapter *adap,
 		dev_err(i2c->dev, "exynos5_i2c_xfer call exynos5_i2c_reset for init\n");
 		exynos5_i2c_reset(i2c);
 	}
-	// LukasAddon disable retries , only 
-	for (retry = 0; retry < adap->retries; retry++) {
-		for (i = 0; i < num; i++) {
-			stop = (i == num - 1);
+	// LukasAddon disable retries , only
+	//for (retry = 0; retry < adap->retries; retry++) {
+	for (i = 0; i < num; i++) {
+		stop = (i == num - 1);
 
-			if (i2c->transfer_delay)
-				udelay(i2c->transfer_delay);
+		if (i2c->transfer_delay)
+			udelay(i2c->transfer_delay);
 
-			//LukasAddon xfer_msg with loop make some errors
-			ret = exynos5_i2c_xfer_msg(i2c, msgs_ptr, stop);
-			msgs_ptr++;
+		ret = exynos5_i2c_xfer_msg(i2c, msgs_ptr, stop);
+		msgs_ptr++;
 
-			if (ret == -EAGAIN) {
-				msgs_ptr = msgs;
-				break;
-			} else if (ret < 0) {
-				goto out;
-			}
-		}
-		if ((i == num) && (ret != -EAGAIN))
+		if (ret == -EAGAIN) {
+			msgs_ptr = msgs;
 			break;
-
-		dev_dbg(i2c->dev, "retrying transfer (%d)\n", retry);
-
-		udelay(100);
+		} else if (ret < 0) {
+			goto out;
+		}
 	}
+	//if ((i == num) && (ret != -EAGAIN))
+	//	break;
+
+	//dev_err(i2c->dev, "retrying transfer (%d)\n", retry);
+
+	//udelay(100);
+	//}
 	if (i == num) {
 		ret = num;
 	} else {
