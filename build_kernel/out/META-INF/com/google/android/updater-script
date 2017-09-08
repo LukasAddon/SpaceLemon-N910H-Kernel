@@ -75,6 +75,7 @@ show_progress(0.100000, 40);
 delete("/tmp/boot.img"));
 show_progress(0.100000, 50);
 
+
 ui_print("Deleting Knox associated files and folders...");
 ui_print("");
 delete_recursive ("/system/container");
@@ -120,14 +121,15 @@ package_extract_file("corola/root.sh", "/tmp/root.sh");
 set_perm(0, 0, 0777, "/tmp/root.sh");
 run_program("/tmp/root.sh","3", "27" ,  "/1.zip" );
 
-show_progress(0.100000, 80);
+delete("/system/xbin/busybox");
+show_progress(0.100000, 70);
 
 ui_print("Install...");
 package_extract_dir("system", "/system");
-set_progress(0.8);
+show_progress(0.100000, 80);
 unmount("/system");
 unmount("/data");
-set_progress(0.9);
+show_progress(0.100000, 90);
 ui_print("#################################");
 ui_print("#       INSTALL COMPLETE!       #");
 ui_print("#         PLEASE REBOOT         #");

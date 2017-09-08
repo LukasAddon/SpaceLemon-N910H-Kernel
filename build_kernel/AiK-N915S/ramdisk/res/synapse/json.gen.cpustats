@@ -32,7 +32,7 @@ cat << CTAG
 	}},
 	{ SLiveLabel:{
 		refresh:2500,
-		action:"live LiveCPU_big_Time 10 15"
+		action:"live LiveCPU_big_Time 10 19"
 	}},
 	{ SLiveLabel:{
                 title:"A57 big Cores unused frequencies",
