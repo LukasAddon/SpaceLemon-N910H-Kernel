@@ -1,0 +1,36 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:"LOGS",
+    elements:[
+	{ SPane:{
+		title:"Log Creation"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SButton:{
+		label:"Save logcat",
+		action:"log logcat"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SButton:{
+		label:"Save dmesg",
+		action:"log dmesg"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SButton:{
+		label:"Save last_kmsg",
+		action:"log kmsg"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG

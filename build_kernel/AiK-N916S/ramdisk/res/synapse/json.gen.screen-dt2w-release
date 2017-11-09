@@ -1,0 +1,113 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:SCREEN,
+    elements:[
+    { SCheckBox:{
+                description:" LCD Power Reduce for backlight. Auto adjust the display brightness based on the on-screen image to save power. If you like brighter screen at the cost of battery drain, then turn it off. Default is Enabled.",
+                label:"LCD Power Reduce",
+                action:"generic /sys/class/lcd/panel/power_reduce"
+	}},
+    { SDescription:{
+		description:""
+	}},
+    { SCheckBox:{
+        description:" Allows you to turn the screen off by swiping UNDER the navigation bar right > left or left > right. Default is Disabled.",
+        label:"Sweep2Sleep",
+		default:`cat /sys/sweep2sleep/sweep2sleep`,
+		action:"generic /sys/sweep2sleep/sweep2sleep"
+	}},
+	{ SDescription:{
+		description:""
+	}},
+    { SCheckBox:{
+        description:" Allows you to turn the screen on by swiping UNDER the navigation bar right > left or left > right. Default is Disabled.",
+        label:"Sweep2Wake",
+		default:`cat /sys/sweep2sleep/sweep2wake`,
+		action:"generic /sys/sweep2sleep/sweep2wake"
+	}},
+	{ SDescription:{
+		description:""
+	}},
+	{ SCheckBox:{
+		label:"Double Tap To Wake Phone",
+		description:"Enable/Disable DT2W. Default is Disabled.",
+		default: `cat /sys/android_touch/doubletap2wake`,
+		action:"generic /sys/android_touch/doubletap2wake"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SSeekBar:{
+		title:"color temperature",
+		description:"0 = Standart UI, 1 = HMT_3000K, 2 = HMT_4000K, 3 = HMT_5000K, 4 = HMT_6500K",
+		max:4,
+		default:0,
+		action:"generic /sys/class/mdnie/mdnie/hmt_color_temperature"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SCheckBox:{
+		label:"Scenario change lock!",
+		description:"not allow edit Scenario . Default is Disabled.",
+		default: `cat /sys/class/mdnie/mdnie/scenario_lock`,
+		action:"generic /sys/class/mdnie/mdnie/scenario_lock"
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"Scenario",
+		description:" This option will change screen scenario color scheme. Some apps can change this value (like Camera or Gallery)!!!! ",
+		default:`cat /sys/class/mdnie/mdnie/scenario`,
+		action:"generic /sys/class/mdnie/mdnie/scenario",
+		values:{ '0' : 'Standart UI',
+		 '1' : 'Video',
+		  '4' :'Camera',
+		   '5': 'Navigation',
+		    '6': 'Gallery',
+		    '7' :'VT',
+		    '8': 'Browser',
+		    '9': 'E-book',
+		    '10': 'E-Mail',
+		    '11': 'HMT_8_MODE',
+		    '12': 'HMT_16_MODE',
+		    '20': 'DMB_NORMAL_MODE',
+		}
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"accessibility",
+		description:"Color mode of screen",
+		default:`cat /sys/class/mdnie/mdnie/accessibility`,
+		action:"generic /sys/class/mdnie/mdnie/accessibility",
+		values:{ '0' : 'Standart',
+		 '1' : 'Inversed',
+		  '4' :'Negative',
+		   '5': 'Inversed Negative',
+		}
+	}},
+	{ SSpacer:{
+		height:2
+	}},
+	{ SOptionList:{
+		title:"secret screen modes",
+		description:"all modes of screen",
+		default:`cat /sys/class/mdnie/mdnie/mode`,
+		action:"generic /sys/class/mdnie/mdnie/mode",
+		values:{
+		 '0' : 'DYNAMIC',
+		  '1' :'STANDARD',
+		   '2': 'NATURAL',
+		   '3' :'MOVIE',
+		   '4' :'AUTO',
+		   '5' :'READING',
+		}
+	}},
+    ]
+}
+CTAG

@@ -1,0 +1,28 @@
+case $1 in
+version)
+  echo `busybox uname -r`
+  ;;
+build)
+  echo `getprop ro.build.PDA`
+  ;;
+baseband)
+  echo `getprop gsm.version.baseband`
+  ;;
+bootloader)
+  echo `getprop ro.bootloader`
+  ;;
+date)
+  echo `getprop ro.build.date`
+  ;;
+android_version)
+  echo `getprop ro.build.version.release`
+  ;;
+serial)
+  P=/efs/FactoryApp/serial_no
+  if [ -f $P ]; then
+    echo `cat $P`
+  else
+    echo `getprop ro.boot.serialno`
+  fi
+  ;;
+esac
