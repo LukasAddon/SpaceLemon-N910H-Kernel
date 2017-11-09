@@ -1,0 +1,82 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+    name:BATTERY,
+    elements:[
+	{ SPane:{
+		title:"Battery Info"
+	}},
+        { SLiveLabel:{
+                  action:"charge-source"
+        }},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live batttype"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live battcurrav"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live battcurrnow"
+	}},
+	{ SLiveLabel:{
+		refresh:9000,
+		action:"live battvoltnow"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live batttemp"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live battcapa"
+	}},
+	{ SLiveLabel:{
+		refresh:1000,
+		action:"live battstatus"
+	}},
+	{ SLiveLabel:{
+		refresh:9000,
+		action:"live batthealth"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SPane:{
+		title:"Battery Scaling Calibration",
+		description:" If you are having incorrect battery SCALING issues, this will reset your device battery % to scale correctly to the approximate available mV. Give it a few hours after you reset the gauge. It may still show you funny values for that period, then the battery percentage should be fine after a full charge cycle."
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SDescription:{
+		description:" 1- Push button < Reset Fuel-Gauge Chip Now >"
+	}},
+	{ SDescription:{
+		description:" 2- Reboot device"
+	}},
+	{ SDescription:{
+		description:" 3- Deplete battery to 5-10 % (NOT ZERO)"
+	}},
+	{ SDescription:{
+		description:" 4- Charge UNINTERUPTED until FULL (don't touch)"
+	}},
+	{ SDescription:{
+		description:" 5- Unplug then use normally. Device should re-calibrate itself"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SButton:{
+		label:"Reset Fuel-Gauge Chip Now",
+		action:"battery fuel-gauge"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+    ]
+}
+CTAG

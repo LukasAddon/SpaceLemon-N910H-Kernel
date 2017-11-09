@@ -1,0 +1,23 @@
+BB=/sbin/busybox;
+
+case $1 in
+vnswap0)
+  $BB mount -t rootfs -o remount,rw rootfs;
+  P=/res/synapse/SkyHigh/vnswap0
+  if [ ! -z $2 ]; then
+  if [ $2 == Disabled ]; then
+    echo 0 > $P
+    swapoff /dev/block/vnswap0 > /dev/null 2>&1
+  elif [ $2 == Enabled ]; then
+    echo 1 > $P
+    mkswap /dev/block/vnswap0 > /dev/null 2>&1
+    swapon /dev/block/vnswap0 > /dev/null 2>&1
+  fi; fi
+  copy=`cat $P`
+  if [ $copy == 0 ]; then
+    echo Disabled
+  elif [ $copy == 1 ]; then
+    echo Enabled
+  fi
+  ;;
+esac
