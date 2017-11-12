@@ -825,6 +825,8 @@ static ssize_t hmtColorTemp_store(struct device *dev,
 }
 #endif
 
+
+///////////////////custom controls start  (c) LukasAddon///////////////////////////////////////
 static ssize_t scenario_lock_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -998,6 +1000,15 @@ static ssize_t mdnie_cs_index_store(struct device *dev,
     return count;
 }
 
+
+//red = 151
+
+//green = 153
+
+// blue = 155
+
+
+//////////////////////////custom controls end  (c) LukasAddon//////////////////////////////////////////////////
 
 
 static struct device_attribute mdnie_attributes[] = {
