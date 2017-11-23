@@ -11,7 +11,6 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <asm/ioctls.h>
 #include <linux/icmp.h>
 #include <linux/module.h>
 #include <linux/skbuff.h>
@@ -382,7 +381,7 @@ static int l2tp_ip_backlog_recv(struct sock *sk, struct sk_buff *skb)
 drop:
 	IP_INC_STATS(sock_net(sk), IPSTATS_MIB_INDISCARDS);
 	kfree_skb(skb);
-	return 0;
+	return -1;
 }
 
 /* Userspace will call sendmsg() on the tunnel socket to send L2TP
@@ -555,30 +554,6 @@ out:
 	return err ? err : copied;
 }
 
-int l2tp_ioctl(struct sock *sk, int cmd, unsigned long arg)
-{
-	struct sk_buff *skb;
-	int amount;
-
-	switch (cmd) {
-	case SIOCOUTQ:
-		amount = sk_wmem_alloc_get(sk);
-		break;
-	case SIOCINQ:
-		spin_lock_bh(&sk->sk_receive_queue.lock);
-		skb = skb_peek(&sk->sk_receive_queue);
-		amount = skb ? skb->len : 0;
-		spin_unlock_bh(&sk->sk_receive_queue.lock);
-		break;
-
-	default:
-		return -ENOIOCTLCMD;
-	}
-
-	return put_user(amount, (int __user *)arg);
-}
-EXPORT_SYMBOL(l2tp_ioctl);
-
 static struct proto l2tp_ip_prot = {
 	.name		   = "L2TP/IP",
 	.owner		   = THIS_MODULE,
@@ -587,7 +562,7 @@ static struct proto l2tp_ip_prot = {
 	.bind		   = l2tp_ip_bind,
 	.connect	   = l2tp_ip_connect,
 	.disconnect	   = l2tp_ip_disconnect,
-	.ioctl		   = l2tp_ioctl,
+	.ioctl		   = udp_ioctl,
 	.destroy	   = l2tp_ip_destroy_sock,
 	.setsockopt	   = ip_setsockopt,
 	.getsockopt	   = ip_getsockopt,

@@ -1860,24 +1860,11 @@ static int acer_wmi_enable_lm(void)
 	return status;
 }
 
-#define ACER_WMID_ACCEL_HID	"BST0001"
-
 static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
 						void *ctx, void **retval)
 {
-	struct acpi_device *dev;
-
-	if (!strcmp(ctx, "SENR")) {
-		if (acpi_bus_get_device(ah, &dev))
-			return AE_OK;
-		if (strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-			return AE_OK;
-	} else
-		return AE_OK;
-
 	*(acpi_handle *)retval = ah;
-
-	return AE_CTRL_TERMINATE;
+	return AE_OK;
 }
 
 static int __init acer_wmi_get_handle(const char *name, const char *prop,
@@ -1891,7 +1878,8 @@ static int __init acer_wmi_get_handle(const char *name, const char *prop,
 	handle = NULL;
 	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
 					(void *)name, &handle);
-	if (ACPI_SUCCESS(status) && handle) {
+
+	if (ACPI_SUCCESS(status)) {
 		*ah = handle;
 		return 0;
 	} else {
@@ -1903,7 +1891,7 @@ static int __init acer_wmi_accel_setup(void)
 {
 	int err;
 
-	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
+	err = acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
 	if (err)
 		return err;
 
@@ -2274,10 +2262,9 @@ static int __init acer_wmi_init(void)
 		err = acer_wmi_input_setup();
 		if (err)
 			return err;
-		err = acer_wmi_accel_setup();
-		if (err && err != -ENODEV)
-			pr_warn("Cannot enable accelerometer\n");
 	}
+
+	acer_wmi_accel_setup();
 
 	err = platform_driver_register(&acer_platform_driver);
 	if (err) {

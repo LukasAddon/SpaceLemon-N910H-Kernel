@@ -1598,7 +1598,7 @@ find_mad_agent(struct ib_mad_port_private *port_priv,
 			if (!class)
 				goto out;
 			if (convert_mgmt_class(mad->mad_hdr.mgmt_class) >=
-			    ARRAY_SIZE(class->method_table))
+			    IB_MGMT_MAX_METHODS)
 				goto out;
 			method = class->method_table[convert_mgmt_class(
 							mad->mad_hdr.mgmt_class)];

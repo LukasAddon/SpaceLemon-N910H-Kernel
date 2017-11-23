@@ -103,25 +103,16 @@ struct ip6_tnl_net {
 
 static struct net_device_stats *ip6_get_stats(struct net_device *dev)
 {
-	struct pcpu_tstats tmp, sum = { 0 };
+	struct pcpu_tstats sum = { 0 };
 	int i;
 
 	for_each_possible_cpu(i) {
-		unsigned int start;
 		const struct pcpu_tstats *tstats = per_cpu_ptr(dev->tstats, i);
 
-		do {
-			start = u64_stats_fetch_begin_bh(&tstats->syncp);
-			tmp.rx_packets = tstats->rx_packets;
-			tmp.rx_bytes = tstats->rx_bytes;
-			tmp.tx_packets = tstats->tx_packets;
-			tmp.tx_bytes =  tstats->tx_bytes;
-		} while (u64_stats_fetch_retry_bh(&tstats->syncp, start));
-
-		sum.rx_packets += tmp.rx_packets;
-		sum.rx_bytes   += tmp.rx_bytes;
-		sum.tx_packets += tmp.tx_packets;
-		sum.tx_bytes   += tmp.tx_bytes;
+		sum.rx_packets += tstats->rx_packets;
+		sum.rx_bytes   += tstats->rx_bytes;
+		sum.tx_packets += tstats->tx_packets;
+		sum.tx_bytes   += tstats->tx_bytes;
 	}
 	dev->stats.rx_packets = sum.rx_packets;
 	dev->stats.rx_bytes   = sum.rx_bytes;
@@ -403,19 +394,18 @@ ip6_tnl_dev_uninit(struct net_device *dev)
 
 __u16 ip6_tnl_parse_tlv_enc_lim(struct sk_buff *skb, __u8 *raw)
 {
-	const struct ipv6hdr *ipv6h = (const struct ipv6hdr *)raw;
-	unsigned int nhoff = raw - skb->data;
-	unsigned int off = nhoff + sizeof(*ipv6h);
-	u8 next, nexthdr = ipv6h->nexthdr;
+	const struct ipv6hdr *ipv6h = (const struct ipv6hdr *) raw;
+	__u8 nexthdr = ipv6h->nexthdr;
+	__u16 off = sizeof (*ipv6h);
 
 	while (ipv6_ext_hdr(nexthdr) && nexthdr != NEXTHDR_NONE) {
+		__u16 optlen = 0;
 		struct ipv6_opt_hdr *hdr;
-		u16 optlen;
-
-		if (!pskb_may_pull(skb, off + sizeof(*hdr)))
+		if (raw + off + sizeof (*hdr) > skb->data &&
+		    !pskb_may_pull(skb, raw - skb->data + off + sizeof (*hdr)))
 			break;
 
-		hdr = (struct ipv6_opt_hdr *)(skb->data + off);
+		hdr = (struct ipv6_opt_hdr *) (raw + off);
 		if (nexthdr == NEXTHDR_FRAGMENT) {
 			struct frag_hdr *frag_hdr = (struct frag_hdr *) hdr;
 			if (frag_hdr->frag_off)
@@ -426,29 +416,20 @@ __u16 ip6_tnl_parse_tlv_enc_lim(struct sk_buff *skb, __u8 *raw)
 		} else {
 			optlen = ipv6_optlen(hdr);
 		}
-		/* cache hdr->nexthdr, since pskb_may_pull() might
-		 * invalidate hdr
-		 */
-		next = hdr->nexthdr;
 		if (nexthdr == NEXTHDR_DEST) {
-			u16 i = 2;
-
-			/* Remember : hdr is no longer valid at this point. */
-			if (!pskb_may_pull(skb, off + optlen))
-				break;
-
+			__u16 i = off + 2;
 			while (1) {
 				struct ipv6_tlv_tnl_enc_lim *tel;
 
 				/* No more room for encapsulation limit */
-				if (i + sizeof(*tel) > optlen)
+				if (i + sizeof (*tel) > off + optlen)
 					break;
 
-				tel = (struct ipv6_tlv_tnl_enc_lim *)(skb->data + off + i);
+				tel = (struct ipv6_tlv_tnl_enc_lim *) &raw[i];
 				/* return index of option if found and valid */
 				if (tel->type == IPV6_TLV_TNL_ENCAP_LIMIT &&
 				    tel->length == 1)
-					return i + off - nhoff;
+					return i;
 				/* else jump to next option */
 				if (tel->type)
 					i += tel->length + 2;
@@ -456,7 +437,7 @@ __u16 ip6_tnl_parse_tlv_enc_lim(struct sk_buff *skb, __u8 *raw)
 					i++;
 			}
 		}
-		nexthdr = next;
+		nexthdr = hdr->nexthdr;
 		off += optlen;
 	}
 	return 0;
@@ -841,10 +822,8 @@ static int ip6_tnl_rcv(struct sk_buff *skb, __u16 protocol,
 		}
 
 		tstats = this_cpu_ptr(t->dev->tstats);
-		u64_stats_update_begin(&tstats->syncp);
 		tstats->rx_packets++;
 		tstats->rx_bytes += skb->len;
-		u64_stats_update_end(&tstats->syncp);
 
 		netif_rx(skb);
 

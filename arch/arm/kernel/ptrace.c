@@ -600,7 +600,7 @@ static int gpr_set(struct task_struct *target,
 		   const void *kbuf, const void __user *ubuf)
 {
 	int ret;
-	struct pt_regs newregs = *task_pt_regs(target);
+	struct pt_regs newregs;
 
 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
 				 &newregs,
