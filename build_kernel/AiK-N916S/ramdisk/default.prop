@@ -45,6 +45,7 @@ ro.com.google.networklocation=0
 ro.telephony.call_ring.delay=0
 
 debug.atrace.tags.enableflags=0
+ro.smps.gain.spk=0.8
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
