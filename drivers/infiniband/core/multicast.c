@@ -516,11 +516,8 @@ static void join_handler(int status, struct ib_sa_mcmember_rec *rec,
 	if (status)
 		process_join_error(group, status);
 	else {
-
-		if (ib_find_pkey(group->port->dev->device,
-				 group->port->port_num, be16_to_cpu(rec->pkey),
-				 &pkey_index))
-			pkey_index = MCAST_INVALID_PKEY_INDEX;
+		ib_find_pkey(group->port->dev->device, group->port->port_num,
+			     be16_to_cpu(rec->pkey), &pkey_index);
 
 		spin_lock_irq(&group->port->lock);
 		group->rec = *rec;

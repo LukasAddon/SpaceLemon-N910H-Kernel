@@ -85,14 +85,6 @@ mount -o remount,rw /system /system
 # $BB chmod 777 /mnt/ntfs
 # $BB mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 
-
-#inject busybox if not present
-if [ ! -f /system/xbin/busybox ]; then
-	cp /sbin/busybox /system/xbin/
-	chmod 755 /system/xbin/busybox
-	/system/xbin/busybox --install -s /system/xbin
-fi;
-
 #
 # Init.d
 #

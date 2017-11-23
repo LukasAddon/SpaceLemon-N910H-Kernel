@@ -1482,14 +1482,12 @@ static ssize_t set_mode(struct device *d, struct device_attribute *attr,
 
 	ret = ipoib_set_mode(dev, buf);
 
-	/* The assumption is that the function ipoib_set_mode returned
-	 * with the rtnl held by it, if not the value -EBUSY returned,
-	 * then no need to rtnl_unlock
-	 */
-	if (ret != -EBUSY)
-		rtnl_unlock();
+	rtnl_unlock();
 
-	return (!ret || ret == -EBUSY) ? count : ret;
+	if (!ret)
+		return count;
+
+	return ret;
 }
 
 static DEVICE_ATTR(mode, S_IWUSR | S_IRUGO, show_mode, set_mode);
