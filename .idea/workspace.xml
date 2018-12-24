@@ -2,84 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f73deda-126c-4981-b906-7f4a1a142cfb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/Makefile~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9260.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9261.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9263.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9g45.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9n12.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9rl.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/at91sam9x5.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/clock.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/generic.h~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/include/mach/at91sam9n12.h~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/include/mach/at91sam9x5.h~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/include/mach/sama5d3.h~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/pm.h~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/sam9_smc.c~584cade4... 3.10.28-29" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-at91/sama5d3.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-dove/common.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-ebsa110/core.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-footbridge/common.c~fcf18dac... 3.10.24" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-footbridge/dc21285-timer.c~ed9de82f... 3.10.27" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-footbridge/dc21285.c~fcf18dac... 3.10.24" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-footbridge/ebsa285.c~fcf18dac... 3.10.24" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-highbank/highbank.c~584cade4... 3.10.28-29" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-imx/clk-imx6q.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-imx/devices/platform-ipu-core.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-imx/mm-imx3.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-integrator/integrator_cp.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-iop13xx/io.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-ixp4xx/common.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-kirkwood/common.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-msm/common.h~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-msm/io.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-mv78xx0/common.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-mvebu/armada-370-xp.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-mvebu/coherency.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-mvebu/coherency.h~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap1/board-h2.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap1/board-h3.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap1/board-innovator.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap1/board-osk.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/cclock3xxx_data.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/control.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/cpuidle34xx.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/cpuidle44xx.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/gpmc.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/irq.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/mux.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/omap4-common.c~584cade4... 3.10.28-29" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/omap_hwmod.c~40925c6c... 3.10.25" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/omap_hwmod_2xxx_ipblock_data.c~b172db4f... 3.10.26" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c~40925c6c... 3.10.25" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/pm.h~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/sleep34xx.S~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-omap2/timer.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-orion5x/common.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-pxa/corgi.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-pxa/hx4700.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-pxa/poodle.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-pxa/reset.c~40925c6c... 3.10.25" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-pxa/tosa.c~40925c6c... 3.10.25" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-realview/include/mach/memory.h~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-s3c64xx/crag6410.h~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-s3c64xx/mach-crag6410.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-sa1100/assabet.c~c399015e... Linux-3.10.22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-sa1100/generic.c~6ca10f53... 3-10-105 update" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-sa1100/include/mach/collie.h~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-sa1100/pm.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-shmobile/board-armadillo800eva.c~ed9de82f... 3.10.27" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-shmobile/board-kzm9g.c~ed9de82f... 3.10.27" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-shmobile/board-mackerel.c~ed9de82f... 3.10.27" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-shmobile/setup-sh73a0.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-socfpga/headsmp.S~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-tegra/common.c~178550b2... 3.10.31  - 3.10.61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/mach-ux500/pm.c~657e266e... update from 3-10-105 to 3-10-107" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/plat-orion/common.c~bad68300... 3-10-62 to 3-10-104" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arch/arm/xen/enlighten.c~657e266e... update from 3-10-105 to 3-10-107" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/exynos5433-tbelteskt_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/exynos5433-tbelteskt_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3caltelgt_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3caltelgt_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltektt_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltektt_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltelgt_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltelgt_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/exynos5433-trelteskt_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/exynos5433-trelteskt_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/trelte_00_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/trelte_00_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/trelte_oldWolfson_00_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/trelte_oldWolfson_00_defconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arch/arm/configs/trlte_00_defconfig" beforeDir="false" afterPath="$PROJECT_DIR$/arch/arm/configs/trlte_00_defconfig" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -109,23 +40,64 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="exynos5433-tbelteskt_defconfig" value="1" />
+          <entry key="exynos5433-tre3caltelgt_defconfig" value="1" />
+          <entry key="exynos5433-treltektt_defconfig" value="1" />
+          <entry key="exynos5433-treltelgt_defconfig" value="1" />
           <entry key="gitignore" value="1" />
+          <entry key="version" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="PLAIN_TEXT" value="6" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="20" selection-start-column="20" selection-end-column="20" />
+            <state relative-caret-position="198">
+              <caret line="11" column="43" lean-forward="true" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-tbelteskt_defconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="558">
+              <caret line="31" column="57" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-treltelgt_defconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="576">
+              <caret line="32" column="57" selection-start-line="32" selection-start-column="57" selection-end-line="32" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-treltektt_defconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="576">
+              <caret line="32" column="57" selection-start-line="32" selection-start-column="57" selection-end-line="32" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3caltelgt_defconfig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="558">
+              <caret line="31" column="62" selection-start-line="31" selection-start-column="62" selection-end-line="31" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -135,9 +107,16 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</find>
+      <find>v2.9</find>
+      <find>v2.91.45</find>
     </findStrings>
+    <replaceStrings>
+      <replace />
+      <replace>v2.99.1</replace>
+    </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/arch/arm/configs</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -147,6 +126,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/arch/arm/configs/exynos5433-tbelteskt_defconfig" />
+        <option value="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltelgt_defconfig" />
+        <option value="$PROJECT_DIR$/arch/arm/configs/exynos5433-treltektt_defconfig" />
+        <option value="$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3caltelgt_defconfig" />
       </list>
     </option>
   </component>
@@ -190,7 +173,7 @@
               <item name="lastKernel" type="462c0819:PsiDirectoryNode" />
               <item name="arch" type="462c0819:PsiDirectoryNode" />
               <item name="arm" type="462c0819:PsiDirectoryNode" />
-              <item name="mach-at91" type="462c0819:PsiDirectoryNode" />
+              <item name="configs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -227,12 +210,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1545677519471</updated>
-      <workItem from="1545677520771" duration="790000" />
+      <workItem from="1545677520771" duration="1297000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="790000" />
+    <option name="totallyTimeSpent" value="1297000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1768" y="393" width="1746" height="1733" extended-state="0" />
@@ -266,10 +249,41 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.version">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="20" selection-start-column="20" selection-end-column="20" />
+        <state relative-caret-position="198">
+          <caret line="11" column="43" lean-forward="true" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-tbelteskt_defconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="31" column="57" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-treltelgt_defconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="57" selection-start-line="32" selection-start-column="57" selection-end-line="32" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-treltektt_defconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="57" selection-start-line="32" selection-start-column="57" selection-end-line="32" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arch/arm/configs/exynos5433-tre3caltelgt_defconfig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="31" column="62" selection-start-line="31" selection-start-column="62" selection-end-line="31" selection-end-column="62" />
         </state>
       </provider>
     </entry>
